@@ -1,0 +1,201 @@
+{
+    "tenantId": "tenant-beta",
+    "reportData": {
+        "patientId": "PAT-2026-SAMPLE",
+        "age": 42,
+        "gender": "male",
+        "profiles": [
+            {
+                "profileName": "Complete Blood Count",
+                "parameters": [
+                    {
+                        "testName": "Hemoglobin",
+                        "value": 11.2,
+                        "unit": "g/dL",
+                        "referenceRange": {
+                            "min": 13.5,
+                            "max": 17.5
+                        }
+                    },
+                    {
+                        "testName": "WBC Count",
+                        "value": 9800,
+                        "unit": "cells/µL",
+                        "referenceRange": {
+                            "min": 4500,
+                            "max": 11000
+                        }
+                    },
+                    {
+                        "testName": "Platelet Count",
+                        "value": 145000,
+                        "unit": "/µL",
+                        "referenceRange": {
+                            "min": 150000,
+                            "max": 400000
+                        }
+                    },
+                    {
+                        "testName": "RBC Count",
+                        "value": 4.1,
+                        "unit": "million/µL",
+                        "referenceRange": {
+                            "min": 4.5,
+                            "max": 5.9
+                        }
+                    },
+                    {
+                        "testName": "Hematocrit",
+                        "value": 36,
+                        "unit": "%",
+                        "referenceRange": {
+                            "min": 41,
+                            "max": 53
+                        }
+                    },
+                    {
+                        "testName": "MCV",
+                        "value": 88,
+                        "unit": "fL",
+                        "referenceRange": {
+                            "min": 80,
+                            "max": 100
+                        }
+                    },
+                     {
+                        "testName": "sai",
+                        "value": 88,
+                        "unit": "fL",
+                        "referenceRange": {
+                            "min": 80,
+                            "max": 100
+                        }
+                    }
+                ]
+            },
+            {
+                "profileName": "Lipid Panel",
+                "parameters": [
+                    {
+                        "testName": "Total Cholesterol",
+                        "value": 210,
+                        "unit": "mg/dL",
+                        "referenceRange": {
+                            "min": 0,
+                            "max": 200
+                        }
+                    },
+                    {
+                        "testName": "LDL Cholesterol",
+                        "value": 138,
+                        "unit": "mg/dL",
+                        "referenceRange": {
+                            "min": 0,
+                            "max": 100
+                        }
+                    },
+                    {
+                        "testName": "HDL Cholesterol",
+                        "value": 48,
+                        "unit": "mg/dL",
+                        "referenceRange": {
+                            "min": 40,
+                            "max": 60
+                        }
+                    },
+                    {
+                        "testName": "Triglycerides",
+                        "value": 165,
+                        "unit": "mg/dL",
+                        "referenceRange": {
+                            "min": 0,
+                            "max": 150
+                        }
+                    }
+                ]
+            },
+            {
+                "profileName": "Thyroid Panel",
+                "parameters": [
+                    {
+                        "testName": "TSH",
+                        "value": 4.8,
+                        "unit": "mIU/L",
+                        "referenceRange": {
+                            "min": 0.4,
+                            "max": 4.0
+                        }
+                    },
+                    {
+                        "testName": "Free T3",
+                        "value": 3.1,
+                        "unit": "pg/mL",
+                        "referenceRange": {
+                            "min": 2.3,
+                            "max": 4.2
+                        }
+                    },
+                    {
+                        "testName": "Free T4",
+                        "value": 1.1,
+                        "unit": "ng/dL",
+                        "referenceRange": {
+                            "min": 0.8,
+                            "max": 1.8
+                        }
+                    }
+                ]
+            },
+            {
+                "profileName": "Liver Function Test",
+                "parameters": [
+                    {
+                        "testName": "SGOT (AST)",
+                        "value": 52,
+                        "unit": "U/L",
+                        "referenceRange": {
+                            "min": 5,
+                            "max": 40
+                        }
+                    },
+                    {
+                        "testName": "SGPT (ALT)",
+                        "value": 68,
+                        "unit": "U/L",
+                        "referenceRange": {
+                            "min": 7,
+                            "max": 56
+                        }
+                    },
+                    {
+                        "testName": "Bilirubin Total",
+                        "value": 0.9,
+                        "unit": "mg/dL",
+                        "referenceRange": {
+                            "min": 0.1,
+                            "max": 1.2
+                        }
+                    },
+                    {
+                        "testName": "Albumin",
+                        "value": 4.1,
+                        "unit": "g/dL",
+                        "referenceRange": {
+                            "min": 3.5,
+                            "max": 5.0
+                        }
+                    },
+                    {
+                        "testName": "Alkaline Phosphatase",
+                        "value": 88,
+                        "unit": "U/L",
+                        "referenceRange": {
+                            "min": 44,
+                            "max": 147
+                        }
+                    }
+                ]
+            }
+        ]
+    }
+}

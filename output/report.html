@@ -1,0 +1,1319 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Beta Health Labs — Health Report</title>
+<style>
+/* ============================================================
+   SMART HEALTH REPORT — DESIGN SYSTEM
+   Phase 4 · Visual System Upgrade
+   ============================================================
+   All tokens, typography, spacing, and component styles live
+   here. Embedded via html-layout.ts <style> tag.
+   ============================================================ */
+
+/* ----------------------------------------------------------
+   1. DESIGN TOKENS
+   ---------------------------------------------------------- */
+:root {
+    /* Color Roles — semantic palette */
+    --color-primary: #1565C0;
+    /* overridden per-tenant inline */
+    --color-healthy: #2E7D32;
+    --color-monitor: #F9A825;
+    --color-attention: #C62828;
+    --color-bg-light: #F7F9FC;
+
+    /* Derived / UI surface colors */
+    --color-text-primary: #0f172a;
+    --color-text-secondary: #475569;
+    --color-text-muted: #64748b;
+    --color-text-faint: #94a3b8;
+    --color-border: #e2e8f0;
+    --color-border-light: #f1f5f9;
+    --color-surface: #ffffff;
+    --color-shadow: rgba(0, 0, 0, 0.06);
+    --color-shadow-lg: rgba(0, 0, 0, 0.10);
+
+    /* Typography Scale */
+    --font-heading: 24px;
+    --font-subheading: 18px;
+    --font-body: 14px;
+    --font-small: 12px;
+    --font-xs: 11px;
+
+    --weight-regular: 400;
+    --weight-medium: 500;
+    --weight-semibold: 600;
+    --weight-bold: 700;
+
+    /* Spacing — 8px grid */
+    --space-1: 8px;
+    --space-2: 16px;
+    --space-3: 24px;
+    --space-4: 32px;
+    --space-5: 40px;
+    --space-6: 48px;
+
+    /* Radii */
+    --radius-sm: 6px;
+    --radius-md: 10px;
+    --radius-lg: 16px;
+    --radius-pill: 100px;
+    --radius-circle: 50%;
+
+    /* Shadows */
+    --shadow-card: 0 2px 8px var(--color-shadow);
+    --shadow-card-hover: 0 4px 16px var(--color-shadow-lg);
+    --shadow-page: 0 1px 4px var(--color-shadow);
+
+    /* Transitions */
+    --transition-fast: 150ms ease;
+    --transition-normal: 250ms ease;
+}
+
+
+/* ----------------------------------------------------------
+   2. RESET & BASE
+   ---------------------------------------------------------- */
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    font-size: var(--font-body);
+    font-weight: var(--weight-regular);
+    color: var(--color-text-primary);
+    background: var(--color-bg-light);
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+}
+
+
+/* ----------------------------------------------------------
+   3. PAGE SHELL
+   ---------------------------------------------------------- */
+.report-page {
+    position: relative;
+    width: 210mm;
+    min-height: 297mm;
+    margin: var(--space-3) auto;
+    background: var(--color-surface);
+    box-shadow: var(--shadow-page);
+    padding: 0;
+    overflow: hidden;
+    page-break-after: always;
+}
+
+.page-strip {
+    height: var(--space-1);
+    width: 100%;
+}
+
+.page-header {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    padding: var(--space-3) var(--space-4) var(--space-2);
+    border-bottom: 1px solid var(--color-border);
+}
+
+.page-header .logo {
+    height: 36px;
+    width: auto;
+    object-fit: contain;
+}
+
+.page-header .lab-name {
+    font-size: 15px;
+    font-weight: var(--weight-semibold);
+    color: var(--color-text-secondary);
+}
+
+.page-content {
+    padding: var(--space-4) var(--space-4);
+}
+
+.page-footer {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: var(--space-2) var(--space-4);
+    font-size: var(--font-xs);
+    color: var(--color-text-faint);
+    border-top: 1px solid var(--color-border);
+}
+
+
+/* ----------------------------------------------------------
+   4. TYPOGRAPHY UTILITIES
+   ---------------------------------------------------------- */
+.heading {
+    font-size: var(--font-heading);
+    font-weight: var(--weight-bold);
+    color: var(--color-text-primary);
+    line-height: 1.2;
+}
+
+.subheading {
+    font-size: var(--font-subheading);
+    font-weight: var(--weight-medium);
+    color: var(--color-text-primary);
+    line-height: 1.3;
+}
+
+.label-sm {
+    font-size: var(--font-small);
+    font-weight: var(--weight-semibold);
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
+    color: var(--color-text-muted);
+}
+
+
+/* ----------------------------------------------------------
+   5. SECTION TITLE
+   ---------------------------------------------------------- */
+.section-title {
+    font-size: var(--font-small);
+    font-weight: var(--weight-semibold);
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
+    color: var(--color-text-muted);
+    margin-bottom: var(--space-2);
+}
+
+
+/* ----------------------------------------------------------
+   6. MASTER OVERVIEW PAGE
+   ---------------------------------------------------------- */
+.master-overview {
+    text-align: center;
+}
+
+/* --- Radial Score Ring (SVG-based) --- */
+.score-ring-wrapper {
+    display: inline-block;
+    position: relative;
+    margin: var(--space-1) 0 var(--space-1);
+}
+
+.score-ring-svg {
+    transform: rotate(-90deg);
+    display: block;
+}
+
+.score-ring-track {
+    fill: none;
+    stroke: var(--color-border);
+    stroke-width: 10;
+}
+
+.score-ring-fill {
+    fill: none;
+    stroke-width: 10;
+    stroke-linecap: round;
+    transition: stroke-dashoffset var(--transition-normal);
+}
+
+.score-ring-value {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+}
+
+.score-ring-number {
+    font-size: 44px;
+    font-weight: var(--weight-bold);
+    line-height: 1;
+}
+
+.score-ring-label {
+    font-size: var(--font-small);
+    font-weight: var(--weight-medium);
+    color: var(--color-text-muted);
+    margin-top: 2px;
+}
+
+/* --- Severity Pill (below ring) --- */
+.severity-label {
+    display: inline-block;
+    margin: var(--space-1) 0 var(--space-3);
+    padding: 4px var(--space-3);
+    border-radius: var(--radius-pill);
+    font-size: 13px;
+    font-weight: var(--weight-semibold);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--color-surface);
+}
+
+/* --- Analytics Strip --- */
+.analytics-strip {
+    display: flex;
+    justify-content: center;
+    gap: var(--space-4);
+    margin-bottom: var(--space-4);
+    padding: var(--space-2) var(--space-3);
+    background: var(--color-bg-light);
+    border-radius: var(--radius-md);
+    border: 1px solid var(--color-border);
+}
+
+.analytics-item {
+    text-align: center;
+}
+
+.analytics-value {
+    font-size: var(--font-heading);
+    font-weight: var(--weight-bold);
+    line-height: 1.2;
+}
+
+.analytics-label {
+    font-size: var(--font-xs);
+    font-weight: var(--weight-semibold);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--color-text-muted);
+    margin-top: 2px;
+}
+
+/* --- Profile / Organ Grid --- */
+.profile-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: var(--space-2);
+    text-align: left;
+}
+
+.profile-card {
+    position: relative;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    padding: var(--space-2);
+    background: var(--color-surface);
+    box-shadow: var(--shadow-card);
+    overflow: hidden;
+    transition: box-shadow var(--transition-fast);
+}
+
+.profile-card .card-name {
+    font-size: 13px;
+    font-weight: var(--weight-semibold);
+    color: var(--color-text-primary);
+    margin-bottom: var(--space-1);
+}
+
+.profile-card .card-score-value {
+    font-size: 20px;
+    font-weight: var(--weight-bold);
+    margin-bottom: var(--space-1);
+}
+
+/* Score bar beneath title */
+.card-score-bar {
+    width: 100%;
+    height: 6px;
+    background: var(--color-border-light);
+    border-radius: var(--radius-pill);
+    overflow: hidden;
+    margin-bottom: var(--space-1);
+}
+
+.card-score-bar-fill {
+    height: 100%;
+    border-radius: var(--radius-pill);
+    transition: width var(--transition-normal);
+}
+
+/* Abnormal badge — positioned top-right */
+.card-badge-corner {
+    position: absolute;
+    top: var(--space-1);
+    right: var(--space-1);
+    padding: 2px var(--space-1);
+    border-radius: var(--radius-sm);
+    font-size: var(--font-xs);
+    font-weight: var(--weight-semibold);
+    color: var(--color-surface);
+}
+
+
+/* ----------------------------------------------------------
+   7. PROFILE DETAIL PAGE
+   ---------------------------------------------------------- */
+/* .profile-detail — no base styles needed; scoped via child selectors */
+
+.profile-heading {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    margin-bottom: var(--space-3);
+    flex-wrap: wrap;
+}
+
+.profile-heading h2 {
+    font-size: 20px;
+    font-weight: var(--weight-bold);
+    color: var(--color-text-primary);
+}
+
+.profile-heading .detail-score {
+    font-size: var(--font-body);
+    font-weight: var(--weight-semibold);
+    color: var(--color-text-secondary);
+}
+
+.profile-heading .detail-badge {
+    padding: 3px var(--space-2);
+    border-radius: var(--radius-pill);
+    font-size: var(--font-small);
+    font-weight: var(--weight-semibold);
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+    color: var(--color-surface);
+}
+
+/* --- Parameter Cards Grid --- */
+.param-cards-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--space-2);
+}
+
+.param-card {
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    padding: var(--space-2);
+    background: var(--color-surface);
+    box-shadow: var(--shadow-card);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-1);
+}
+
+.param-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+}
+
+.param-card-name {
+    font-size: 13px;
+    font-weight: var(--weight-semibold);
+    color: var(--color-text-primary);
+}
+
+.param-card-value-row {
+    display: flex;
+    align-items: baseline;
+    gap: 4px;
+}
+
+.param-card-value {
+    font-size: var(--font-subheading);
+    font-weight: var(--weight-bold);
+    color: var(--color-text-primary);
+}
+
+.param-card-unit {
+    font-size: var(--font-small);
+    font-weight: var(--weight-regular);
+    color: var(--color-text-muted);
+}
+
+/* --- Mini Range Slider --- */
+.range-slider {
+    width: 100%;
+    height: 6px;
+    background: var(--color-border);
+    border-radius: var(--radius-pill);
+    position: relative;
+    margin-top: 2px;
+}
+
+.range-slider-fill {
+    position: absolute;
+    top: 0;
+    height: 100%;
+    border-radius: var(--radius-pill);
+}
+
+.range-slider-dot {
+    position: absolute;
+    top: 50%;
+    width: 12px;
+    height: 12px;
+    border-radius: var(--radius-circle);
+    border: 2px solid var(--color-surface);
+    transform: translate(-50%, -50%);
+    box-shadow: 0 1px 3px var(--color-shadow);
+}
+
+.range-slider-bounds {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 2px;
+}
+
+.range-bound-label {
+    font-size: 10px;
+    color: var(--color-text-faint);
+}
+
+/* --- Status Pill --- */
+.status-pill {
+    display: inline-block;
+    padding: 2px var(--space-1);
+    border-radius: var(--radius-pill);
+    font-size: var(--font-xs);
+    font-weight: var(--weight-semibold);
+    color: var(--color-surface);
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+}
+
+/* --- Fallback Table (>20 params) --- */
+.param-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+}
+
+.param-table th {
+    text-align: left;
+    padding: var(--space-1) var(--space-1);
+    font-size: var(--font-xs);
+    font-weight: var(--weight-semibold);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--color-text-muted);
+    border-bottom: 2px solid var(--color-border);
+}
+
+.param-table td {
+    padding: 9px var(--space-1);
+    border-bottom: 1px solid var(--color-border-light);
+    color: var(--color-text-secondary);
+}
+
+.param-table tr:last-child td {
+    border-bottom: none;
+}
+
+
+/* ----------------------------------------------------------
+   8. SEMANTIC COLOR CLASSES
+   ---------------------------------------------------------- */
+
+/* Background fills */
+.bg-healthy {
+    background: var(--color-healthy);
+}
+
+.bg-monitor {
+    background: var(--color-monitor);
+}
+
+.bg-attention {
+    background: var(--color-attention);
+}
+
+.bg-stable {
+    background: var(--color-primary);
+}
+
+.bg-sev-monitor {
+    background: var(--color-monitor);
+}
+
+.bg-critical {
+    background: var(--color-attention);
+}
+
+.bg-normal {
+    background: var(--color-healthy);
+}
+
+.bg-low {
+    background: var(--color-monitor);
+}
+
+.bg-high {
+    background: var(--color-monitor);
+}
+
+.bg-status-critical {
+    background: var(--color-attention);
+}
+
+/* Text */
+.text-primary {
+    color: var(--color-primary);
+}
+
+.text-healthy {
+    color: var(--color-healthy);
+}
+
+.text-monitor {
+    color: var(--color-monitor);
+}
+
+.text-attention {
+    color: var(--color-attention);
+}
+
+
+/* ----------------------------------------------------------
+   9. PRINT / PDF OVERRIDES
+   Phase 6 — Production PDF Engine
+   ---------------------------------------------------------- */
+@media print {
+
+    /* ── Base ── */
+    body {
+        background: var(--color-surface);
+        -webkit-print-color-adjust: exact;
+        /* force Puppeteer to print backgrounds */
+        print-color-adjust: exact;
+    }
+
+    /* ── Page shell ── */
+    .report-page {
+        box-shadow: none;
+        margin: 0;
+        /* Each report page maps to one physical PDF page */
+        page-break-after: always;
+        break-after: page;
+        /* Remove overflow:hidden so nothing is clipped during PDF rasterization */
+        overflow: visible;
+    }
+
+    /* Footer must stay at the bottom of its containing page shell,
+     not flow to the next page. Keep position:absolute so Puppeteer
+     renders it inside the page div correctly. */
+    .page-footer {
+        position: absolute;
+        bottom: 0;
+    }
+
+    /* ── Cards — avoid splitting across page boundaries ── */
+    .profile-card {
+        break-inside: avoid;
+        box-shadow: none;
+    }
+
+    .param-card {
+        break-inside: avoid;
+        box-shadow: none;
+    }
+
+    /* ── Analytics strip — keep as one unit ── */
+    .analytics-strip {
+        break-inside: avoid;
+    }
+
+    /* ── Profile heading + its parameter block ── */
+    .profile-heading {
+        break-after: avoid;
+        /* keep heading glued to first card row */
+    }
+
+    /* ── Range slider — ensure overflow is visible so dot is not clipped ── */
+    .range-slider {
+        overflow: visible;
+    }
+
+    /* ── SVG rings — no transform clipping ── */
+    .score-ring-wrapper {
+        overflow: visible;
+    }
+
+    /* ── Grid layout — prevent orphaned single columns in print ── */
+    .profile-grid {
+        break-inside: avoid;
+    }
+
+    /* ── Suppress transitions (already rendered by Puppeteer) ── */
+    *,
+    *::before,
+    *::after {
+        transition: none !important;
+        animation: none !important;
+    }
+
+}
+
+/* --- Tenant Brand Overrides --- */
+:root {
+  --color-primary: #E53935;
+  --color-secondary: #1B5E20;
+  --color-healthy: #388E3C;
+}
+
+.bg-stable    { background: #E53935; }
+.text-primary { color: #E53935; }
+</style>
+</head>
+<body>
+
+<div class="report-page">
+  <div class="page-strip" style="background:#E53935"></div>
+
+  <header class="page-header">
+    <img class="logo" src="https://cdn.example.com/beta/logo.png" alt="Beta Health Labs logo" />
+    <span class="lab-name">Beta Health Labs</span>
+  </header>
+
+  <main class="page-content">
+    
+<section class="master-overview">
+  <h1 class="section-title">Master Health Overview</h1>
+
+  
+    <div class="score-ring-wrapper">
+      <svg class="score-ring-svg" width="160" height="160" viewBox="0 0 160 160">
+        <circle class="score-ring-track"
+                cx="80" cy="80" r="75" />
+        <circle class="score-ring-fill"
+                cx="80" cy="80" r="75"
+                stroke="var(--color-attention)"
+                stroke-dasharray="471.23889803846896"
+                stroke-dashoffset="42.41150082346218" />
+      </svg>
+      <div class="score-ring-value">
+        <div class="score-ring-number" style="color:var(--color-attention)">91</div>
+        <div class="score-ring-label">/ 100</div>
+      </div>
+    </div>
+  <br />
+  <span class="severity-label bg-critical">critical</span>
+
+  
+    <div class="analytics-strip">
+      <div class="analytics-item">
+        <div class="analytics-value text-primary">4</div>
+        <div class="analytics-label">Total Profiles</div>
+      </div>
+      <div class="analytics-item">
+        <div class="analytics-value" style="color:var(--color-monitor)">10</div>
+        <div class="analytics-label">Abnormal Parameters</div>
+      </div>
+      <div class="analytics-item">
+        <div class="analytics-value" style="color:var(--color-attention)">3</div>
+        <div class="analytics-label">Critical Flags</div>
+      </div>
+    </div>
+
+  <h3 class="section-title">Profile Summary</h3>
+
+  <div class="profile-grid">
+    
+    <div class="profile-card">
+      <span class="card-badge-corner bg-attention">4 abnormal</span>
+      <div class="card-name">Complete Blood Count</div>
+      <div class="card-score-value" style="color:var(--color-attention)">93</div>
+      <div class="card-score-bar">
+        <div class="card-score-bar-fill"
+             style="width:93%;background:var(--color-attention)"></div>
+      </div>
+    </div>
+
+    <div class="profile-card">
+      <span class="card-badge-corner bg-attention">3 abnormal</span>
+      <div class="card-name">Lipid Panel</div>
+      <div class="card-score-value" style="color:var(--color-attention)">87</div>
+      <div class="card-score-bar">
+        <div class="card-score-bar-fill"
+             style="width:87%;background:var(--color-attention)"></div>
+      </div>
+    </div>
+
+    <div class="profile-card">
+      <span class="card-badge-corner bg-attention">1 abnormal</span>
+      <div class="card-name">Thyroid Panel</div>
+      <div class="card-score-value" style="color:var(--color-monitor)">93</div>
+      <div class="card-score-bar">
+        <div class="card-score-bar-fill"
+             style="width:93%;background:var(--color-monitor)"></div>
+      </div>
+    </div>
+
+    <div class="profile-card">
+      <span class="card-badge-corner bg-attention">2 abnormal</span>
+      <div class="card-name">Liver Function Test</div>
+      <div class="card-score-value" style="color:var(--color-attention)">90</div>
+      <div class="card-score-bar">
+        <div class="card-score-bar-fill"
+             style="width:90%;background:var(--color-attention)"></div>
+      </div>
+    </div>
+  </div>
+</section>
+  </main>
+
+  <footer class="page-footer">
+    <span class="footer-brand">Beta Health Labs — Quality Diagnostics</span>
+    <span class="footer-page">Page 1 of 5</span>
+  </footer>
+</div>
+
+<div class="report-page">
+  <div class="page-strip" style="background:#E53935"></div>
+
+  <header class="page-header">
+    <img class="logo" src="https://cdn.example.com/beta/logo.png" alt="Beta Health Labs logo" />
+    <span class="lab-name">Beta Health Labs</span>
+  </header>
+
+  <main class="page-content">
+    
+<section class="profile-detail">
+  <div class="profile-heading">
+    <h2>Complete Blood Count</h2>
+    <span class="detail-score">Score: 93/100</span>
+    <span class="detail-badge bg-attention">attention</span>
+  </div>
+
+  <div class="param-cards-grid">
+          
+    <div class="param-card">
+      <div class="param-card-header">
+        <span class="param-card-name">Hemoglobin</span>
+        <span class="status-pill bg-low">low</span>
+      </div>
+      <div class="param-card-value-row">
+        <span class="param-card-value">11.2</span>
+        <span class="param-card-unit">g/dL</span>
+      </div>
+      
+    <div class="range-slider">
+      <div class="range-slider-fill"
+           style="left:11.53846153846153%;width:76.9230769230769%;background:var(--color-bg-light);opacity:0.5"></div>
+      <div class="range-slider-fill"
+           style="left:0;width:0%;background:var(--color-monitor)"></div>
+      <div class="range-slider-dot"
+           style="left:0%;background:var(--color-monitor)"></div>
+    </div>
+    <div class="range-slider-bounds">
+      <span class="range-bound-label">13.5</span>
+      <span class="range-bound-label">17.5</span>
+    </div>
+    </div>
+
+    <div class="param-card">
+      <div class="param-card-header">
+        <span class="param-card-name">WBC Count</span>
+        <span class="status-pill bg-normal">normal</span>
+      </div>
+      <div class="param-card-value-row">
+        <span class="param-card-value">9800</span>
+        <span class="param-card-unit">cells/µL</span>
+      </div>
+      
+    <div class="range-slider">
+      <div class="range-slider-fill"
+           style="left:11.538461538461538%;width:76.92307692307692%;background:var(--color-bg-light);opacity:0.5"></div>
+      <div class="range-slider-fill"
+           style="left:0;width:74.2603550295858%;background:var(--color-healthy)"></div>
+      <div class="range-slider-dot"
+           style="left:74.2603550295858%;background:var(--color-healthy)"></div>
+    </div>
+    <div class="range-slider-bounds">
+      <span class="range-bound-label">4500</span>
+      <span class="range-bound-label">11000</span>
+    </div>
+    </div>
+
+    <div class="param-card">
+      <div class="param-card-header">
+        <span class="param-card-name">Platelet Count</span>
+        <span class="status-pill bg-low">low</span>
+      </div>
+      <div class="param-card-value-row">
+        <span class="param-card-value">145000</span>
+        <span class="param-card-unit">/µL</span>
+      </div>
+      
+    <div class="range-slider">
+      <div class="range-slider-fill"
+           style="left:11.538461538461538%;width:76.92307692307692%;background:var(--color-bg-light);opacity:0.5"></div>
+      <div class="range-slider-fill"
+           style="left:0;width:10%;background:var(--color-monitor)"></div>
+      <div class="range-slider-dot"
+           style="left:10%;background:var(--color-monitor)"></div>
+    </div>
+    <div class="range-slider-bounds">
+      <span class="range-bound-label">150000</span>
+      <span class="range-bound-label">400000</span>
+    </div>
+    </div>
+
+    <div class="param-card">
+      <div class="param-card-header">
+        <span class="param-card-name">RBC Count</span>
+        <span class="status-pill bg-low">low</span>
+      </div>
+      <div class="param-card-value-row">
+        <span class="param-card-value">4.1</span>
+        <span class="param-card-unit">million/µL</span>
+      </div>
+      
+    <div class="range-slider">
+      <div class="range-slider-fill"
+           style="left:11.538461538461535%;width:76.92307692307693%;background:var(--color-bg-light);opacity:0.5"></div>
+      <div class="range-slider-fill"
+           style="left:0;width:0%;background:var(--color-monitor)"></div>
+      <div class="range-slider-dot"
+           style="left:0%;background:var(--color-monitor)"></div>
+    </div>
+    <div class="range-slider-bounds">
+      <span class="range-bound-label">4.5</span>
+      <span class="range-bound-label">5.9</span>
+    </div>
+    </div>
+
+    <div class="param-card">
+      <div class="param-card-header">
+        <span class="param-card-name">Hematocrit</span>
+        <span class="status-pill bg-low">low</span>
+      </div>
+      <div class="param-card-value-row">
+        <span class="param-card-value">36</span>
+        <span class="param-card-unit">%</span>
+      </div>
+      
+    <div class="range-slider">
+      <div class="range-slider-fill"
+           style="left:11.538461538461524%;width:76.92307692307696%;background:var(--color-bg-light);opacity:0.5"></div>
+      <div class="range-slider-fill"
+           style="left:0;width:0%;background:var(--color-monitor)"></div>
+      <div class="range-slider-dot"
+           style="left:0%;background:var(--color-monitor)"></div>
+    </div>
+    <div class="range-slider-bounds">
+      <span class="range-bound-label">41</span>
+      <span class="range-bound-label">53</span>
+    </div>
+    </div>
+
+    <div class="param-card">
+      <div class="param-card-header">
+        <span class="param-card-name">MCV</span>
+        <span class="status-pill bg-normal">normal</span>
+      </div>
+      <div class="param-card-value-row">
+        <span class="param-card-value">88</span>
+        <span class="param-card-unit">fL</span>
+      </div>
+      
+    <div class="range-slider">
+      <div class="range-slider-fill"
+           style="left:11.538461538461538%;width:76.92307692307692%;background:var(--color-bg-light);opacity:0.5"></div>
+      <div class="range-slider-fill"
+           style="left:0;width:42.30769230769231%;background:var(--color-healthy)"></div>
+      <div class="range-slider-dot"
+           style="left:42.30769230769231%;background:var(--color-healthy)"></div>
+    </div>
+    <div class="range-slider-bounds">
+      <span class="range-bound-label">80</span>
+      <span class="range-bound-label">100</span>
+    </div>
+    </div>
+        </div>
+</section>
+  </main>
+
+  <footer class="page-footer">
+    <span class="footer-brand">Beta Health Labs — Quality Diagnostics</span>
+    <span class="footer-page">Page 2 of 5</span>
+  </footer>
+</div>
+
+<div class="report-page">
+  <div class="page-strip" style="background:#E53935"></div>
+
+  <header class="page-header">
+    <img class="logo" src="https://cdn.example.com/beta/logo.png" alt="Beta Health Labs logo" />
+    <span class="lab-name">Beta Health Labs</span>
+  </header>
+
+  <main class="page-content">
+    
+<section class="profile-detail">
+  <div class="profile-heading">
+    <h2>Lipid Panel</h2>
+    <span class="detail-score">Score: 87/100</span>
+    <span class="detail-badge bg-attention">attention</span>
+  </div>
+
+  <div class="param-cards-grid">
+          
+    <div class="param-card">
+      <div class="param-card-header">
+        <span class="param-card-name">Total Cholesterol</span>
+        <span class="status-pill bg-high">high</span>
+      </div>
+      <div class="param-card-value-row">
+        <span class="param-card-value">210</span>
+        <span class="param-card-unit">mg/dL</span>
+      </div>
+      
+    <div class="range-slider">
+      <div class="range-slider-fill"
+           style="left:11.538461538461538%;width:76.92307692307692%;background:var(--color-bg-light);opacity:0.5"></div>
+      <div class="range-slider-fill"
+           style="left:0;width:92.3076923076923%;background:var(--color-monitor)"></div>
+      <div class="range-slider-dot"
+           style="left:92.3076923076923%;background:var(--color-monitor)"></div>
+    </div>
+    <div class="range-slider-bounds">
+      <span class="range-bound-label">0</span>
+      <span class="range-bound-label">200</span>
+    </div>
+    </div>
+
+    <div class="param-card">
+      <div class="param-card-header">
+        <span class="param-card-name">LDL Cholesterol</span>
+        <span class="status-pill bg-high">high</span>
+      </div>
+      <div class="param-card-value-row">
+        <span class="param-card-value">138</span>
+        <span class="param-card-unit">mg/dL</span>
+      </div>
+      
+    <div class="range-slider">
+      <div class="range-slider-fill"
+           style="left:11.538461538461538%;width:76.92307692307692%;background:var(--color-bg-light);opacity:0.5"></div>
+      <div class="range-slider-fill"
+           style="left:0;width:100%;background:var(--color-monitor)"></div>
+      <div class="range-slider-dot"
+           style="left:100%;background:var(--color-monitor)"></div>
+    </div>
+    <div class="range-slider-bounds">
+      <span class="range-bound-label">0</span>
+      <span class="range-bound-label">100</span>
+    </div>
+    </div>
+
+    <div class="param-card">
+      <div class="param-card-header">
+        <span class="param-card-name">HDL Cholesterol</span>
+        <span class="status-pill bg-normal">normal</span>
+      </div>
+      <div class="param-card-value-row">
+        <span class="param-card-value">48</span>
+        <span class="param-card-unit">mg/dL</span>
+      </div>
+      
+    <div class="range-slider">
+      <div class="range-slider-fill"
+           style="left:11.538461538461538%;width:76.92307692307692%;background:var(--color-bg-light);opacity:0.5"></div>
+      <div class="range-slider-fill"
+           style="left:0;width:42.30769230769231%;background:var(--color-healthy)"></div>
+      <div class="range-slider-dot"
+           style="left:42.30769230769231%;background:var(--color-healthy)"></div>
+    </div>
+    <div class="range-slider-bounds">
+      <span class="range-bound-label">40</span>
+      <span class="range-bound-label">60</span>
+    </div>
+    </div>
+
+    <div class="param-card">
+      <div class="param-card-header">
+        <span class="param-card-name">Triglycerides</span>
+        <span class="status-pill bg-high">high</span>
+      </div>
+      <div class="param-card-value-row">
+        <span class="param-card-value">165</span>
+        <span class="param-card-unit">mg/dL</span>
+      </div>
+      
+    <div class="range-slider">
+      <div class="range-slider-fill"
+           style="left:11.538461538461538%;width:76.92307692307692%;background:var(--color-bg-light);opacity:0.5"></div>
+      <div class="range-slider-fill"
+           style="left:0;width:96.15384615384616%;background:var(--color-monitor)"></div>
+      <div class="range-slider-dot"
+           style="left:96.15384615384616%;background:var(--color-monitor)"></div>
+    </div>
+    <div class="range-slider-bounds">
+      <span class="range-bound-label">0</span>
+      <span class="range-bound-label">150</span>
+    </div>
+    </div>
+        </div>
+</section>
+  </main>
+
+  <footer class="page-footer">
+    <span class="footer-brand">Beta Health Labs — Quality Diagnostics</span>
+    <span class="footer-page">Page 3 of 5</span>
+  </footer>
+</div>
+
+<div class="report-page">
+  <div class="page-strip" style="background:#E53935"></div>
+
+  <header class="page-header">
+    <img class="logo" src="https://cdn.example.com/beta/logo.png" alt="Beta Health Labs logo" />
+    <span class="lab-name">Beta Health Labs</span>
+  </header>
+
+  <main class="page-content">
+    
+<section class="profile-detail">
+  <div class="profile-heading">
+    <h2>Thyroid Panel</h2>
+    <span class="detail-score">Score: 93/100</span>
+    <span class="detail-badge bg-monitor">monitor</span>
+  </div>
+
+  <div class="param-cards-grid">
+          
+    <div class="param-card">
+      <div class="param-card-header">
+        <span class="param-card-name">TSH</span>
+        <span class="status-pill bg-high">high</span>
+      </div>
+      <div class="param-card-value-row">
+        <span class="param-card-value">4.8</span>
+        <span class="param-card-unit">mIU/L</span>
+      </div>
+      
+    <div class="range-slider">
+      <div class="range-slider-fill"
+           style="left:11.53846153846154%;width:76.9230769230769%;background:var(--color-bg-light);opacity:0.5"></div>
+      <div class="range-slider-fill"
+           style="left:0;width:100%;background:var(--color-monitor)"></div>
+      <div class="range-slider-dot"
+           style="left:100%;background:var(--color-monitor)"></div>
+    </div>
+    <div class="range-slider-bounds">
+      <span class="range-bound-label">0.4</span>
+      <span class="range-bound-label">4</span>
+    </div>
+    </div>
+
+    <div class="param-card">
+      <div class="param-card-header">
+        <span class="param-card-name">Free T3</span>
+        <span class="status-pill bg-normal">normal</span>
+      </div>
+      <div class="param-card-value-row">
+        <span class="param-card-value">3.1</span>
+        <span class="param-card-unit">pg/mL</span>
+      </div>
+      
+    <div class="range-slider">
+      <div class="range-slider-fill"
+           style="left:11.538461538461542%;width:76.9230769230769%;background:var(--color-bg-light);opacity:0.5"></div>
+      <div class="range-slider-fill"
+           style="left:0;width:43.927125506072876%;background:var(--color-healthy)"></div>
+      <div class="range-slider-dot"
+           style="left:43.927125506072876%;background:var(--color-healthy)"></div>
+    </div>
+    <div class="range-slider-bounds">
+      <span class="range-bound-label">2.3</span>
+      <span class="range-bound-label">4.2</span>
+    </div>
+    </div>
+
+    <div class="param-card">
+      <div class="param-card-header">
+        <span class="param-card-name">Free T4</span>
+        <span class="status-pill bg-normal">normal</span>
+      </div>
+      <div class="param-card-value-row">
+        <span class="param-card-value">1.1</span>
+        <span class="param-card-unit">ng/dL</span>
+      </div>
+      
+    <div class="range-slider">
+      <div class="range-slider-fill"
+           style="left:11.538461538461542%;width:76.92307692307692%;background:var(--color-bg-light);opacity:0.5"></div>
+      <div class="range-slider-fill"
+           style="left:0;width:34.61538461538463%;background:var(--color-healthy)"></div>
+      <div class="range-slider-dot"
+           style="left:34.61538461538463%;background:var(--color-healthy)"></div>
+    </div>
+    <div class="range-slider-bounds">
+      <span class="range-bound-label">0.8</span>
+      <span class="range-bound-label">1.8</span>
+    </div>
+    </div>
+        </div>
+</section>
+  </main>
+
+  <footer class="page-footer">
+    <span class="footer-brand">Beta Health Labs — Quality Diagnostics</span>
+    <span class="footer-page">Page 4 of 5</span>
+  </footer>
+</div>
+
+<div class="report-page">
+  <div class="page-strip" style="background:#E53935"></div>
+
+  <header class="page-header">
+    <img class="logo" src="https://cdn.example.com/beta/logo.png" alt="Beta Health Labs logo" />
+    <span class="lab-name">Beta Health Labs</span>
+  </header>
+
+  <main class="page-content">
+    
+<section class="profile-detail">
+  <div class="profile-heading">
+    <h2>Liver Function Test</h2>
+    <span class="detail-score">Score: 90/100</span>
+    <span class="detail-badge bg-attention">attention</span>
+  </div>
+
+  <div class="param-cards-grid">
+          
+    <div class="param-card">
+      <div class="param-card-header">
+        <span class="param-card-name">SGOT (AST)</span>
+        <span class="status-pill bg-high">high</span>
+      </div>
+      <div class="param-card-value-row">
+        <span class="param-card-value">52</span>
+        <span class="param-card-unit">U/L</span>
+      </div>
+      
+    <div class="range-slider">
+      <div class="range-slider-fill"
+           style="left:11.538461538461538%;width:76.92307692307692%;background:var(--color-bg-light);opacity:0.5"></div>
+      <div class="range-slider-fill"
+           style="left:0;width:100%;background:var(--color-monitor)"></div>
+      <div class="range-slider-dot"
+           style="left:100%;background:var(--color-monitor)"></div>
+    </div>
+    <div class="range-slider-bounds">
+      <span class="range-bound-label">5</span>
+      <span class="range-bound-label">40</span>
+    </div>
+    </div>
+
+    <div class="param-card">
+      <div class="param-card-header">
+        <span class="param-card-name">SGPT (ALT)</span>
+        <span class="status-pill bg-high">high</span>
+      </div>
+      <div class="param-card-value-row">
+        <span class="param-card-value">68</span>
+        <span class="param-card-unit">U/L</span>
+      </div>
+      
+    <div class="range-slider">
+      <div class="range-slider-fill"
+           style="left:11.538461538461538%;width:76.92307692307692%;background:var(--color-bg-light);opacity:0.5"></div>
+      <div class="range-slider-fill"
+           style="left:0;width:100%;background:var(--color-monitor)"></div>
+      <div class="range-slider-dot"
+           style="left:100%;background:var(--color-monitor)"></div>
+    </div>
+    <div class="range-slider-bounds">
+      <span class="range-bound-label">7</span>
+      <span class="range-bound-label">56</span>
+    </div>
+    </div>
+
+    <div class="param-card">
+      <div class="param-card-header">
+        <span class="param-card-name">Bilirubin Total</span>
+        <span class="status-pill bg-normal">normal</span>
+      </div>
+      <div class="param-card-value-row">
+        <span class="param-card-value">0.9</span>
+        <span class="param-card-unit">mg/dL</span>
+      </div>
+      
+    <div class="range-slider">
+      <div class="range-slider-fill"
+           style="left:11.538461538461538%;width:76.92307692307692%;background:var(--color-bg-light);opacity:0.5"></div>
+      <div class="range-slider-fill"
+           style="left:0;width:67.48251748251748%;background:var(--color-healthy)"></div>
+      <div class="range-slider-dot"
+           style="left:67.48251748251748%;background:var(--color-healthy)"></div>
+    </div>
+    <div class="range-slider-bounds">
+      <span class="range-bound-label">0.1</span>
+      <span class="range-bound-label">1.2</span>
+    </div>
+    </div>
+
+    <div class="param-card">
+      <div class="param-card-header">
+        <span class="param-card-name">Albumin</span>
+        <span class="status-pill bg-normal">normal</span>
+      </div>
+      <div class="param-card-value-row">
+        <span class="param-card-value">4.1</span>
+        <span class="param-card-unit">g/dL</span>
+      </div>
+      
+    <div class="range-slider">
+      <div class="range-slider-fill"
+           style="left:11.538461538461545%;width:76.92307692307693%;background:var(--color-bg-light);opacity:0.5"></div>
+      <div class="range-slider-fill"
+           style="left:0;width:42.3076923076923%;background:var(--color-healthy)"></div>
+      <div class="range-slider-dot"
+           style="left:42.3076923076923%;background:var(--color-healthy)"></div>
+    </div>
+    <div class="range-slider-bounds">
+      <span class="range-bound-label">3.5</span>
+      <span class="range-bound-label">5</span>
+    </div>
+    </div>
+
+    <div class="param-card">
+      <div class="param-card-header">
+        <span class="param-card-name">Alkaline Phosphatase</span>
+        <span class="status-pill bg-normal">normal</span>
+      </div>
+      <div class="param-card-value-row">
+        <span class="param-card-value">88</span>
+        <span class="param-card-unit">U/L</span>
+      </div>
+      
+    <div class="range-slider">
+      <div class="range-slider-fill"
+           style="left:11.53846153846154%;width:76.92307692307693%;background:var(--color-bg-light);opacity:0.5"></div>
+      <div class="range-slider-fill"
+           style="left:0;width:44.398805078416736%;background:var(--color-healthy)"></div>
+      <div class="range-slider-dot"
+           style="left:44.398805078416736%;background:var(--color-healthy)"></div>
+    </div>
+    <div class="range-slider-bounds">
+      <span class="range-bound-label">44</span>
+      <span class="range-bound-label">147</span>
+    </div>
+    </div>
+        </div>
+</section>
+  </main>
+
+  <footer class="page-footer">
+    <span class="footer-brand">Beta Health Labs — Quality Diagnostics</span>
+    <span class="footer-page">Page 5 of 5</span>
+  </footer>
+</div>
+</body>
+</html>
