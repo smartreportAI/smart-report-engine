@@ -176,6 +176,7 @@ export class BrowserPool {
         const browser = await puppeteer.launch({
             headless: true,
             args: LAUNCH_ARGS,
+            ...(process.env.PUPPETEER_EXECUTABLE_PATH && { executablePath: process.env.PUPPETEER_EXECUTABLE_PATH })
         });
 
         const entry: PoolEntry = {
