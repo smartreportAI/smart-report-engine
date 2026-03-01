@@ -1,4 +1,5 @@
 import type { ReportStrategy } from '../../rendering/strategies/report-strategy.types';
+import type { TenantBrandingConfig } from '../../modules/tenants/tenant.types';
 
 /**
  * Data envelope passed to every page's generate() method.
@@ -15,6 +16,8 @@ export interface PageRenderContext<T = unknown> {
   data: T;
   /** Strategy flags controlling which premium features are enabled. */
   strategy: ReportStrategy;
+  /** Direct access to the tenant's exact brand config. */
+  branding: TenantBrandingConfig;
 }
 
 /**

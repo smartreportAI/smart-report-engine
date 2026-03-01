@@ -1,0 +1,14 @@
+MSH|^~\&|LabSystem|CityHospital|OrderSystem|CityHospital|20260301100000||ORU^R01|MSG-2026-001|P|2.5
+PID|1||PAT-2026-HL7^^^CityHospital||Sharma^Rahul||19840615|M
+OBR|1||ORD-CBC-001|CBC^Complete Blood Count
+OBX|1|NM|718-7^Hemoglobin||11.2|g/dL|13.5-17.5|L|||F
+OBX|2|NM|6690-2^WBC Count||9800|cells/uL|4500-11000|N|||F
+OBX|3|NM|777-3^Platelet Count||145000|/uL|150000-400000|L|||F
+OBX|4|NM|789-8^RBC Count||4.1|million/uL|4.5-5.9|L|||F
+OBX|5|NM|4544-3^Hematocrit||36|%|41-53|L|||F
+OBX|6|NM|787-2^MCV||88|fL|80-100|N|||F
+OBR|2||ORD-LIP-001|LIPID^Lipid Panel
+OBX|1|NM|2093-3^Total Cholesterol||210|mg/dL|0-200|H|||F
+OBX|2|NM|2089-1^LDL Cholesterol||138|mg/dL|0-100|H|||F
+OBX|3|NM|2085-9^HDL Cholesterol||48|mg/dL|40-60|N|||F
+OBX|4|NM|2571-8^Triglycerides||165|mg/dL|0-150|H|||F

@@ -1,5 +1,9 @@
-import { describe, it, expect } from 'vitest';
-import { generatePdfFromHtml } from '../../rendering/pdf/pdf.service';
+import { describe, it, expect, afterAll } from 'vitest';
+import { generatePdfFromHtml, shutdownPdfService } from '../../rendering/pdf/pdf.service';
+
+afterAll(async () => {
+    await shutdownPdfService();
+});
 
 describe('generatePdfFromHtml', () => {
     it('returns a valid PDF buffer from minimal HTML', async () => {

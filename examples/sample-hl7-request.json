@@ -1,0 +1,5 @@
+{
+    "tenantId": "tenant-beta",
+    "output": "html",
+    "hl7Message": "MSH|^~\\&|LabSystem|CityHospital|OrderSystem|CityHospital|20260301100000||ORU^R01|MSG-2026-001|P|2.5\rPID|1||PAT-2026-HL7^^^CityHospital||Sharma^Rahul||19840615|M\rOBR|1||ORD-CBC-001|CBC^Complete Blood Count\rOBX|1|NM|718-7^Hemoglobin||11.2|g/dL|13.5-17.5|L|||F\rOBX|2|NM|6690-2^WBC Count||9800|cells/uL|4500-11000|N|||F\rOBX|3|NM|777-3^Platelet Count||145000|/uL|150000-400000|L|||F\rOBR|2||ORD-LIP-001|LIPID^Lipid Panel\rOBX|1|NM|2093-3^Total Cholesterol||210|mg/dL|0-200|H|||F\rOBX|2|NM|2089-1^LDL Cholesterol||138|mg/dL|0-100|H|||F\rOBX|3|NM|2085-9^HDL Cholesterol||48|mg/dL|40-60|N|||F"
+}

@@ -1,0 +1,166 @@
+{
+    "tenantId": "tenant-alpha",
+    "output": "pdf",
+    "reportData": {
+        "patientId": "PAT-ALPHA-2024",
+        "age": 42,
+        "gender": "male",
+        "profiles": [
+            {
+                "profileName": "Lipid Profile",
+                "parameters": [
+                    {
+                        "testName": "Total Cholesterol",
+                        "value": 215,
+                        "unit": "mg/dL",
+                        "referenceRange": {
+                            "min": 0,
+                            "max": 200
+                        }
+                    },
+                    {
+                        "testName": "LDL Cholesterol",
+                        "value": 148,
+                        "unit": "mg/dL",
+                        "referenceRange": {
+                            "min": 0,
+                            "max": 130
+                        }
+                    },
+                    {
+                        "testName": "HDL Cholesterol",
+                        "value": 38,
+                        "unit": "mg/dL",
+                        "referenceRange": {
+                            "min": 40,
+                            "max": 60
+                        }
+                    },
+                    {
+                        "testName": "Triglycerides",
+                        "value": 182,
+                        "unit": "mg/dL",
+                        "referenceRange": {
+                            "min": 0,
+                            "max": 150
+                        }
+                    },
+                    {
+                        "testName": "VLDL",
+                        "value": 36,
+                        "unit": "mg/dL",
+                        "referenceRange": {
+                            "min": 5,
+                            "max": 40
+                        }
+                    }
+                ]
+            },
+            {
+                "profileName": "Complete Blood Count",
+                "parameters": [
+                    {
+                        "testName": "Haemoglobin",
+                        "value": 13.2,
+                        "unit": "g/dL",
+                        "referenceRange": {
+                            "min": 13.5,
+                            "max": 17.5
+                        }
+                    },
+                    {
+                        "testName": "RBC Count",
+                        "value": 4.8,
+                        "unit": "million/µL",
+                        "referenceRange": {
+                            "min": 4.5,
+                            "max": 5.9
+                        }
+                    },
+                    {
+                        "testName": "WBC Count",
+                        "value": 7200,
+                        "unit": "/µL",
+                        "referenceRange": {
+                            "min": 4000,
+                            "max": 11000
+                        }
+                    },
+                    {
+                        "testName": "Platelets",
+                        "value": 245000,
+                        "unit": "/µL",
+                        "referenceRange": {
+                            "min": 150000,
+                            "max": 400000
+                        }
+                    },
+                    {
+                        "testName": "Hematocrit",
+                        "value": 39.5,
+                        "unit": "%",
+                        "referenceRange": {
+                            "min": 41,
+                            "max": 53
+                        }
+                    }
+                ]
+            },
+            {
+                "profileName": "Thyroid Function",
+                "parameters": [
+                    {
+                        "testName": "TSH",
+                        "value": 4.8,
+                        "unit": "µIU/mL",
+                        "referenceRange": {
+                            "min": 0.4,
+                            "max": 4.0
+                        }
+                    },
+                    {
+                        "testName": "Free T3",
+                        "value": 3.1,
+                        "unit": "pg/mL",
+                        "referenceRange": {
+                            "min": 2.3,
+                            "max": 4.2
+                        }
+                    },
+                    {
+                        "testName": "Free T4",
+                        "value": 0.92,
+                        "unit": "ng/dL",
+                        "referenceRange": {
+                            "min": 0.8,
+                            "max": 1.8
+                        }
+                    }
+                ]
+            },
+            {
+                "profileName": "Blood Sugar",
+                "parameters": [
+                    {
+                        "testName": "Fasting Blood Glucose",
+                        "value": 108,
+                        "unit": "mg/dL",
+                        "referenceRange": {
+                            "min": 70,
+                            "max": 100
+                        }
+                    },
+                    {
+                        "testName": "HbA1c",
+                        "value": 5.9,
+                        "unit": "%",
+                        "referenceRange": {
+                            "min": 4.0,
+                            "max": 5.7
+                        }
+                    }
+                ]
+            }
+        ]
+    }
+}

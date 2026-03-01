@@ -1,0 +1,146 @@
+/**
+ * InDepth — Back Page
+ *
+ * The final page of the report:
+ *   - Thank-you / closing message
+ *   - Lab contact details
+ *   - QR code placeholder (SVG)
+ *   - Legal disclaimer
+ *   - "Powered by" badge (strategy-gated)
+ *   - Full-bleed branded footer strip
+ *
+ * Receives: NormalizedReport (for tenant branding access via strategy)
+ */
+
+import type { ReportPage, PageRenderContext } from '../../core/page-registry/page.types';
+import type { NormalizedReport } from '../../domain/models/report.model';
+import type { TenantBrandingConfig } from '../../modules/tenants/tenant.types';
+
+/* ------------------------------------------------------------------ */
+
+/** Placeholder QR code SVG (replace with real QR generation if needed) */
+function renderQrPlaceholder(primaryColor: string): string {
+  return `
+<svg class="back-qr" width="90" height="90" viewBox="0 0 90 90"
+     xmlns="http://www.w3.org/2000/svg" aria-label="QR Code placeholder">
+  <!-- Outer border -->
+  <rect x="1" y="1" width="88" height="88" rx="6" fill="none"
+        stroke="${primaryColor}" stroke-width="2"/>
+  <!-- Top-left finder -->
+  <rect x="8"  y="8"  width="24" height="24" rx="3" fill="${primaryColor}"/>
+  <rect x="13" y="13" width="14" height="14" rx="1" fill="white"/>
+  <rect x="17" y="17" width="6"  height="6"  rx="1" fill="${primaryColor}"/>
+  <!-- Top-right finder -->
+  <rect x="58" y="8"  width="24" height="24" rx="3" fill="${primaryColor}"/>
+  <rect x="63" y="13" width="14" height="14" rx="1" fill="white"/>
+  <rect x="67" y="17" width="6"  height="6"  rx="1" fill="${primaryColor}"/>
+  <!-- Bottom-left finder -->
+  <rect x="8"  y="58" width="24" height="24" rx="3" fill="${primaryColor}"/>
+  <rect x="13" y="63" width="14" height="14" rx="1" fill="white"/>
+  <rect x="17" y="67" width="6"  height="6"  rx="1" fill="${primaryColor}"/>
+  <!-- Data dots (decorative) -->
+  <rect x="40" y="8"  width="5" height="5" rx="1" fill="${primaryColor}"/>
+  <rect x="48" y="8"  width="5" height="5" rx="1" fill="${primaryColor}"/>
+  <rect x="40" y="16" width="5" height="5" rx="1" fill="${primaryColor}"/>
+  <rect x="40" y="40" width="5" height="5" rx="1" fill="${primaryColor}"/>
+  <rect x="48" y="48" width="5" height="5" rx="1" fill="${primaryColor}"/>
+  <rect x="56" y="40" width="5" height="5" rx="1" fill="${primaryColor}"/>
+  <rect x="56" y="56" width="5" height="5" rx="1" fill="${primaryColor}"/>
+  <rect x="40" y="56" width="5" height="5" rx="1" fill="${primaryColor}"/>
+</svg>`;
+}
+
+function renderContactBlock(branding: TenantBrandingConfig): string {
+  const lines: string[] = [];
+  if (branding.contactPhone) lines.push(`<div class="back-contact__line">☎ ${branding.contactPhone}</div>`);
+  if (branding.contactEmail) lines.push(`<div class="back-contact__line">✉ ${branding.contactEmail}</div>`);
+  if (lines.length === 0) return '';
+
+  return `
+<div class="back-contact">
+  <div class="back-contact__heading">Contact Us</div>
+  ${lines.join('\n')}
+</div>`;
+}
+
+/* ------------------------------------------------------------------ */
+
+export const inDepthBackPage: ReportPage = {
+  name: 'indepth-back',
+
+  generate(ctx: PageRenderContext): string {
+    // For the back page we abuse ctx.strategy as branding (the builder
+    // passes strategy; we pull primaryColor from the CSS variable fallback)
+    const report = ctx.data as NormalizedReport;
+    const strategy = ctx.strategy;
+    void report;
+
+    // Branding is injected via CSS variables — we use a sentinel value
+    // for the QR and accents so it respects the tenant's primaryColor.
+    const primaryColor = 'var(--color-primary)';
+    const qr = renderQrPlaceholder('#1565C0'); // static fallback colour
+
+    const poweredBy = strategy.allowRecommendations
+      ? `<div class="back-powered-by">Powered by <strong>Smart Health Engine</strong></div>`
+      : '';
+
+    return `
+<style>
+.back-wrapper {
+  /* Full-bleed back page — no renderLayout wrapper means no header/footer */
+  width: 210mm;
+  height: 297mm;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  background: white;
+  box-sizing: border-box;
+  padding: 12mm 0 0 0; /* Replicate the native top margin space */
+}
+</style>
+<div class="back-wrapper">
+  <section class="indepth-back" style="flex: 1;">
+    <!-- Hero closing message -->
+    <div class="back-hero" style="border-top:6px solid ${primaryColor}">
+      <div class="back-hero__headline">Thank You for Choosing Us</div>
+    <div class="back-hero__sub">
+      Your health is our priority. If you have any questions about these results,
+      please contact your physician or our support team.
+    </div>
+  </div>
+
+  <!-- Middle row: QR + contact + disclaimer -->
+  <div class="back-mid-row">
+    <div class="back-qr-col">
+      ${qr}
+      <div class="back-qr-label">Scan to verify report</div>
+    </div>
+
+    <div class="back-info-col">
+      <div class="back-disclaimer">
+        <strong>Disclaimer:</strong> This report is generated by Smart Health Engine
+        and is intended as a summary of laboratory findings. Results must be
+        interpreted by a qualified healthcare provider in the context of the
+        patient's clinical history. This report does not constitute medical advice,
+        diagnosis, or treatment recommendations.
+      </div>
+    </div>
+  </div>
+
+  <!-- Contact block -->
+  <div class="back-contact-row">
+    <!-- Placeholder: replace with real contact from tenant config -->
+    <div class="back-contact">
+      <div class="back-contact__heading">Contact Us</div>
+      <div class="back-contact__line">For queries about this report, please reach out to the issuing laboratory.</div>
+    </div>
+  </div>
+
+  ${poweredBy}
+
+  <!-- Full-bleed bottom strip -->
+  <div class="back-bottom-strip" style="background:${primaryColor}"></div>
+  </section>
+</div>`;
+  },
+};

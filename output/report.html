@@ -103,7 +103,7 @@ body {
     position: relative;
     width: 210mm;
     min-height: 297mm;
-    margin: var(--space-3) auto;
+    margin: 0 auto;
     background: var(--color-surface);
     box-shadow: var(--shadow-page);
     padding: 0;
@@ -120,7 +120,9 @@ body {
     display: flex;
     align-items: center;
     gap: var(--space-2);
-    padding: var(--space-3) var(--space-4) var(--space-2);
+    padding: var(--space-3) 0 var(--space-2);
+    margin-bottom: var(--header-margin, 0px);
+    height: var(--header-height, auto);
     border-bottom: 1px solid var(--color-border);
 }
 
@@ -137,21 +139,24 @@ body {
 }
 
 .page-content {
-    padding: var(--space-4) var(--space-4);
+    /* Only the content gets horizontal padding; header/footer are full width */
+    padding: var(--space-3) 20px;
 }
 
 .page-footer {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    right: 0;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: var(--space-2) var(--space-4);
+    padding: var(--space-2) 0;
+    margin-top: var(--footer-margin, 0px);
+    height: var(--footer-height, auto);
     font-size: var(--font-xs);
     color: var(--color-text-faint);
     border-top: 1px solid var(--color-border);
+    position: absolute;
+    bottom: 0;
+    left: 20px;
+    right: 20px;
 }
 
 
@@ -584,31 +589,45 @@ body {
    ---------------------------------------------------------- */
 @media print {
 
+    /* Define pure physical dimensions to prevent Puppeteer scaling issues */
+    @page {
+        size: A4 portrait;
+        /* Let Puppeteer handle margins dynamically via pdf.service.ts */
+    }
+
     /* ── Base ── */
     body {
         background: var(--color-surface);
         -webkit-print-color-adjust: exact;
         /* force Puppeteer to print backgrounds */
         print-color-adjust: exact;
+        margin: 0;
+        padding: 0;
+        width: 100%;
     }
 
     /* ── Page shell ── */
     .report-page {
         box-shadow: none;
         margin: 0;
+        min-height: auto !important;
+        /* CRITICAL: Prevent blank pages spanning! */
+        height: auto !important;
+        width: 100% !important;
+        /* CRITICAL: Prevent half-width rendering! */
         /* Each report page maps to one physical PDF page */
         page-break-after: always;
         break-after: page;
         /* Remove overflow:hidden so nothing is clipped during PDF rasterization */
         overflow: visible;
+        position: static;
     }
 
-    /* Footer must stay at the bottom of its containing page shell,
-     not flow to the next page. Keep position:absolute so Puppeteer
-     renders it inside the page div correctly. */
-    .page-footer {
-        position: absolute;
-        bottom: 0;
+    /* Hide the HTML fallback headers in print mode so Puppeteer native headers take over */
+    .page-header,
+    .page-footer,
+    .page-strip {
+        display: none !important;
     }
 
     /* ── Cards — avoid splitting across page boundaries ── */
@@ -658,6 +677,818 @@ body {
 
 }
 
+
+/* =============================================================
+   10. SHARED COMPONENTS
+   ============================================================= */
+
+/* ── Patient Header ─────────────────────────────────────────── */
+.patient-header {
+    display: flex;
+    align-items: stretch;
+    gap: 0;
+    border: 1px solid var(--color-border);
+    border-left: 4px solid var(--color-primary);
+    border-radius: var(--radius-md);
+    background: var(--color-bg-light);
+    overflow: hidden;
+    margin: var(--space-2) 0;
+}
+
+.ph-cell {
+    flex: 1;
+    padding: var(--space-1) var(--space-2);
+    text-align: center;
+}
+
+.ph-cell__label {
+    font-size: var(--font-xs);
+    font-weight: var(--weight-semibold);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--color-text-muted);
+    margin-bottom: 2px;
+}
+
+.ph-cell__value {
+    font-size: var(--font-body);
+    font-weight: var(--weight-semibold);
+    color: var(--color-text-primary);
+    text-transform: capitalize;
+}
+
+.ph-divider {
+    width: 1px;
+    background: var(--color-border);
+    align-self: stretch;
+}
+
+/* ── Speedometer / Gauge ─────────────────────────────────────── */
+.speedometer {
+    display: inline-block;
+    text-align: center;
+}
+
+.speedometer__value {
+    font-size: 28px;
+    font-weight: var(--weight-bold);
+    line-height: 1;
+    margin-top: -4px;
+}
+
+.speedometer__label {
+    font-size: var(--font-xs);
+    font-weight: var(--weight-semibold);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--color-text-muted);
+    margin-top: 2px;
+}
+
+
+/* =============================================================
+   11. INDEPTH — COVER PAGE
+   ============================================================= */
+
+.indepth-cover {
+    display: flex;
+    flex-direction: column;
+    min-height: 100%;
+}
+
+/* Full-bleed hero */
+.cover-hero {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: var(--space-6) var(--space-4) var(--space-5);
+    text-align: center;
+}
+
+.cover-hero__logo {
+    height: 64px;
+    width: auto;
+    object-fit: contain;
+    margin-bottom: var(--space-2);
+    filter: brightness(0) invert(1);
+}
+
+.cover-hero__lab-name {
+    font-size: 22px;
+    font-weight: var(--weight-bold);
+    color: #ffffff;
+    letter-spacing: 0.5px;
+}
+
+.cover-hero__divider {
+    width: 48px;
+    height: 2px;
+    background: rgba(255, 255, 255, 0.5);
+    margin: var(--space-2) auto;
+    border-radius: var(--radius-pill);
+}
+
+.cover-hero__title {
+    font-size: 28px;
+    font-weight: var(--weight-bold);
+    color: #ffffff;
+    margin-bottom: 6px;
+}
+
+.cover-hero__subtitle {
+    font-size: 14px;
+    font-weight: var(--weight-medium);
+    color: rgba(255, 255, 255, 0.8);
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+}
+
+/* Body section below hero */
+.cover-body {
+    padding: var(--space-4) var(--space-4) var(--space-3);
+    flex: 1;
+}
+
+.cover-score-row {
+    display: flex;
+    align-items: center;
+    gap: var(--space-4);
+    margin-bottom: var(--space-3);
+}
+
+.cover-score-block {
+    text-align: center;
+    min-width: 140px;
+}
+
+.cover-score-label {
+    font-size: var(--font-xs);
+    font-weight: var(--weight-semibold);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--color-text-muted);
+    margin-bottom: var(--space-1);
+}
+
+.cover-score-value {
+    font-size: 56px;
+    font-weight: var(--weight-bold);
+    line-height: 1;
+}
+
+.cover-score-denom {
+    font-size: 20px;
+    color: var(--color-text-muted);
+}
+
+.cover-score-severity {
+    display: inline-block;
+    margin-top: var(--space-1);
+    padding: 4px var(--space-3);
+    border-radius: var(--radius-pill);
+    font-size: 11px;
+    font-weight: var(--weight-bold);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: #fff;
+}
+
+.cover-stats-block {
+    display: flex;
+    gap: var(--space-3);
+    flex: 1;
+}
+
+.cover-stat {
+    flex: 1;
+    text-align: center;
+    padding: var(--space-2);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    background: var(--color-bg-light);
+}
+
+.cover-stat__value {
+    font-size: 28px;
+    font-weight: var(--weight-bold);
+    color: var(--color-text-primary);
+}
+
+.cover-stat__label {
+    font-size: var(--font-xs);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--color-text-muted);
+    margin-top: 2px;
+}
+
+/* Cover footer */
+.cover-footer {
+    padding: var(--space-2) var(--space-4);
+    border-top: 1px solid var(--color-border);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: var(--space-2);
+}
+
+.cover-footer__disclaimer {
+    font-size: 10px;
+    color: var(--color-text-muted);
+    flex: 1;
+}
+
+.cover-footer__contact {
+    font-size: var(--font-xs);
+    color: var(--color-text-secondary);
+    font-weight: var(--weight-medium);
+    white-space: nowrap;
+}
+
+
+/* =============================================================
+   12. INDEPTH — HOW TO READ PAGE
+   ============================================================= */
+
+.indepth-how-to-read {
+    padding: var(--space-1) 0;
+}
+
+.htr-title {
+    font-size: 22px;
+    font-weight: var(--weight-bold);
+    color: var(--color-text-primary);
+    margin-bottom: var(--space-1);
+}
+
+.htr-subtitle {
+    font-size: var(--font-body);
+    color: var(--color-text-secondary);
+    margin-bottom: var(--space-3);
+    line-height: 1.6;
+}
+
+.htr-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--space-2);
+    margin-bottom: var(--space-3);
+}
+
+.htr-card {
+    display: flex;
+    gap: var(--space-2);
+    align-items: flex-start;
+    padding: var(--space-2);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    background: var(--color-bg-light);
+}
+
+.htr-card__icon {
+    font-size: 22px;
+    flex-shrink: 0;
+    line-height: 1;
+    margin-top: 2px;
+}
+
+.htr-card__title {
+    font-size: 13px;
+    font-weight: var(--weight-semibold);
+    color: var(--color-text-primary);
+    margin-bottom: 4px;
+}
+
+.htr-card__text {
+    font-size: var(--font-small);
+    color: var(--color-text-secondary);
+    line-height: 1.55;
+}
+
+.htr-note {
+    padding: var(--space-2) var(--space-3);
+    background: #FFF8E1;
+    border-left: 4px solid var(--color-monitor);
+    border-radius: var(--radius-sm);
+    font-size: var(--font-small);
+    color: var(--color-text-secondary);
+    line-height: 1.55;
+}
+
+
+/* =============================================================
+   13. INDEPTH — SUMMARY PAGE
+   ============================================================= */
+
+.indepth-summary {
+    padding: var(--space-1) 0;
+}
+
+.summary-title {
+    font-size: 22px;
+    font-weight: var(--weight-bold);
+    color: var(--color-text-primary);
+    margin-bottom: var(--space-2);
+}
+
+.summary-section-heading {
+    font-size: 13px;
+    font-weight: var(--weight-semibold);
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
+    color: var(--color-text-muted);
+    margin: var(--space-3) 0 var(--space-1);
+}
+
+/* Top row: gauge + stats */
+.summary-top-row {
+    display: flex;
+    align-items: center;
+    gap: var(--space-4);
+    margin-bottom: var(--space-3);
+}
+
+.summary-gauge-col {
+    text-align: center;
+    flex-shrink: 0;
+}
+
+.summary-severity-chip {
+    display: inline-block;
+    padding: 4px var(--space-2);
+    border-radius: var(--radius-pill);
+    font-size: 11px;
+    font-weight: var(--weight-bold);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: #fff;
+    margin-top: var(--space-1);
+}
+
+.summary-stats-col {
+    display: flex;
+    gap: var(--space-2);
+    flex: 1;
+}
+
+.summary-stat-box {
+    flex: 1;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    padding: var(--space-2);
+    text-align: center;
+    background: var(--color-bg-light);
+}
+
+.summary-stat-box__value {
+    font-size: 28px;
+    font-weight: var(--weight-bold);
+    color: var(--color-text-primary);
+}
+
+.summary-stat-box__label {
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--color-text-muted);
+}
+
+/* Summary table */
+.summary-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+}
+
+.summary-table th {
+    text-align: left;
+    padding: var(--space-1);
+    font-size: var(--font-xs);
+    font-weight: var(--weight-semibold);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--color-text-muted);
+    border-bottom: 2px solid var(--color-border);
+}
+
+.summary-table__row td {
+    padding: 8px var(--space-1);
+    border-bottom: 1px solid var(--color-border-light);
+    vertical-align: middle;
+}
+
+.summary-table__profile-name {
+    font-weight: var(--weight-semibold);
+    color: var(--color-text-primary);
+}
+
+.summary-table__abnormal {
+    text-align: center;
+    font-weight: var(--weight-semibold);
+}
+
+.summary-score-bar {
+    display: inline-block;
+    width: 80px;
+    height: 6px;
+    background: var(--color-border-light);
+    border-radius: var(--radius-pill);
+    overflow: hidden;
+    vertical-align: middle;
+    margin-right: 6px;
+}
+
+.summary-score-bar__fill {
+    height: 100%;
+    border-radius: var(--radius-pill);
+}
+
+.summary-score-num {
+    font-size: 13px;
+    font-weight: var(--weight-bold);
+}
+
+.summary-badge {
+    display: inline-block;
+    padding: 2px var(--space-1);
+    border-radius: var(--radius-pill);
+    font-size: var(--font-xs);
+    font-weight: var(--weight-bold);
+    color: #fff;
+    letter-spacing: 0.4px;
+}
+
+/* Abnormal callout */
+.callout {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    padding: var(--space-2) var(--space-3);
+    border-radius: var(--radius-md);
+    border: 1px solid var(--color-border);
+}
+
+.callout--good {
+    background: #F1F8E9;
+    border-color: var(--color-healthy);
+}
+
+.callout__icon {
+    font-size: 18px;
+}
+
+.callout__text {
+    font-size: var(--font-body);
+    color: var(--color-text-secondary);
+}
+
+.abn-callout {
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    overflow: hidden;
+}
+
+.abn-callout__header {
+    padding: var(--space-1) var(--space-2);
+    background: #FFF3E0;
+    font-size: var(--font-small);
+    font-weight: var(--weight-semibold);
+    color: var(--color-text-secondary);
+    border-bottom: 1px solid var(--color-border);
+}
+
+.abn-row {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    padding: 7px var(--space-2);
+    border-bottom: 1px solid var(--color-border-light);
+    font-size: 13px;
+}
+
+.abn-row:last-child {
+    border-bottom: none;
+}
+
+.abn-row__profile {
+    color: var(--color-text-muted);
+    font-size: var(--font-xs);
+    min-width: 100px;
+}
+
+.abn-row__name {
+    flex: 1;
+    font-weight: var(--weight-medium);
+    color: var(--color-text-primary);
+}
+
+.abn-row__value {
+    font-weight: var(--weight-semibold);
+    color: var(--color-text-primary);
+}
+
+.abn-row__status {
+    font-size: var(--font-xs);
+    font-weight: var(--weight-bold);
+    text-transform: uppercase;
+    padding: 2px 6px;
+    border-radius: var(--radius-pill);
+    color: #fff;
+    letter-spacing: 0.4px;
+}
+
+.abn-status--high {
+    background: var(--color-monitor);
+}
+
+.abn-status--low {
+    background: var(--color-monitor);
+}
+
+.abn-status--critical {
+    background: var(--color-attention);
+}
+
+.abn-more {
+    padding: var(--space-1) var(--space-2);
+    font-size: var(--font-xs);
+    color: var(--color-text-muted);
+    font-style: italic;
+}
+
+
+/* =============================================================
+   14. INDEPTH — DETAIL PAGE
+   ============================================================= */
+
+.indepth-detail {
+    padding: var(--space-1) 0;
+}
+
+.det-profile-header {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--space-3);
+    margin-bottom: var(--space-3);
+    position: relative;
+}
+
+.det-profile-header__left {
+    flex: 1;
+}
+
+.det-profile-name {
+    font-size: 20px;
+    font-weight: var(--weight-bold);
+    color: var(--color-text-primary);
+    margin-bottom: var(--space-1);
+}
+
+.det-profile-badge {
+    position: absolute;
+    top: 0;
+    right: 0;
+    padding: 3px var(--space-2);
+    border-radius: var(--radius-pill);
+    font-size: var(--font-xs);
+    font-weight: var(--weight-bold);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: #fff;
+}
+
+.det-abnormal-flag {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: var(--font-small);
+    color: var(--color-attention);
+    font-weight: var(--weight-semibold);
+}
+
+.det-normal-flag {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: var(--font-small);
+    color: var(--color-healthy);
+    font-weight: var(--weight-semibold);
+}
+
+/* Parameter card grid */
+.det-param-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--space-2);
+}
+
+.det-param-card {
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    padding: var(--space-2);
+    background: var(--color-surface);
+    box-shadow: var(--shadow-card);
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.det-param-card--flagged {
+    border-left: 3px solid var(--color-attention);
+    background: #FFFBFB;
+}
+
+.det-param-card__top {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+}
+
+.det-param-card__name {
+    font-size: 13px;
+    font-weight: var(--weight-semibold);
+    color: var(--color-text-primary);
+}
+
+.det-status-pill {
+    display: inline-block;
+    padding: 2px 7px;
+    border-radius: var(--radius-pill);
+    font-size: 10px;
+    font-weight: var(--weight-bold);
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+    color: #fff;
+    flex-shrink: 0;
+}
+
+.det-status--normal {
+    background: var(--color-healthy);
+}
+
+.det-status--low {
+    background: var(--color-monitor);
+}
+
+.det-status--high {
+    background: var(--color-monitor);
+}
+
+.det-status--critical {
+    background: var(--color-attention);
+}
+
+.det-param-card__value-row {
+    display: flex;
+    align-items: baseline;
+    gap: 6px;
+    flex-wrap: wrap;
+}
+
+.det-param-card__value {
+    font-size: var(--font-subheading);
+    font-weight: var(--weight-bold);
+}
+
+.det-param-card__unit {
+    font-size: var(--font-small);
+    color: var(--color-text-muted);
+}
+
+.det-param-card__mini-gauge {
+    margin-left: auto;
+}
+
+.det-param-card__range-row {
+    display: flex;
+    align-items: center;
+    gap: var(--space-1);
+}
+
+.det-param-card__range-label {
+    font-size: 10px;
+    color: var(--color-text-faint);
+}
+
+.det-param-card__range-unit {
+    font-size: 10px;
+    color: var(--color-text-faint);
+}
+
+
+/* =============================================================
+   15. INDEPTH — BACK PAGE
+   ============================================================= */
+
+.indepth-back {
+    display: flex;
+    flex-direction: column;
+    min-height: 100%;
+    position: relative;
+}
+
+.back-hero {
+    text-align: center;
+    padding: var(--space-5) var(--space-4) var(--space-4);
+    background: var(--color-bg-light);
+    border-bottom: 1px solid var(--color-border);
+}
+
+.back-hero__headline {
+    font-size: 24px;
+    font-weight: var(--weight-bold);
+    color: var(--color-text-primary);
+    margin-bottom: var(--space-1);
+}
+
+.back-hero__sub {
+    font-size: var(--font-body);
+    color: var(--color-text-secondary);
+    max-width: 480px;
+    margin: 0 auto;
+    line-height: 1.6;
+}
+
+.back-mid-row {
+    display: flex;
+    gap: var(--space-4);
+    padding: var(--space-4);
+    flex: 1;
+}
+
+.back-qr-col {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-1);
+    flex-shrink: 0;
+}
+
+.back-qr {
+    display: block;
+}
+
+.back-qr-label {
+    font-size: 10px;
+    color: var(--color-text-muted);
+    text-align: center;
+}
+
+.back-info-col {
+    flex: 1;
+}
+
+.back-disclaimer {
+    font-size: var(--font-small);
+    color: var(--color-text-secondary);
+    line-height: 1.65;
+    padding: var(--space-2);
+    background: var(--color-bg-light);
+    border-left: 3px solid var(--color-border);
+    border-radius: var(--radius-sm);
+}
+
+.back-contact-row {
+    padding: 0 var(--space-4) var(--space-3);
+}
+
+.back-contact {
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    padding: var(--space-2) var(--space-3);
+    background: var(--color-bg-light);
+}
+
+.back-contact__heading {
+    font-size: var(--font-small);
+    font-weight: var(--weight-semibold);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--color-text-muted);
+    margin-bottom: 4px;
+}
+
+.back-contact__line {
+    font-size: var(--font-body);
+    color: var(--color-text-secondary);
+}
+
+.back-powered-by {
+    text-align: center;
+    padding: var(--space-1) 0 var(--space-2);
+    font-size: var(--font-xs);
+    color: var(--color-text-faint);
+}
+
+.back-bottom-strip {
+    height: 10px;
+    width: 100%;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+}
+
 /* --- Tenant Brand Overrides --- */
 :root {
   --color-primary: #E53935;
@@ -680,95 +1511,75 @@ body {
   </header>
 
   <main class="page-content">
-    
-<section class="master-overview">
-  <h1 class="section-title">Master Health Overview</h1>
+    <section class="indepth-cover">
+<div class="cover-hero" style="background:undefined">
+  <img class="cover-hero__logo" src="undefined" alt="undefined" />
+  <div class="cover-hero__lab-name">undefined</div>
+  <div class="cover-hero__divider"></div>
+  <div class="cover-hero__title">Comprehensive Health Report</div>
+  <div class="cover-hero__subtitle">In-Depth Analysis</div>
+</div>
+
+<div class="cover-body">
+  <div class="cover-score-row">
+    <div class="cover-score-block">
+      <div class="cover-score-label">Overall Health Score</div>
+      <div class="cover-score-value" style="color:#C62828">84<span class="cover-score-denom">/100</span></div>
+      <div class="cover-score-severity" style="background:#C62828">CRITICAL</div>
+    </div>
+    <div class="cover-stats-block">
+      <div class="cover-stat">
+        <div class="cover-stat__value">7</div>
+        <div class="cover-stat__label">Profiles Tested</div>
+      </div>
+      <div class="cover-stat">
+        <div class="cover-stat__value" style="color:#F9A825">
+          19
+        </div>
+        <div class="cover-stat__label">Abnormal Parameters</div>
+      </div>
+      <div class="cover-stat">
+        <div class="cover-stat__value" style="color:#C62828">
+          7
+        </div>
+        <div class="cover-stat__label">Critical Profiles</div>
+      </div>
+    </div>
+  </div>
 
   
-    <div class="score-ring-wrapper">
-      <svg class="score-ring-svg" width="160" height="160" viewBox="0 0 160 160">
-        <circle class="score-ring-track"
-                cx="80" cy="80" r="75" />
-        <circle class="score-ring-fill"
-                cx="80" cy="80" r="75"
-                stroke="var(--color-attention)"
-                stroke-dasharray="471.23889803846896"
-                stroke-dashoffset="42.41150082346218" />
-      </svg>
-      <div class="score-ring-value">
-        <div class="score-ring-number" style="color:var(--color-attention)">91</div>
-        <div class="score-ring-label">/ 100</div>
-      </div>
-    </div>
-  <br />
-  <span class="severity-label bg-critical">critical</span>
-
+<div class="patient-header" style="border-left-color:undefined">
   
-    <div class="analytics-strip">
-      <div class="analytics-item">
-        <div class="analytics-value text-primary">4</div>
-        <div class="analytics-label">Total Profiles</div>
+      <div class="ph-cell">
+        <div class="ph-cell__label">Patient ID</div>
+        <div class="ph-cell__value">PAT-BETA-2024</div>
+      </div><div class="ph-divider"></div>
+      <div class="ph-cell">
+        <div class="ph-cell__label">Age</div>
+        <div class="ph-cell__value">55 yrs</div>
+      </div><div class="ph-divider"></div>
+      <div class="ph-cell">
+        <div class="ph-cell__label">Gender</div>
+        <div class="ph-cell__value">female</div>
+      </div><div class="ph-divider"></div>
+      <div class="ph-cell">
+        <div class="ph-cell__label">Report Date</div>
+        <div class="ph-cell__value">01 March 2026</div>
       </div>
-      <div class="analytics-item">
-        <div class="analytics-value" style="color:var(--color-monitor)">10</div>
-        <div class="analytics-label">Abnormal Parameters</div>
-      </div>
-      <div class="analytics-item">
-        <div class="analytics-value" style="color:var(--color-attention)">3</div>
-        <div class="analytics-label">Critical Flags</div>
-      </div>
-    </div>
+</div>
+</div>
 
-  <h3 class="section-title">Profile Summary</h3>
-
-  <div class="profile-grid">
-    
-    <div class="profile-card">
-      <span class="card-badge-corner bg-attention">4 abnormal</span>
-      <div class="card-name">Complete Blood Count</div>
-      <div class="card-score-value" style="color:var(--color-attention)">93</div>
-      <div class="card-score-bar">
-        <div class="card-score-bar-fill"
-             style="width:93%;background:var(--color-attention)"></div>
-      </div>
-    </div>
-
-    <div class="profile-card">
-      <span class="card-badge-corner bg-attention">3 abnormal</span>
-      <div class="card-name">Lipid Panel</div>
-      <div class="card-score-value" style="color:var(--color-attention)">87</div>
-      <div class="card-score-bar">
-        <div class="card-score-bar-fill"
-             style="width:87%;background:var(--color-attention)"></div>
-      </div>
-    </div>
-
-    <div class="profile-card">
-      <span class="card-badge-corner bg-attention">1 abnormal</span>
-      <div class="card-name">Thyroid Panel</div>
-      <div class="card-score-value" style="color:var(--color-monitor)">93</div>
-      <div class="card-score-bar">
-        <div class="card-score-bar-fill"
-             style="width:93%;background:var(--color-monitor)"></div>
-      </div>
-    </div>
-
-    <div class="profile-card">
-      <span class="card-badge-corner bg-attention">2 abnormal</span>
-      <div class="card-name">Liver Function Test</div>
-      <div class="card-score-value" style="color:var(--color-attention)">90</div>
-      <div class="card-score-bar">
-        <div class="card-score-bar-fill"
-             style="width:90%;background:var(--color-attention)"></div>
-      </div>
-    </div>
+<div class="cover-footer" style="border-top-color:undefined">
+  <div class="cover-footer__disclaimer">
+    This report is confidential. Results must be interpreted in clinical context by a qualified healthcare provider.
   </div>
-</section>
+  
+</div></section>
   </main>
 
   <footer class="page-footer">
     <span class="footer-brand">Beta Health Labs — Quality Diagnostics</span>
-    <span class="footer-page">Page 1 of 5</span>
+    <span class="footer-page">Page 1 of 11</span>
   </footer>
 </div>
 
@@ -782,165 +1593,75 @@ body {
 
   <main class="page-content">
     
-<section class="profile-detail">
-  <div class="profile-heading">
-    <h2>Complete Blood Count</h2>
-    <span class="detail-score">Score: 93/100</span>
-    <span class="detail-badge bg-attention">attention</span>
+<section class="indepth-how-to-read">
+  <h1 class="htr-title">How to Read This Report</h1>
+  <p class="htr-subtitle">
+    This report presents your laboratory results in a clear, visual format.
+    Here is a quick guide to understanding each element.
+  </p>
+
+  <div class="htr-grid">
+    
+<div class="htr-card">
+  <div class="htr-card__icon">🎯</div>
+  <div class="htr-card__body">
+    <div class="htr-card__title">Overall Health Score</div>
+    <div class="htr-card__text">A number from 0 to 100 that summarises all your test results into one metric. <strong>70–100</strong> is healthy, <strong>40–69</strong> needs monitoring, and <strong>below 40</strong> requires prompt attention.</div>
+  </div>
+</div>
+
+<div class="htr-card">
+  <div class="htr-card__icon">🟢</div>
+  <div class="htr-card__body">
+    <div class="htr-card__title">Severity Badges</div>
+    <div class="htr-card__text"><strong style="color:#2E7D32">STABLE</strong> — All parameters within healthy range. <strong style="color:#F9A825">MONITOR</strong> — One or more parameters are slightly out of range; discuss with your doctor. <strong style="color:#C62828">CRITICAL</strong> — One or more parameters require immediate clinical attention.</div>
+  </div>
+</div>
+
+<div class="htr-card">
+  <div class="htr-card__icon">🌡️</div>
+  <div class="htr-card__body">
+    <div class="htr-card__title">The Speedometer (Gauge)</div>
+    <div class="htr-card__text">The dial shows where your result sits across three zones: <em style="color:#C62828">Red</em> (low / attention), <em style="color:#F9A825">Amber</em> (borderline / monitor), and <em style="color:#2E7D32">Green</em> (healthy / normal). The needle points to your score.</div>
+  </div>
+</div>
+
+<div class="htr-card">
+  <div class="htr-card__icon">📏</div>
+  <div class="htr-card__body">
+    <div class="htr-card__title">Range Sliders</div>
+    <div class="htr-card__text">A horizontal bar showing the reference range (normal zone) and where your value falls. A dot marker outside the green zone indicates an abnormal result.</div>
+  </div>
+</div>
+
+<div class="htr-card">
+  <div class="htr-card__icon">⚠️</div>
+  <div class="htr-card__body">
+    <div class="htr-card__title">Abnormal Parameters</div>
+    <div class="htr-card__text">A parameter is flagged as <em>high</em>, <em>low</em>, or <em>critical</em> when it falls outside the reference range for your age and gender. Always discuss abnormal results with a qualified healthcare provider.</div>
+  </div>
+</div>
+
+<div class="htr-card">
+  <div class="htr-card__icon">📋</div>
+  <div class="htr-card__body">
+    <div class="htr-card__title">Profile Sections</div>
+    <div class="htr-card__text">Results are grouped by body system (e.g. Lipid Profile, Thyroid, Blood Sugar). Each section has its own score and severity badge so you can quickly see which system needs attention.</div>
+  </div>
+</div>
   </div>
 
-  <div class="param-cards-grid">
-          
-    <div class="param-card">
-      <div class="param-card-header">
-        <span class="param-card-name">Hemoglobin</span>
-        <span class="status-pill bg-low">low</span>
-      </div>
-      <div class="param-card-value-row">
-        <span class="param-card-value">11.2</span>
-        <span class="param-card-unit">g/dL</span>
-      </div>
-      
-    <div class="range-slider">
-      <div class="range-slider-fill"
-           style="left:11.53846153846153%;width:76.9230769230769%;background:var(--color-bg-light);opacity:0.5"></div>
-      <div class="range-slider-fill"
-           style="left:0;width:0%;background:var(--color-monitor)"></div>
-      <div class="range-slider-dot"
-           style="left:0%;background:var(--color-monitor)"></div>
-    </div>
-    <div class="range-slider-bounds">
-      <span class="range-bound-label">13.5</span>
-      <span class="range-bound-label">17.5</span>
-    </div>
-    </div>
-
-    <div class="param-card">
-      <div class="param-card-header">
-        <span class="param-card-name">WBC Count</span>
-        <span class="status-pill bg-normal">normal</span>
-      </div>
-      <div class="param-card-value-row">
-        <span class="param-card-value">9800</span>
-        <span class="param-card-unit">cells/µL</span>
-      </div>
-      
-    <div class="range-slider">
-      <div class="range-slider-fill"
-           style="left:11.538461538461538%;width:76.92307692307692%;background:var(--color-bg-light);opacity:0.5"></div>
-      <div class="range-slider-fill"
-           style="left:0;width:74.2603550295858%;background:var(--color-healthy)"></div>
-      <div class="range-slider-dot"
-           style="left:74.2603550295858%;background:var(--color-healthy)"></div>
-    </div>
-    <div class="range-slider-bounds">
-      <span class="range-bound-label">4500</span>
-      <span class="range-bound-label">11000</span>
-    </div>
-    </div>
-
-    <div class="param-card">
-      <div class="param-card-header">
-        <span class="param-card-name">Platelet Count</span>
-        <span class="status-pill bg-low">low</span>
-      </div>
-      <div class="param-card-value-row">
-        <span class="param-card-value">145000</span>
-        <span class="param-card-unit">/µL</span>
-      </div>
-      
-    <div class="range-slider">
-      <div class="range-slider-fill"
-           style="left:11.538461538461538%;width:76.92307692307692%;background:var(--color-bg-light);opacity:0.5"></div>
-      <div class="range-slider-fill"
-           style="left:0;width:10%;background:var(--color-monitor)"></div>
-      <div class="range-slider-dot"
-           style="left:10%;background:var(--color-monitor)"></div>
-    </div>
-    <div class="range-slider-bounds">
-      <span class="range-bound-label">150000</span>
-      <span class="range-bound-label">400000</span>
-    </div>
-    </div>
-
-    <div class="param-card">
-      <div class="param-card-header">
-        <span class="param-card-name">RBC Count</span>
-        <span class="status-pill bg-low">low</span>
-      </div>
-      <div class="param-card-value-row">
-        <span class="param-card-value">4.1</span>
-        <span class="param-card-unit">million/µL</span>
-      </div>
-      
-    <div class="range-slider">
-      <div class="range-slider-fill"
-           style="left:11.538461538461535%;width:76.92307692307693%;background:var(--color-bg-light);opacity:0.5"></div>
-      <div class="range-slider-fill"
-           style="left:0;width:0%;background:var(--color-monitor)"></div>
-      <div class="range-slider-dot"
-           style="left:0%;background:var(--color-monitor)"></div>
-    </div>
-    <div class="range-slider-bounds">
-      <span class="range-bound-label">4.5</span>
-      <span class="range-bound-label">5.9</span>
-    </div>
-    </div>
-
-    <div class="param-card">
-      <div class="param-card-header">
-        <span class="param-card-name">Hematocrit</span>
-        <span class="status-pill bg-low">low</span>
-      </div>
-      <div class="param-card-value-row">
-        <span class="param-card-value">36</span>
-        <span class="param-card-unit">%</span>
-      </div>
-      
-    <div class="range-slider">
-      <div class="range-slider-fill"
-           style="left:11.538461538461524%;width:76.92307692307696%;background:var(--color-bg-light);opacity:0.5"></div>
-      <div class="range-slider-fill"
-           style="left:0;width:0%;background:var(--color-monitor)"></div>
-      <div class="range-slider-dot"
-           style="left:0%;background:var(--color-monitor)"></div>
-    </div>
-    <div class="range-slider-bounds">
-      <span class="range-bound-label">41</span>
-      <span class="range-bound-label">53</span>
-    </div>
-    </div>
-
-    <div class="param-card">
-      <div class="param-card-header">
-        <span class="param-card-name">MCV</span>
-        <span class="status-pill bg-normal">normal</span>
-      </div>
-      <div class="param-card-value-row">
-        <span class="param-card-value">88</span>
-        <span class="param-card-unit">fL</span>
-      </div>
-      
-    <div class="range-slider">
-      <div class="range-slider-fill"
-           style="left:11.538461538461538%;width:76.92307692307692%;background:var(--color-bg-light);opacity:0.5"></div>
-      <div class="range-slider-fill"
-           style="left:0;width:42.30769230769231%;background:var(--color-healthy)"></div>
-      <div class="range-slider-dot"
-           style="left:42.30769230769231%;background:var(--color-healthy)"></div>
-    </div>
-    <div class="range-slider-bounds">
-      <span class="range-bound-label">80</span>
-      <span class="range-bound-label">100</span>
-    </div>
-    </div>
-        </div>
+  <div class="htr-note">
+    <strong>Important:</strong> This report is generated by Smart Health Engine and is intended
+    as a summary aid. It does <em>not</em> constitute medical advice. Please consult your
+    physician or specialist for interpretation and treatment decisions.
+  </div>
 </section>
   </main>
 
   <footer class="page-footer">
     <span class="footer-brand">Beta Health Labs — Quality Diagnostics</span>
-    <span class="footer-page">Page 2 of 5</span>
+    <span class="footer-page">Page 2 of 11</span>
   </footer>
 </div>
 
@@ -954,117 +1675,309 @@ body {
 
   <main class="page-content">
     
-<section class="profile-detail">
-  <div class="profile-heading">
-    <h2>Lipid Panel</h2>
-    <span class="detail-score">Score: 87/100</span>
-    <span class="detail-badge bg-attention">attention</span>
+<section class="indepth-summary">
+  <h1 class="summary-title">Executive Summary</h1>
+  
+<div class="patient-header" style="border-left-color:var(--color-primary)">
+  
+      <div class="ph-cell">
+        <div class="ph-cell__label">Patient ID</div>
+        <div class="ph-cell__value">PAT-BETA-2024</div>
+      </div><div class="ph-divider"></div>
+      <div class="ph-cell">
+        <div class="ph-cell__label">Age</div>
+        <div class="ph-cell__value">55 yrs</div>
+      </div><div class="ph-divider"></div>
+      <div class="ph-cell">
+        <div class="ph-cell__label">Gender</div>
+        <div class="ph-cell__value">female</div>
+      </div><div class="ph-divider"></div>
+      <div class="ph-cell">
+        <div class="ph-cell__label">Report Date</div>
+        <div class="ph-cell__value">01 March 2026</div>
+      </div>
+</div>
+
+  <div class="summary-top-row">
+    <!-- Score gauge -->
+    <div class="summary-gauge-col">
+      
+<div class="speedometer" style="width:180px;margin:0 auto;text-align:center">
+  <svg width="180" height="129.6" viewBox="0 0 180 129.6">
+    <!-- Background arc track -->
+    <path d="M 14.400000000000006 117 A 75.6 75.6 0 0 1 165.6 117"
+          fill="none" stroke="var(--color-border)" stroke-width="13.5" stroke-linecap="butt"/>
+
+    <!-- Zone arcs: red (0-40%), amber (40-70%), green (70-100%) -->
+    <path d="M 89.99999999999999 192.6 A 75.6 75.6 0 0 1 18.100127368086405 140.36168477474604"
+                  fill="none" stroke="var(--color-attention)" stroke-width="13.5" stroke-linecap="butt"/>
+    <path d="M 18.100127368086405 140.36168477474604 A 75.6 75.6 0 0 1 28.838315225253986 72.56343492668903"
+                  fill="none" stroke="var(--color-monitor)" stroke-width="13.5" stroke-linecap="butt"/>
+    <path d="M 28.838315225253986 72.56343492668903 A 75.6 75.6 0 0 1 90 41.400000000000006"
+                  fill="none" stroke="var(--color-healthy)" stroke-width="13.5" stroke-linecap="butt"/>
+
+    <!-- Needle -->
+    <line x1="90" y1="117"
+          x2="146.31146725961867" y2="86.04250890222377"
+          stroke="var(--color-healthy)" stroke-width="3" stroke-linecap="round"/>
+    <!-- Pivot dot -->
+    <circle cx="90" cy="117" r="7.2"
+            fill="var(--color-healthy)" stroke="var(--color-surface)" stroke-width="2"/>
+  </svg>
+
+  <!-- Score value -->
+  <div class="speedometer__value" style="color:var(--color-healthy)">84</div>
+  <div class="speedometer__label">Health Score</div>
+</div>
+      <div class="summary-severity-chip"
+           style="background:var(--color-attention)">
+        CRITICAL
+      </div>
+    </div>
+
+    <!-- Quick stats -->
+    <div class="summary-stats-col">
+      <div class="summary-stat-box">
+        <div class="summary-stat-box__value">7</div>
+        <div class="summary-stat-box__label">Profiles Tested</div>
+      </div>
+      <div class="summary-stat-box">
+        <div class="summary-stat-box__value">29</div>
+        <div class="summary-stat-box__label">Parameters</div>
+      </div>
+      <div class="summary-stat-box" style="border-color:#C62828">
+        <div class="summary-stat-box__value" style="color:#C62828">19</div>
+        <div class="summary-stat-box__label">Abnormal</div>
+      </div>
+    </div>
   </div>
 
-  <div class="param-cards-grid">
-          
-    <div class="param-card">
-      <div class="param-card-header">
-        <span class="param-card-name">Total Cholesterol</span>
-        <span class="status-pill bg-high">high</span>
-      </div>
-      <div class="param-card-value-row">
-        <span class="param-card-value">210</span>
-        <span class="param-card-unit">mg/dL</span>
-      </div>
-      
-    <div class="range-slider">
-      <div class="range-slider-fill"
-           style="left:11.538461538461538%;width:76.92307692307692%;background:var(--color-bg-light);opacity:0.5"></div>
-      <div class="range-slider-fill"
-           style="left:0;width:92.3076923076923%;background:var(--color-monitor)"></div>
-      <div class="range-slider-dot"
-           style="left:92.3076923076923%;background:var(--color-monitor)"></div>
+  <!-- Profile-level summary table -->
+  <h2 class="summary-section-heading">Profile Overview</h2>
+  <table class="summary-table">
+    <thead>
+      <tr>
+        <th>Profile</th>
+        <th>Score</th>
+        <th>Status</th>
+        <th>Abnormal</th>
+      </tr>
+    </thead>
+    <tbody>
+<tr class="summary-table__row">
+  <td class="summary-table__profile-name">Lipid Profile</td>
+  <td>
+    <div class="summary-score-bar">
+      <div class="summary-score-bar__fill"
+           style="width:82%;background:var(--color-attention)"></div>
     </div>
-    <div class="range-slider-bounds">
-      <span class="range-bound-label">0</span>
-      <span class="range-bound-label">200</span>
+    <span class="summary-score-num" style="color:var(--color-attention)">82</span>
+  </td>
+  <td>
+    <span class="summary-badge" style="background:var(--color-attention)">
+      ATTENTION
+    </span>
+  </td>
+  <td class="summary-table__abnormal">
+    <span style="color:#C62828;font-weight:600">4</span>
+  </td>
+</tr>
+<tr class="summary-table__row">
+  <td class="summary-table__profile-name">Complete Blood Count</td>
+  <td>
+    <div class="summary-score-bar">
+      <div class="summary-score-bar__fill"
+           style="width:98%;background:var(--color-attention)"></div>
     </div>
+    <span class="summary-score-num" style="color:var(--color-attention)">98</span>
+  </td>
+  <td>
+    <span class="summary-badge" style="background:var(--color-attention)">
+      ATTENTION
+    </span>
+  </td>
+  <td class="summary-table__abnormal">
+    <span style="color:#C62828;font-weight:600">2</span>
+  </td>
+</tr>
+<tr class="summary-table__row">
+  <td class="summary-table__profile-name">Liver Function</td>
+  <td>
+    <div class="summary-score-bar">
+      <div class="summary-score-bar__fill"
+           style="width:92%;background:var(--color-attention)"></div>
     </div>
+    <span class="summary-score-num" style="color:var(--color-attention)">92</span>
+  </td>
+  <td>
+    <span class="summary-badge" style="background:var(--color-attention)">
+      ATTENTION
+    </span>
+  </td>
+  <td class="summary-table__abnormal">
+    <span style="color:#C62828;font-weight:600">2</span>
+  </td>
+</tr>
+<tr class="summary-table__row">
+  <td class="summary-table__profile-name">Kidney Function</td>
+  <td>
+    <div class="summary-score-bar">
+      <div class="summary-score-bar__fill"
+           style="width:87%;background:var(--color-attention)"></div>
+    </div>
+    <span class="summary-score-num" style="color:var(--color-attention)">87</span>
+  </td>
+  <td>
+    <span class="summary-badge" style="background:var(--color-attention)">
+      ATTENTION
+    </span>
+  </td>
+  <td class="summary-table__abnormal">
+    <span style="color:#C62828;font-weight:600">3</span>
+  </td>
+</tr>
+<tr class="summary-table__row">
+  <td class="summary-table__profile-name">Thyroid Function</td>
+  <td>
+    <div class="summary-score-bar">
+      <div class="summary-score-bar__fill"
+           style="width:68%;background:var(--color-attention)"></div>
+    </div>
+    <span class="summary-score-num" style="color:var(--color-attention)">68</span>
+  </td>
+  <td>
+    <span class="summary-badge" style="background:var(--color-attention)">
+      ATTENTION
+    </span>
+  </td>
+  <td class="summary-table__abnormal">
+    <span style="color:#C62828;font-weight:600">2</span>
+  </td>
+</tr>
+<tr class="summary-table__row">
+  <td class="summary-table__profile-name">Blood Sugar</td>
+  <td>
+    <div class="summary-score-bar">
+      <div class="summary-score-bar__fill"
+           style="width:79%;background:var(--color-attention)"></div>
+    </div>
+    <span class="summary-score-num" style="color:var(--color-attention)">79</span>
+  </td>
+  <td>
+    <span class="summary-badge" style="background:var(--color-attention)">
+      ATTENTION
+    </span>
+  </td>
+  <td class="summary-table__abnormal">
+    <span style="color:#C62828;font-weight:600">3</span>
+  </td>
+</tr>
+<tr class="summary-table__row">
+  <td class="summary-table__profile-name">Vitamins & Minerals</td>
+  <td>
+    <div class="summary-score-bar">
+      <div class="summary-score-bar__fill"
+           style="width:81%;background:var(--color-attention)"></div>
+    </div>
+    <span class="summary-score-num" style="color:var(--color-attention)">81</span>
+  </td>
+  <td>
+    <span class="summary-badge" style="background:var(--color-attention)">
+      ATTENTION
+    </span>
+  </td>
+  <td class="summary-table__abnormal">
+    <span style="color:#C62828;font-weight:600">3</span>
+  </td>
+</tr></tbody>
+  </table>
 
-    <div class="param-card">
-      <div class="param-card-header">
-        <span class="param-card-name">LDL Cholesterol</span>
-        <span class="status-pill bg-high">high</span>
-      </div>
-      <div class="param-card-value-row">
-        <span class="param-card-value">138</span>
-        <span class="param-card-unit">mg/dL</span>
-      </div>
-      
-    <div class="range-slider">
-      <div class="range-slider-fill"
-           style="left:11.538461538461538%;width:76.92307692307692%;background:var(--color-bg-light);opacity:0.5"></div>
-      <div class="range-slider-fill"
-           style="left:0;width:100%;background:var(--color-monitor)"></div>
-      <div class="range-slider-dot"
-           style="left:100%;background:var(--color-monitor)"></div>
+  <!-- Abnormal parameter callout -->
+  <h2 class="summary-section-heading">Abnormal Parameters</h2>
+  
+<div class="abn-callout">
+  <div class="abn-callout__header">⚠️ Parameters Requiring Attention</div>
+  
+    <div class="abn-row">
+      <span class="abn-row__profile">Lipid Profile</span>
+      <span class="abn-row__name">Total Cholesterol</span>
+      <span class="abn-row__value">238 mg/dL</span>
+      <span class="abn-row__status abn-status--high">HIGH</span>
     </div>
-    <div class="range-slider-bounds">
-      <span class="range-bound-label">0</span>
-      <span class="range-bound-label">100</span>
+    <div class="abn-row">
+      <span class="abn-row__profile">Lipid Profile</span>
+      <span class="abn-row__name">LDL Cholesterol</span>
+      <span class="abn-row__value">162 mg/dL</span>
+      <span class="abn-row__status abn-status--high">HIGH</span>
     </div>
+    <div class="abn-row">
+      <span class="abn-row__profile">Lipid Profile</span>
+      <span class="abn-row__name">Triglycerides</span>
+      <span class="abn-row__value">210 mg/dL</span>
+      <span class="abn-row__status abn-status--high">HIGH</span>
     </div>
-
-    <div class="param-card">
-      <div class="param-card-header">
-        <span class="param-card-name">HDL Cholesterol</span>
-        <span class="status-pill bg-normal">normal</span>
-      </div>
-      <div class="param-card-value-row">
-        <span class="param-card-value">48</span>
-        <span class="param-card-unit">mg/dL</span>
-      </div>
-      
-    <div class="range-slider">
-      <div class="range-slider-fill"
-           style="left:11.538461538461538%;width:76.92307692307692%;background:var(--color-bg-light);opacity:0.5"></div>
-      <div class="range-slider-fill"
-           style="left:0;width:42.30769230769231%;background:var(--color-healthy)"></div>
-      <div class="range-slider-dot"
-           style="left:42.30769230769231%;background:var(--color-healthy)"></div>
+    <div class="abn-row">
+      <span class="abn-row__profile">Lipid Profile</span>
+      <span class="abn-row__name">VLDL</span>
+      <span class="abn-row__value">42 mg/dL</span>
+      <span class="abn-row__status abn-status--high">HIGH</span>
     </div>
-    <div class="range-slider-bounds">
-      <span class="range-bound-label">40</span>
-      <span class="range-bound-label">60</span>
+    <div class="abn-row">
+      <span class="abn-row__profile">Complete Blood Count</span>
+      <span class="abn-row__name">Haemoglobin</span>
+      <span class="abn-row__value">11.4 g/dL</span>
+      <span class="abn-row__status abn-status--low">LOW</span>
     </div>
+    <div class="abn-row">
+      <span class="abn-row__profile">Complete Blood Count</span>
+      <span class="abn-row__name">Hematocrit</span>
+      <span class="abn-row__value">34.8 %</span>
+      <span class="abn-row__status abn-status--low">LOW</span>
     </div>
-
-    <div class="param-card">
-      <div class="param-card-header">
-        <span class="param-card-name">Triglycerides</span>
-        <span class="status-pill bg-high">high</span>
-      </div>
-      <div class="param-card-value-row">
-        <span class="param-card-value">165</span>
-        <span class="param-card-unit">mg/dL</span>
-      </div>
-      
-    <div class="range-slider">
-      <div class="range-slider-fill"
-           style="left:11.538461538461538%;width:76.92307692307692%;background:var(--color-bg-light);opacity:0.5"></div>
-      <div class="range-slider-fill"
-           style="left:0;width:96.15384615384616%;background:var(--color-monitor)"></div>
-      <div class="range-slider-dot"
-           style="left:96.15384615384616%;background:var(--color-monitor)"></div>
+    <div class="abn-row">
+      <span class="abn-row__profile">Liver Function</span>
+      <span class="abn-row__name">ALT (SGPT)</span>
+      <span class="abn-row__value">52 U/L</span>
+      <span class="abn-row__status abn-status--high">HIGH</span>
     </div>
-    <div class="range-slider-bounds">
-      <span class="range-bound-label">0</span>
-      <span class="range-bound-label">150</span>
+    <div class="abn-row">
+      <span class="abn-row__profile">Liver Function</span>
+      <span class="abn-row__name">AST (SGOT)</span>
+      <span class="abn-row__value">44 U/L</span>
+      <span class="abn-row__status abn-status--high">HIGH</span>
     </div>
+    <div class="abn-row">
+      <span class="abn-row__profile">Kidney Function</span>
+      <span class="abn-row__name">Creatinine</span>
+      <span class="abn-row__value">1.3 mg/dL</span>
+      <span class="abn-row__status abn-status--high">HIGH</span>
     </div>
-        </div>
+    <div class="abn-row">
+      <span class="abn-row__profile">Kidney Function</span>
+      <span class="abn-row__name">Blood Urea Nitrogen</span>
+      <span class="abn-row__value">22 mg/dL</span>
+      <span class="abn-row__status abn-status--high">HIGH</span>
+    </div>
+    <div class="abn-row">
+      <span class="abn-row__profile">Kidney Function</span>
+      <span class="abn-row__name">eGFR</span>
+      <span class="abn-row__value">68 mL/min/1.73m²</span>
+      <span class="abn-row__status abn-status--low">LOW</span>
+    </div>
+    <div class="abn-row">
+      <span class="abn-row__profile">Thyroid Function</span>
+      <span class="abn-row__name">TSH</span>
+      <span class="abn-row__value">6.2 µIU/mL</span>
+      <span class="abn-row__status abn-status--critical">CRITICAL</span>
+    </div>
+  <div class="abn-more">+7 more — see detailed pages below</div>
+</div>
 </section>
   </main>
 
   <footer class="page-footer">
     <span class="footer-brand">Beta Health Labs — Quality Diagnostics</span>
-    <span class="footer-page">Page 3 of 5</span>
+    <span class="footer-page">Page 3 of 11</span>
   </footer>
 </div>
 
@@ -1078,93 +1991,335 @@ body {
 
   <main class="page-content">
     
-<section class="profile-detail">
-  <div class="profile-heading">
-    <h2>Thyroid Panel</h2>
-    <span class="detail-score">Score: 93/100</span>
-    <span class="detail-badge bg-monitor">monitor</span>
+<section class="indepth-detail">
+  <div class="det-profile-header">
+    <div class="det-profile-header__left">
+      <h2 class="det-profile-name">Lipid Profile</h2>
+      <div class="det-abnormal-flag">⚠️ 4 parameters outside reference range</div>
+    </div>
+    <div class="det-profile-header__right">
+      
+<div class="speedometer" style="width:120px;margin:0 auto;text-align:center">
+  <svg width="120" height="86.39999999999999" viewBox="0 0 120 86.39999999999999">
+    <!-- Background arc track -->
+    <path d="M 9.600000000000001 78 A 50.4 50.4 0 0 1 110.4 78"
+          fill="none" stroke="var(--color-border)" stroke-width="9" stroke-linecap="butt"/>
+
+    <!-- Zone arcs: red (0-40%), amber (40-70%), green (70-100%) -->
+    <path d="M 59.99999999999999 128.4 A 50.4 50.4 0 0 1 12.066751578724265 93.57445651649736"
+                  fill="none" stroke="var(--color-attention)" stroke-width="9" stroke-linecap="butt"/>
+    <path d="M 12.066751578724265 93.57445651649736 A 50.4 50.4 0 0 1 19.225543483502655 48.37562328445935"
+                  fill="none" stroke="var(--color-monitor)" stroke-width="9" stroke-linecap="butt"/>
+    <path d="M 19.225543483502655 48.37562328445935 A 50.4 50.4 0 0 1 60 27.6"
+                  fill="none" stroke="var(--color-healthy)" stroke-width="9" stroke-linecap="butt"/>
+
+    <!-- Needle -->
+    <line x1="60" y1="78"
+          x2="96.17100832850632" y2="55.04518010309978"
+          stroke="var(--color-healthy)" stroke-width="3" stroke-linecap="round"/>
+    <!-- Pivot dot -->
+    <circle cx="60" cy="78" r="4.8"
+            fill="var(--color-healthy)" stroke="var(--color-surface)" stroke-width="2"/>
+  </svg>
+
+  <!-- Score value -->
+  <div class="speedometer__value" style="color:var(--color-healthy)">82</div>
+  <div class="speedometer__label">Profile Score</div>
+</div>
+    </div>
+    <div class="det-profile-badge" style="background:var(--color-attention)">
+      ATTENTION
+    </div>
   </div>
 
-  <div class="param-cards-grid">
-          
-    <div class="param-card">
-      <div class="param-card-header">
-        <span class="param-card-name">TSH</span>
-        <span class="status-pill bg-high">high</span>
-      </div>
-      <div class="param-card-value-row">
-        <span class="param-card-value">4.8</span>
-        <span class="param-card-unit">mIU/L</span>
-      </div>
-      
-    <div class="range-slider">
-      <div class="range-slider-fill"
-           style="left:11.53846153846154%;width:76.9230769230769%;background:var(--color-bg-light);opacity:0.5"></div>
-      <div class="range-slider-fill"
-           style="left:0;width:100%;background:var(--color-monitor)"></div>
-      <div class="range-slider-dot"
-           style="left:100%;background:var(--color-monitor)"></div>
-    </div>
-    <div class="range-slider-bounds">
-      <span class="range-bound-label">0.4</span>
-      <span class="range-bound-label">4</span>
-    </div>
-    </div>
+  <div class="det-param-grid">
+    
+<div class="det-param-card det-param-card--flagged">
+  <div class="det-param-card__top">
+    <div class="det-param-card__name">Total Cholesterol</div>
+    <span class="det-status-pill det-status--high">HIGH</span>
+  </div>
+  <div class="det-param-card__value-row">
+    <span class="det-param-card__value" style="color:var(--color-monitor)">238</span>
+    <span class="det-param-card__unit">mg/dL</span>
+    <div class="det-param-card__mini-gauge">
+<div class="speedometer" style="width:72px;margin:0 auto;text-align:center">
+  <svg width="72" height="51.839999999999996" viewBox="0 0 72 51.839999999999996">
+    <!-- Background arc track -->
+    <path d="M 5.760000000000002 46.800000000000004 A 30.24 30.24 0 0 1 66.24 46.800000000000004"
+          fill="none" stroke="var(--color-border)" stroke-width="5.3999999999999995" stroke-linecap="butt"/>
 
-    <div class="param-card">
-      <div class="param-card-header">
-        <span class="param-card-name">Free T3</span>
-        <span class="status-pill bg-normal">normal</span>
-      </div>
-      <div class="param-card-value-row">
-        <span class="param-card-value">3.1</span>
-        <span class="param-card-unit">pg/mL</span>
-      </div>
-      
-    <div class="range-slider">
-      <div class="range-slider-fill"
-           style="left:11.538461538461542%;width:76.9230769230769%;background:var(--color-bg-light);opacity:0.5"></div>
-      <div class="range-slider-fill"
-           style="left:0;width:43.927125506072876%;background:var(--color-healthy)"></div>
-      <div class="range-slider-dot"
-           style="left:43.927125506072876%;background:var(--color-healthy)"></div>
-    </div>
-    <div class="range-slider-bounds">
-      <span class="range-bound-label">2.3</span>
-      <span class="range-bound-label">4.2</span>
-    </div>
-    </div>
+    <!-- Zone arcs: red (0-40%), amber (40-70%), green (70-100%) -->
+    <path d="M 35.99999999999999 77.04 A 30.24 30.24 0 0 1 7.2400509472345576 56.14467390989842"
+                  fill="none" stroke="var(--color-attention)" stroke-width="5.3999999999999995" stroke-linecap="butt"/>
+    <path d="M 7.2400509472345576 56.14467390989842 A 30.24 30.24 0 0 1 11.535326090101595 29.025373970675613"
+                  fill="none" stroke="var(--color-monitor)" stroke-width="5.3999999999999995" stroke-linecap="butt"/>
+    <path d="M 11.535326090101595 29.025373970675613 A 30.24 30.24 0 0 1 36 16.560000000000006"
+                  fill="none" stroke="var(--color-healthy)" stroke-width="5.3999999999999995" stroke-linecap="butt"/>
 
-    <div class="param-card">
-      <div class="param-card-header">
-        <span class="param-card-name">Free T4</span>
-        <span class="status-pill bg-normal">normal</span>
-      </div>
-      <div class="param-card-value-row">
-        <span class="param-card-value">1.1</span>
-        <span class="param-card-unit">ng/dL</span>
-      </div>
-      
-    <div class="range-slider">
-      <div class="range-slider-fill"
-           style="left:11.538461538461542%;width:76.92307692307692%;background:var(--color-bg-light);opacity:0.5"></div>
-      <div class="range-slider-fill"
-           style="left:0;width:34.61538461538463%;background:var(--color-healthy)"></div>
-      <div class="range-slider-dot"
-           style="left:34.61538461538463%;background:var(--color-healthy)"></div>
-    </div>
-    <div class="range-slider-bounds">
-      <span class="range-bound-label">0.8</span>
-      <span class="range-bound-label">1.8</span>
-    </div>
-    </div>
-        </div>
+    <!-- Needle -->
+    <line x1="36" y1="46.800000000000004"
+          x2="61.70399999999999" y2="46.800000000000004"
+          stroke="var(--color-healthy)" stroke-width="3" stroke-linecap="round"/>
+    <!-- Pivot dot -->
+    <circle cx="36" cy="46.800000000000004" r="2.88"
+            fill="var(--color-healthy)" stroke="var(--color-surface)" stroke-width="2"/>
+  </svg>
+
+  <!-- Score value -->
+  <div class="speedometer__value" style="color:var(--color-healthy)">100</div>
+  <div class="speedometer__label"></div>
+</div></div>
+  </div>
+  <div class="det-param-card__range-row">
+    <span class="det-param-card__range-label">Ref: 0 – 200</span>
+    <span class="det-param-card__range-unit">mg/dL</span>
+  </div>
+  
+<div class="range-slider">
+  <div class="range-slider-fill"
+       style="left:11.538461538461538%;width:76.92307692307692%;background:var(--color-bg-light);opacity:0.5"></div>
+  <div class="range-slider-fill"
+       style="left:0;width:100%;background:var(--color-monitor)"></div>
+  <div class="range-slider-dot"
+       style="left:100%;background:var(--color-monitor)"></div>
+</div>
+<div class="range-slider-bounds">
+  <span class="range-bound-label">0</span>
+  <span class="range-bound-label">200</span>
+</div>
+</div>
+
+<div class="det-param-card det-param-card--flagged">
+  <div class="det-param-card__top">
+    <div class="det-param-card__name">LDL Cholesterol</div>
+    <span class="det-status-pill det-status--high">HIGH</span>
+  </div>
+  <div class="det-param-card__value-row">
+    <span class="det-param-card__value" style="color:var(--color-monitor)">162</span>
+    <span class="det-param-card__unit">mg/dL</span>
+    <div class="det-param-card__mini-gauge">
+<div class="speedometer" style="width:72px;margin:0 auto;text-align:center">
+  <svg width="72" height="51.839999999999996" viewBox="0 0 72 51.839999999999996">
+    <!-- Background arc track -->
+    <path d="M 5.760000000000002 46.800000000000004 A 30.24 30.24 0 0 1 66.24 46.800000000000004"
+          fill="none" stroke="var(--color-border)" stroke-width="5.3999999999999995" stroke-linecap="butt"/>
+
+    <!-- Zone arcs: red (0-40%), amber (40-70%), green (70-100%) -->
+    <path d="M 35.99999999999999 77.04 A 30.24 30.24 0 0 1 7.2400509472345576 56.14467390989842"
+                  fill="none" stroke="var(--color-attention)" stroke-width="5.3999999999999995" stroke-linecap="butt"/>
+    <path d="M 7.2400509472345576 56.14467390989842 A 30.24 30.24 0 0 1 11.535326090101595 29.025373970675613"
+                  fill="none" stroke="var(--color-monitor)" stroke-width="5.3999999999999995" stroke-linecap="butt"/>
+    <path d="M 11.535326090101595 29.025373970675613 A 30.24 30.24 0 0 1 36 16.560000000000006"
+                  fill="none" stroke="var(--color-healthy)" stroke-width="5.3999999999999995" stroke-linecap="butt"/>
+
+    <!-- Needle -->
+    <line x1="36" y1="46.800000000000004"
+          x2="61.70399999999999" y2="46.800000000000004"
+          stroke="var(--color-healthy)" stroke-width="3" stroke-linecap="round"/>
+    <!-- Pivot dot -->
+    <circle cx="36" cy="46.800000000000004" r="2.88"
+            fill="var(--color-healthy)" stroke="var(--color-surface)" stroke-width="2"/>
+  </svg>
+
+  <!-- Score value -->
+  <div class="speedometer__value" style="color:var(--color-healthy)">100</div>
+  <div class="speedometer__label"></div>
+</div></div>
+  </div>
+  <div class="det-param-card__range-row">
+    <span class="det-param-card__range-label">Ref: 0 – 130</span>
+    <span class="det-param-card__range-unit">mg/dL</span>
+  </div>
+  
+<div class="range-slider">
+  <div class="range-slider-fill"
+       style="left:11.538461538461538%;width:76.92307692307692%;background:var(--color-bg-light);opacity:0.5"></div>
+  <div class="range-slider-fill"
+       style="left:0;width:100%;background:var(--color-monitor)"></div>
+  <div class="range-slider-dot"
+       style="left:100%;background:var(--color-monitor)"></div>
+</div>
+<div class="range-slider-bounds">
+  <span class="range-bound-label">0</span>
+  <span class="range-bound-label">130</span>
+</div>
+</div>
+
+<div class="det-param-card ">
+  <div class="det-param-card__top">
+    <div class="det-param-card__name">HDL Cholesterol</div>
+    <span class="det-status-pill det-status--normal">NORMAL</span>
+  </div>
+  <div class="det-param-card__value-row">
+    <span class="det-param-card__value" style="color:var(--color-healthy)">52</span>
+    <span class="det-param-card__unit">mg/dL</span>
+    <div class="det-param-card__mini-gauge">
+<div class="speedometer" style="width:72px;margin:0 auto;text-align:center">
+  <svg width="72" height="51.839999999999996" viewBox="0 0 72 51.839999999999996">
+    <!-- Background arc track -->
+    <path d="M 5.760000000000002 46.800000000000004 A 30.24 30.24 0 0 1 66.24 46.800000000000004"
+          fill="none" stroke="var(--color-border)" stroke-width="5.3999999999999995" stroke-linecap="butt"/>
+
+    <!-- Zone arcs: red (0-40%), amber (40-70%), green (70-100%) -->
+    <path d="M 35.99999999999999 77.04 A 30.24 30.24 0 0 1 7.2400509472345576 56.14467390989842"
+                  fill="none" stroke="var(--color-attention)" stroke-width="5.3999999999999995" stroke-linecap="butt"/>
+    <path d="M 7.2400509472345576 56.14467390989842 A 30.24 30.24 0 0 1 11.535326090101595 29.025373970675613"
+                  fill="none" stroke="var(--color-monitor)" stroke-width="5.3999999999999995" stroke-linecap="butt"/>
+    <path d="M 11.535326090101595 29.025373970675613 A 30.24 30.24 0 0 1 36 16.560000000000006"
+                  fill="none" stroke="var(--color-healthy)" stroke-width="5.3999999999999995" stroke-linecap="butt"/>
+
+    <!-- Needle -->
+    <line x1="36" y1="46.800000000000004"
+          x2="43.94297282341365" y2="22.354043305149382"
+          stroke="var(--color-monitor)" stroke-width="3" stroke-linecap="round"/>
+    <!-- Pivot dot -->
+    <circle cx="36" cy="46.800000000000004" r="2.88"
+            fill="var(--color-monitor)" stroke="var(--color-surface)" stroke-width="2"/>
+  </svg>
+
+  <!-- Score value -->
+  <div class="speedometer__value" style="color:var(--color-monitor)">60</div>
+  <div class="speedometer__label"></div>
+</div></div>
+  </div>
+  <div class="det-param-card__range-row">
+    <span class="det-param-card__range-label">Ref: 40 – 60</span>
+    <span class="det-param-card__range-unit">mg/dL</span>
+  </div>
+  
+<div class="range-slider">
+  <div class="range-slider-fill"
+       style="left:11.538461538461538%;width:76.92307692307692%;background:var(--color-bg-light);opacity:0.5"></div>
+  <div class="range-slider-fill"
+       style="left:0;width:57.692307692307686%;background:var(--color-healthy)"></div>
+  <div class="range-slider-dot"
+       style="left:57.692307692307686%;background:var(--color-healthy)"></div>
+</div>
+<div class="range-slider-bounds">
+  <span class="range-bound-label">40</span>
+  <span class="range-bound-label">60</span>
+</div>
+</div>
+
+<div class="det-param-card det-param-card--flagged">
+  <div class="det-param-card__top">
+    <div class="det-param-card__name">Triglycerides</div>
+    <span class="det-status-pill det-status--high">HIGH</span>
+  </div>
+  <div class="det-param-card__value-row">
+    <span class="det-param-card__value" style="color:var(--color-monitor)">210</span>
+    <span class="det-param-card__unit">mg/dL</span>
+    <div class="det-param-card__mini-gauge">
+<div class="speedometer" style="width:72px;margin:0 auto;text-align:center">
+  <svg width="72" height="51.839999999999996" viewBox="0 0 72 51.839999999999996">
+    <!-- Background arc track -->
+    <path d="M 5.760000000000002 46.800000000000004 A 30.24 30.24 0 0 1 66.24 46.800000000000004"
+          fill="none" stroke="var(--color-border)" stroke-width="5.3999999999999995" stroke-linecap="butt"/>
+
+    <!-- Zone arcs: red (0-40%), amber (40-70%), green (70-100%) -->
+    <path d="M 35.99999999999999 77.04 A 30.24 30.24 0 0 1 7.2400509472345576 56.14467390989842"
+                  fill="none" stroke="var(--color-attention)" stroke-width="5.3999999999999995" stroke-linecap="butt"/>
+    <path d="M 7.2400509472345576 56.14467390989842 A 30.24 30.24 0 0 1 11.535326090101595 29.025373970675613"
+                  fill="none" stroke="var(--color-monitor)" stroke-width="5.3999999999999995" stroke-linecap="butt"/>
+    <path d="M 11.535326090101595 29.025373970675613 A 30.24 30.24 0 0 1 36 16.560000000000006"
+                  fill="none" stroke="var(--color-healthy)" stroke-width="5.3999999999999995" stroke-linecap="butt"/>
+
+    <!-- Needle -->
+    <line x1="36" y1="46.800000000000004"
+          x2="61.70399999999999" y2="46.800000000000004"
+          stroke="var(--color-healthy)" stroke-width="3" stroke-linecap="round"/>
+    <!-- Pivot dot -->
+    <circle cx="36" cy="46.800000000000004" r="2.88"
+            fill="var(--color-healthy)" stroke="var(--color-surface)" stroke-width="2"/>
+  </svg>
+
+  <!-- Score value -->
+  <div class="speedometer__value" style="color:var(--color-healthy)">100</div>
+  <div class="speedometer__label"></div>
+</div></div>
+  </div>
+  <div class="det-param-card__range-row">
+    <span class="det-param-card__range-label">Ref: 0 – 150</span>
+    <span class="det-param-card__range-unit">mg/dL</span>
+  </div>
+  
+<div class="range-slider">
+  <div class="range-slider-fill"
+       style="left:11.538461538461538%;width:76.92307692307692%;background:var(--color-bg-light);opacity:0.5"></div>
+  <div class="range-slider-fill"
+       style="left:0;width:100%;background:var(--color-monitor)"></div>
+  <div class="range-slider-dot"
+       style="left:100%;background:var(--color-monitor)"></div>
+</div>
+<div class="range-slider-bounds">
+  <span class="range-bound-label">0</span>
+  <span class="range-bound-label">150</span>
+</div>
+</div>
+
+<div class="det-param-card det-param-card--flagged">
+  <div class="det-param-card__top">
+    <div class="det-param-card__name">VLDL</div>
+    <span class="det-status-pill det-status--high">HIGH</span>
+  </div>
+  <div class="det-param-card__value-row">
+    <span class="det-param-card__value" style="color:var(--color-monitor)">42</span>
+    <span class="det-param-card__unit">mg/dL</span>
+    <div class="det-param-card__mini-gauge">
+<div class="speedometer" style="width:72px;margin:0 auto;text-align:center">
+  <svg width="72" height="51.839999999999996" viewBox="0 0 72 51.839999999999996">
+    <!-- Background arc track -->
+    <path d="M 5.760000000000002 46.800000000000004 A 30.24 30.24 0 0 1 66.24 46.800000000000004"
+          fill="none" stroke="var(--color-border)" stroke-width="5.3999999999999995" stroke-linecap="butt"/>
+
+    <!-- Zone arcs: red (0-40%), amber (40-70%), green (70-100%) -->
+    <path d="M 35.99999999999999 77.04 A 30.24 30.24 0 0 1 7.2400509472345576 56.14467390989842"
+                  fill="none" stroke="var(--color-attention)" stroke-width="5.3999999999999995" stroke-linecap="butt"/>
+    <path d="M 7.2400509472345576 56.14467390989842 A 30.24 30.24 0 0 1 11.535326090101595 29.025373970675613"
+                  fill="none" stroke="var(--color-monitor)" stroke-width="5.3999999999999995" stroke-linecap="butt"/>
+    <path d="M 11.535326090101595 29.025373970675613 A 30.24 30.24 0 0 1 36 16.560000000000006"
+                  fill="none" stroke="var(--color-healthy)" stroke-width="5.3999999999999995" stroke-linecap="butt"/>
+
+    <!-- Needle -->
+    <line x1="36" y1="46.800000000000004"
+          x2="61.70399999999999" y2="46.800000000000004"
+          stroke="var(--color-healthy)" stroke-width="3" stroke-linecap="round"/>
+    <!-- Pivot dot -->
+    <circle cx="36" cy="46.800000000000004" r="2.88"
+            fill="var(--color-healthy)" stroke="var(--color-surface)" stroke-width="2"/>
+  </svg>
+
+  <!-- Score value -->
+  <div class="speedometer__value" style="color:var(--color-healthy)">100</div>
+  <div class="speedometer__label"></div>
+</div></div>
+  </div>
+  <div class="det-param-card__range-row">
+    <span class="det-param-card__range-label">Ref: 5 – 40</span>
+    <span class="det-param-card__range-unit">mg/dL</span>
+  </div>
+  
+<div class="range-slider">
+  <div class="range-slider-fill"
+       style="left:11.538461538461538%;width:76.92307692307692%;background:var(--color-bg-light);opacity:0.5"></div>
+  <div class="range-slider-fill"
+       style="left:0;width:92.85714285714286%;background:var(--color-monitor)"></div>
+  <div class="range-slider-dot"
+       style="left:92.85714285714286%;background:var(--color-monitor)"></div>
+</div>
+<div class="range-slider-bounds">
+  <span class="range-bound-label">5</span>
+  <span class="range-bound-label">40</span>
+</div>
+</div>
+  </div>
 </section>
   </main>
 
   <footer class="page-footer">
     <span class="footer-brand">Beta Health Labs — Quality Diagnostics</span>
-    <span class="footer-page">Page 4 of 5</span>
+    <span class="footer-page">Page 4 of 11</span>
   </footer>
 </div>
 
@@ -1178,141 +2333,1796 @@ body {
 
   <main class="page-content">
     
-<section class="profile-detail">
-  <div class="profile-heading">
-    <h2>Liver Function Test</h2>
-    <span class="detail-score">Score: 90/100</span>
-    <span class="detail-badge bg-attention">attention</span>
+<section class="indepth-detail">
+  <div class="det-profile-header">
+    <div class="det-profile-header__left">
+      <h2 class="det-profile-name">Complete Blood Count</h2>
+      <div class="det-abnormal-flag">⚠️ 2 parameters outside reference range</div>
+    </div>
+    <div class="det-profile-header__right">
+      
+<div class="speedometer" style="width:120px;margin:0 auto;text-align:center">
+  <svg width="120" height="86.39999999999999" viewBox="0 0 120 86.39999999999999">
+    <!-- Background arc track -->
+    <path d="M 9.600000000000001 78 A 50.4 50.4 0 0 1 110.4 78"
+          fill="none" stroke="var(--color-border)" stroke-width="9" stroke-linecap="butt"/>
+
+    <!-- Zone arcs: red (0-40%), amber (40-70%), green (70-100%) -->
+    <path d="M 59.99999999999999 128.4 A 50.4 50.4 0 0 1 12.066751578724265 93.57445651649736"
+                  fill="none" stroke="var(--color-attention)" stroke-width="9" stroke-linecap="butt"/>
+    <path d="M 12.066751578724265 93.57445651649736 A 50.4 50.4 0 0 1 19.225543483502655 48.37562328445935"
+                  fill="none" stroke="var(--color-monitor)" stroke-width="9" stroke-linecap="butt"/>
+    <path d="M 19.225543483502655 48.37562328445935 A 50.4 50.4 0 0 1 60 27.6"
+                  fill="none" stroke="var(--color-healthy)" stroke-width="9" stroke-linecap="butt"/>
+
+    <!-- Needle -->
+    <line x1="60" y1="78"
+          x2="102.75546504586714" y2="75.31005414336423"
+          stroke="var(--color-healthy)" stroke-width="3" stroke-linecap="round"/>
+    <!-- Pivot dot -->
+    <circle cx="60" cy="78" r="4.8"
+            fill="var(--color-healthy)" stroke="var(--color-surface)" stroke-width="2"/>
+  </svg>
+
+  <!-- Score value -->
+  <div class="speedometer__value" style="color:var(--color-healthy)">98</div>
+  <div class="speedometer__label">Profile Score</div>
+</div>
+    </div>
+    <div class="det-profile-badge" style="background:var(--color-attention)">
+      ATTENTION
+    </div>
   </div>
 
-  <div class="param-cards-grid">
-          
-    <div class="param-card">
-      <div class="param-card-header">
-        <span class="param-card-name">SGOT (AST)</span>
-        <span class="status-pill bg-high">high</span>
-      </div>
-      <div class="param-card-value-row">
-        <span class="param-card-value">52</span>
-        <span class="param-card-unit">U/L</span>
-      </div>
-      
-    <div class="range-slider">
-      <div class="range-slider-fill"
-           style="left:11.538461538461538%;width:76.92307692307692%;background:var(--color-bg-light);opacity:0.5"></div>
-      <div class="range-slider-fill"
-           style="left:0;width:100%;background:var(--color-monitor)"></div>
-      <div class="range-slider-dot"
-           style="left:100%;background:var(--color-monitor)"></div>
-    </div>
-    <div class="range-slider-bounds">
-      <span class="range-bound-label">5</span>
-      <span class="range-bound-label">40</span>
-    </div>
-    </div>
+  <div class="det-param-grid">
+    
+<div class="det-param-card det-param-card--flagged">
+  <div class="det-param-card__top">
+    <div class="det-param-card__name">Haemoglobin</div>
+    <span class="det-status-pill det-status--low">LOW</span>
+  </div>
+  <div class="det-param-card__value-row">
+    <span class="det-param-card__value" style="color:var(--color-monitor)">11.4</span>
+    <span class="det-param-card__unit">g/dL</span>
+    <div class="det-param-card__mini-gauge">
+<div class="speedometer" style="width:72px;margin:0 auto;text-align:center">
+  <svg width="72" height="51.839999999999996" viewBox="0 0 72 51.839999999999996">
+    <!-- Background arc track -->
+    <path d="M 5.760000000000002 46.800000000000004 A 30.24 30.24 0 0 1 66.24 46.800000000000004"
+          fill="none" stroke="var(--color-border)" stroke-width="5.3999999999999995" stroke-linecap="butt"/>
 
-    <div class="param-card">
-      <div class="param-card-header">
-        <span class="param-card-name">SGPT (ALT)</span>
-        <span class="status-pill bg-high">high</span>
-      </div>
-      <div class="param-card-value-row">
-        <span class="param-card-value">68</span>
-        <span class="param-card-unit">U/L</span>
-      </div>
-      
-    <div class="range-slider">
-      <div class="range-slider-fill"
-           style="left:11.538461538461538%;width:76.92307692307692%;background:var(--color-bg-light);opacity:0.5"></div>
-      <div class="range-slider-fill"
-           style="left:0;width:100%;background:var(--color-monitor)"></div>
-      <div class="range-slider-dot"
-           style="left:100%;background:var(--color-monitor)"></div>
-    </div>
-    <div class="range-slider-bounds">
-      <span class="range-bound-label">7</span>
-      <span class="range-bound-label">56</span>
-    </div>
-    </div>
+    <!-- Zone arcs: red (0-40%), amber (40-70%), green (70-100%) -->
+    <path d="M 35.99999999999999 77.04 A 30.24 30.24 0 0 1 7.2400509472345576 56.14467390989842"
+                  fill="none" stroke="var(--color-attention)" stroke-width="5.3999999999999995" stroke-linecap="butt"/>
+    <path d="M 7.2400509472345576 56.14467390989842 A 30.24 30.24 0 0 1 11.535326090101595 29.025373970675613"
+                  fill="none" stroke="var(--color-monitor)" stroke-width="5.3999999999999995" stroke-linecap="butt"/>
+    <path d="M 11.535326090101595 29.025373970675613 A 30.24 30.24 0 0 1 36 16.560000000000006"
+                  fill="none" stroke="var(--color-healthy)" stroke-width="5.3999999999999995" stroke-linecap="butt"/>
 
-    <div class="param-card">
-      <div class="param-card-header">
-        <span class="param-card-name">Bilirubin Total</span>
-        <span class="status-pill bg-normal">normal</span>
-      </div>
-      <div class="param-card-value-row">
-        <span class="param-card-value">0.9</span>
-        <span class="param-card-unit">mg/dL</span>
-      </div>
-      
-    <div class="range-slider">
-      <div class="range-slider-fill"
-           style="left:11.538461538461538%;width:76.92307692307692%;background:var(--color-bg-light);opacity:0.5"></div>
-      <div class="range-slider-fill"
-           style="left:0;width:67.48251748251748%;background:var(--color-healthy)"></div>
-      <div class="range-slider-dot"
-           style="left:67.48251748251748%;background:var(--color-healthy)"></div>
-    </div>
-    <div class="range-slider-bounds">
-      <span class="range-bound-label">0.1</span>
-      <span class="range-bound-label">1.2</span>
-    </div>
-    </div>
+    <!-- Needle -->
+    <line x1="36" y1="46.800000000000004"
+          x2="10.296000000000003" y2="46.800000000000004"
+          stroke="var(--color-attention)" stroke-width="3" stroke-linecap="round"/>
+    <!-- Pivot dot -->
+    <circle cx="36" cy="46.800000000000004" r="2.88"
+            fill="var(--color-attention)" stroke="var(--color-surface)" stroke-width="2"/>
+  </svg>
 
-    <div class="param-card">
-      <div class="param-card-header">
-        <span class="param-card-name">Albumin</span>
-        <span class="status-pill bg-normal">normal</span>
-      </div>
-      <div class="param-card-value-row">
-        <span class="param-card-value">4.1</span>
-        <span class="param-card-unit">g/dL</span>
-      </div>
-      
-    <div class="range-slider">
-      <div class="range-slider-fill"
-           style="left:11.538461538461545%;width:76.92307692307693%;background:var(--color-bg-light);opacity:0.5"></div>
-      <div class="range-slider-fill"
-           style="left:0;width:42.3076923076923%;background:var(--color-healthy)"></div>
-      <div class="range-slider-dot"
-           style="left:42.3076923076923%;background:var(--color-healthy)"></div>
-    </div>
-    <div class="range-slider-bounds">
-      <span class="range-bound-label">3.5</span>
-      <span class="range-bound-label">5</span>
-    </div>
-    </div>
+  <!-- Score value -->
+  <div class="speedometer__value" style="color:var(--color-attention)">0</div>
+  <div class="speedometer__label"></div>
+</div></div>
+  </div>
+  <div class="det-param-card__range-row">
+    <span class="det-param-card__range-label">Ref: 12 – 16</span>
+    <span class="det-param-card__range-unit">g/dL</span>
+  </div>
+  
+<div class="range-slider">
+  <div class="range-slider-fill"
+       style="left:11.53846153846153%;width:76.9230769230769%;background:var(--color-bg-light);opacity:0.5"></div>
+  <div class="range-slider-fill"
+       style="left:0;width:0%;background:var(--color-monitor)"></div>
+  <div class="range-slider-dot"
+       style="left:0%;background:var(--color-monitor)"></div>
+</div>
+<div class="range-slider-bounds">
+  <span class="range-bound-label">12</span>
+  <span class="range-bound-label">16</span>
+</div>
+</div>
 
-    <div class="param-card">
-      <div class="param-card-header">
-        <span class="param-card-name">Alkaline Phosphatase</span>
-        <span class="status-pill bg-normal">normal</span>
-      </div>
-      <div class="param-card-value-row">
-        <span class="param-card-value">88</span>
-        <span class="param-card-unit">U/L</span>
-      </div>
-      
-    <div class="range-slider">
-      <div class="range-slider-fill"
-           style="left:11.53846153846154%;width:76.92307692307693%;background:var(--color-bg-light);opacity:0.5"></div>
-      <div class="range-slider-fill"
-           style="left:0;width:44.398805078416736%;background:var(--color-healthy)"></div>
-      <div class="range-slider-dot"
-           style="left:44.398805078416736%;background:var(--color-healthy)"></div>
-    </div>
-    <div class="range-slider-bounds">
-      <span class="range-bound-label">44</span>
-      <span class="range-bound-label">147</span>
-    </div>
-    </div>
-        </div>
+<div class="det-param-card ">
+  <div class="det-param-card__top">
+    <div class="det-param-card__name">RBC Count</div>
+    <span class="det-status-pill det-status--normal">NORMAL</span>
+  </div>
+  <div class="det-param-card__value-row">
+    <span class="det-param-card__value" style="color:var(--color-healthy)">3.9</span>
+    <span class="det-param-card__unit">million/µL</span>
+    <div class="det-param-card__mini-gauge">
+<div class="speedometer" style="width:72px;margin:0 auto;text-align:center">
+  <svg width="72" height="51.839999999999996" viewBox="0 0 72 51.839999999999996">
+    <!-- Background arc track -->
+    <path d="M 5.760000000000002 46.800000000000004 A 30.24 30.24 0 0 1 66.24 46.800000000000004"
+          fill="none" stroke="var(--color-border)" stroke-width="5.3999999999999995" stroke-linecap="butt"/>
+
+    <!-- Zone arcs: red (0-40%), amber (40-70%), green (70-100%) -->
+    <path d="M 35.99999999999999 77.04 A 30.24 30.24 0 0 1 7.2400509472345576 56.14467390989842"
+                  fill="none" stroke="var(--color-attention)" stroke-width="5.3999999999999995" stroke-linecap="butt"/>
+    <path d="M 7.2400509472345576 56.14467390989842 A 30.24 30.24 0 0 1 11.535326090101595 29.025373970675613"
+                  fill="none" stroke="var(--color-monitor)" stroke-width="5.3999999999999995" stroke-linecap="butt"/>
+    <path d="M 11.535326090101595 29.025373970675613 A 30.24 30.24 0 0 1 36 16.560000000000006"
+                  fill="none" stroke="var(--color-healthy)" stroke-width="5.3999999999999995" stroke-linecap="butt"/>
+
+    <!-- Needle -->
+    <line x1="36" y1="46.800000000000004"
+          x2="10.91503555112644" y2="41.19284612314327"
+          stroke="var(--color-attention)" stroke-width="3" stroke-linecap="round"/>
+    <!-- Pivot dot -->
+    <circle cx="36" cy="46.800000000000004" r="2.88"
+            fill="var(--color-attention)" stroke="var(--color-surface)" stroke-width="2"/>
+  </svg>
+
+  <!-- Score value -->
+  <div class="speedometer__value" style="color:var(--color-attention)">7</div>
+  <div class="speedometer__label"></div>
+</div></div>
+  </div>
+  <div class="det-param-card__range-row">
+    <span class="det-param-card__range-label">Ref: 3.8 – 5.2</span>
+    <span class="det-param-card__range-unit">million/µL</span>
+  </div>
+  
+<div class="range-slider">
+  <div class="range-slider-fill"
+       style="left:11.538461538461535%;width:76.92307692307693%;background:var(--color-bg-light);opacity:0.5"></div>
+  <div class="range-slider-fill"
+       style="left:0;width:17.032967032967033%;background:var(--color-healthy)"></div>
+  <div class="range-slider-dot"
+       style="left:17.032967032967033%;background:var(--color-healthy)"></div>
+</div>
+<div class="range-slider-bounds">
+  <span class="range-bound-label">3.8</span>
+  <span class="range-bound-label">5.2</span>
+</div>
+</div>
+
+<div class="det-param-card ">
+  <div class="det-param-card__top">
+    <div class="det-param-card__name">WBC Count</div>
+    <span class="det-status-pill det-status--normal">NORMAL</span>
+  </div>
+  <div class="det-param-card__value-row">
+    <span class="det-param-card__value" style="color:var(--color-healthy)">6500</span>
+    <span class="det-param-card__unit">/µL</span>
+    <div class="det-param-card__mini-gauge">
+<div class="speedometer" style="width:72px;margin:0 auto;text-align:center">
+  <svg width="72" height="51.839999999999996" viewBox="0 0 72 51.839999999999996">
+    <!-- Background arc track -->
+    <path d="M 5.760000000000002 46.800000000000004 A 30.24 30.24 0 0 1 66.24 46.800000000000004"
+          fill="none" stroke="var(--color-border)" stroke-width="5.3999999999999995" stroke-linecap="butt"/>
+
+    <!-- Zone arcs: red (0-40%), amber (40-70%), green (70-100%) -->
+    <path d="M 35.99999999999999 77.04 A 30.24 30.24 0 0 1 7.2400509472345576 56.14467390989842"
+                  fill="none" stroke="var(--color-attention)" stroke-width="5.3999999999999995" stroke-linecap="butt"/>
+    <path d="M 7.2400509472345576 56.14467390989842 A 30.24 30.24 0 0 1 11.535326090101595 29.025373970675613"
+                  fill="none" stroke="var(--color-monitor)" stroke-width="5.3999999999999995" stroke-linecap="butt"/>
+    <path d="M 11.535326090101595 29.025373970675613 A 30.24 30.24 0 0 1 36 16.560000000000006"
+                  fill="none" stroke="var(--color-healthy)" stroke-width="5.3999999999999995" stroke-linecap="butt"/>
+
+    <!-- Needle -->
+    <line x1="36" y1="46.800000000000004"
+          x2="25.055769089611374" y2="23.542325443413443"
+          stroke="var(--color-attention)" stroke-width="3" stroke-linecap="round"/>
+    <!-- Pivot dot -->
+    <circle cx="36" cy="46.800000000000004" r="2.88"
+            fill="var(--color-attention)" stroke="var(--color-surface)" stroke-width="2"/>
+  </svg>
+
+  <!-- Score value -->
+  <div class="speedometer__value" style="color:var(--color-attention)">36</div>
+  <div class="speedometer__label"></div>
+</div></div>
+  </div>
+  <div class="det-param-card__range-row">
+    <span class="det-param-card__range-label">Ref: 4000 – 11000</span>
+    <span class="det-param-card__range-unit">/µL</span>
+  </div>
+  
+<div class="range-slider">
+  <div class="range-slider-fill"
+       style="left:11.538461538461538%;width:76.92307692307692%;background:var(--color-bg-light);opacity:0.5"></div>
+  <div class="range-slider-fill"
+       style="left:0;width:39.010989010989015%;background:var(--color-healthy)"></div>
+  <div class="range-slider-dot"
+       style="left:39.010989010989015%;background:var(--color-healthy)"></div>
+</div>
+<div class="range-slider-bounds">
+  <span class="range-bound-label">4000</span>
+  <span class="range-bound-label">11000</span>
+</div>
+</div>
+
+<div class="det-param-card ">
+  <div class="det-param-card__top">
+    <div class="det-param-card__name">Platelets</div>
+    <span class="det-status-pill det-status--normal">NORMAL</span>
+  </div>
+  <div class="det-param-card__value-row">
+    <span class="det-param-card__value" style="color:var(--color-healthy)">185000</span>
+    <span class="det-param-card__unit">/µL</span>
+    <div class="det-param-card__mini-gauge">
+<div class="speedometer" style="width:72px;margin:0 auto;text-align:center">
+  <svg width="72" height="51.839999999999996" viewBox="0 0 72 51.839999999999996">
+    <!-- Background arc track -->
+    <path d="M 5.760000000000002 46.800000000000004 A 30.24 30.24 0 0 1 66.24 46.800000000000004"
+          fill="none" stroke="var(--color-border)" stroke-width="5.3999999999999995" stroke-linecap="butt"/>
+
+    <!-- Zone arcs: red (0-40%), amber (40-70%), green (70-100%) -->
+    <path d="M 35.99999999999999 77.04 A 30.24 30.24 0 0 1 7.2400509472345576 56.14467390989842"
+                  fill="none" stroke="var(--color-attention)" stroke-width="5.3999999999999995" stroke-linecap="butt"/>
+    <path d="M 7.2400509472345576 56.14467390989842 A 30.24 30.24 0 0 1 11.535326090101595 29.025373970675613"
+                  fill="none" stroke="var(--color-monitor)" stroke-width="5.3999999999999995" stroke-linecap="butt"/>
+    <path d="M 11.535326090101595 29.025373970675613 A 30.24 30.24 0 0 1 36 16.560000000000006"
+                  fill="none" stroke="var(--color-healthy)" stroke-width="5.3999999999999995" stroke-linecap="butt"/>
+
+    <!-- Needle -->
+    <line x1="36" y1="46.800000000000004"
+          x2="12.742325443413435" y2="35.855769089611385"
+          stroke="var(--color-attention)" stroke-width="3" stroke-linecap="round"/>
+    <!-- Pivot dot -->
+    <circle cx="36" cy="46.800000000000004" r="2.88"
+            fill="var(--color-attention)" stroke="var(--color-surface)" stroke-width="2"/>
+  </svg>
+
+  <!-- Score value -->
+  <div class="speedometer__value" style="color:var(--color-attention)">14</div>
+  <div class="speedometer__label"></div>
+</div></div>
+  </div>
+  <div class="det-param-card__range-row">
+    <span class="det-param-card__range-label">Ref: 150000 – 400000</span>
+    <span class="det-param-card__range-unit">/µL</span>
+  </div>
+  
+<div class="range-slider">
+  <div class="range-slider-fill"
+       style="left:11.538461538461538%;width:76.92307692307692%;background:var(--color-bg-light);opacity:0.5"></div>
+  <div class="range-slider-fill"
+       style="left:0;width:22.30769230769231%;background:var(--color-healthy)"></div>
+  <div class="range-slider-dot"
+       style="left:22.30769230769231%;background:var(--color-healthy)"></div>
+</div>
+<div class="range-slider-bounds">
+  <span class="range-bound-label">150000</span>
+  <span class="range-bound-label">400000</span>
+</div>
+</div>
+
+<div class="det-param-card det-param-card--flagged">
+  <div class="det-param-card__top">
+    <div class="det-param-card__name">Hematocrit</div>
+    <span class="det-status-pill det-status--low">LOW</span>
+  </div>
+  <div class="det-param-card__value-row">
+    <span class="det-param-card__value" style="color:var(--color-monitor)">34.8</span>
+    <span class="det-param-card__unit">%</span>
+    <div class="det-param-card__mini-gauge">
+<div class="speedometer" style="width:72px;margin:0 auto;text-align:center">
+  <svg width="72" height="51.839999999999996" viewBox="0 0 72 51.839999999999996">
+    <!-- Background arc track -->
+    <path d="M 5.760000000000002 46.800000000000004 A 30.24 30.24 0 0 1 66.24 46.800000000000004"
+          fill="none" stroke="var(--color-border)" stroke-width="5.3999999999999995" stroke-linecap="butt"/>
+
+    <!-- Zone arcs: red (0-40%), amber (40-70%), green (70-100%) -->
+    <path d="M 35.99999999999999 77.04 A 30.24 30.24 0 0 1 7.2400509472345576 56.14467390989842"
+                  fill="none" stroke="var(--color-attention)" stroke-width="5.3999999999999995" stroke-linecap="butt"/>
+    <path d="M 7.2400509472345576 56.14467390989842 A 30.24 30.24 0 0 1 11.535326090101595 29.025373970675613"
+                  fill="none" stroke="var(--color-monitor)" stroke-width="5.3999999999999995" stroke-linecap="butt"/>
+    <path d="M 11.535326090101595 29.025373970675613 A 30.24 30.24 0 0 1 36 16.560000000000006"
+                  fill="none" stroke="var(--color-healthy)" stroke-width="5.3999999999999995" stroke-linecap="butt"/>
+
+    <!-- Needle -->
+    <line x1="36" y1="46.800000000000004"
+          x2="10.296000000000003" y2="46.800000000000004"
+          stroke="var(--color-attention)" stroke-width="3" stroke-linecap="round"/>
+    <!-- Pivot dot -->
+    <circle cx="36" cy="46.800000000000004" r="2.88"
+            fill="var(--color-attention)" stroke="var(--color-surface)" stroke-width="2"/>
+  </svg>
+
+  <!-- Score value -->
+  <div class="speedometer__value" style="color:var(--color-attention)">0</div>
+  <div class="speedometer__label"></div>
+</div></div>
+  </div>
+  <div class="det-param-card__range-row">
+    <span class="det-param-card__range-label">Ref: 36 – 46</span>
+    <span class="det-param-card__range-unit">%</span>
+  </div>
+  
+<div class="range-slider">
+  <div class="range-slider-fill"
+       style="left:11.538461538461538%;width:76.92307692307692%;background:var(--color-bg-light);opacity:0.5"></div>
+  <div class="range-slider-fill"
+       style="left:0;width:2.307692307692286%;background:var(--color-monitor)"></div>
+  <div class="range-slider-dot"
+       style="left:2.307692307692286%;background:var(--color-monitor)"></div>
+</div>
+<div class="range-slider-bounds">
+  <span class="range-bound-label">36</span>
+  <span class="range-bound-label">46</span>
+</div>
+</div>
+  </div>
 </section>
   </main>
 
   <footer class="page-footer">
     <span class="footer-brand">Beta Health Labs — Quality Diagnostics</span>
-    <span class="footer-page">Page 5 of 5</span>
+    <span class="footer-page">Page 5 of 11</span>
+  </footer>
+</div>
+
+<div class="report-page">
+  <div class="page-strip" style="background:#E53935"></div>
+
+  <header class="page-header">
+    <img class="logo" src="https://cdn.example.com/beta/logo.png" alt="Beta Health Labs logo" />
+    <span class="lab-name">Beta Health Labs</span>
+  </header>
+
+  <main class="page-content">
+    
+<section class="indepth-detail">
+  <div class="det-profile-header">
+    <div class="det-profile-header__left">
+      <h2 class="det-profile-name">Liver Function</h2>
+      <div class="det-abnormal-flag">⚠️ 2 parameters outside reference range</div>
+    </div>
+    <div class="det-profile-header__right">
+      
+<div class="speedometer" style="width:120px;margin:0 auto;text-align:center">
+  <svg width="120" height="86.39999999999999" viewBox="0 0 120 86.39999999999999">
+    <!-- Background arc track -->
+    <path d="M 9.600000000000001 78 A 50.4 50.4 0 0 1 110.4 78"
+          fill="none" stroke="var(--color-border)" stroke-width="9" stroke-linecap="butt"/>
+
+    <!-- Zone arcs: red (0-40%), amber (40-70%), green (70-100%) -->
+    <path d="M 59.99999999999999 128.4 A 50.4 50.4 0 0 1 12.066751578724265 93.57445651649736"
+                  fill="none" stroke="var(--color-attention)" stroke-width="9" stroke-linecap="butt"/>
+    <path d="M 12.066751578724265 93.57445651649736 A 50.4 50.4 0 0 1 19.225543483502655 48.37562328445935"
+                  fill="none" stroke="var(--color-monitor)" stroke-width="9" stroke-linecap="butt"/>
+    <path d="M 19.225543483502655 48.37562328445935 A 50.4 50.4 0 0 1 60 27.6"
+                  fill="none" stroke="var(--color-healthy)" stroke-width="9" stroke-linecap="butt"/>
+
+    <!-- Needle -->
+    <line x1="60" y1="78"
+          x2="101.49410262275055" y2="67.34612523385762"
+          stroke="var(--color-healthy)" stroke-width="3" stroke-linecap="round"/>
+    <!-- Pivot dot -->
+    <circle cx="60" cy="78" r="4.8"
+            fill="var(--color-healthy)" stroke="var(--color-surface)" stroke-width="2"/>
+  </svg>
+
+  <!-- Score value -->
+  <div class="speedometer__value" style="color:var(--color-healthy)">92</div>
+  <div class="speedometer__label">Profile Score</div>
+</div>
+    </div>
+    <div class="det-profile-badge" style="background:var(--color-attention)">
+      ATTENTION
+    </div>
+  </div>
+
+  <div class="det-param-grid">
+    
+<div class="det-param-card det-param-card--flagged">
+  <div class="det-param-card__top">
+    <div class="det-param-card__name">ALT (SGPT)</div>
+    <span class="det-status-pill det-status--high">HIGH</span>
+  </div>
+  <div class="det-param-card__value-row">
+    <span class="det-param-card__value" style="color:var(--color-monitor)">52</span>
+    <span class="det-param-card__unit">U/L</span>
+    <div class="det-param-card__mini-gauge">
+<div class="speedometer" style="width:72px;margin:0 auto;text-align:center">
+  <svg width="72" height="51.839999999999996" viewBox="0 0 72 51.839999999999996">
+    <!-- Background arc track -->
+    <path d="M 5.760000000000002 46.800000000000004 A 30.24 30.24 0 0 1 66.24 46.800000000000004"
+          fill="none" stroke="var(--color-border)" stroke-width="5.3999999999999995" stroke-linecap="butt"/>
+
+    <!-- Zone arcs: red (0-40%), amber (40-70%), green (70-100%) -->
+    <path d="M 35.99999999999999 77.04 A 30.24 30.24 0 0 1 7.2400509472345576 56.14467390989842"
+                  fill="none" stroke="var(--color-attention)" stroke-width="5.3999999999999995" stroke-linecap="butt"/>
+    <path d="M 7.2400509472345576 56.14467390989842 A 30.24 30.24 0 0 1 11.535326090101595 29.025373970675613"
+                  fill="none" stroke="var(--color-monitor)" stroke-width="5.3999999999999995" stroke-linecap="butt"/>
+    <path d="M 11.535326090101595 29.025373970675613 A 30.24 30.24 0 0 1 36 16.560000000000006"
+                  fill="none" stroke="var(--color-healthy)" stroke-width="5.3999999999999995" stroke-linecap="butt"/>
+
+    <!-- Needle -->
+    <line x1="36" y1="46.800000000000004"
+          x2="61.70399999999999" y2="46.800000000000004"
+          stroke="var(--color-healthy)" stroke-width="3" stroke-linecap="round"/>
+    <!-- Pivot dot -->
+    <circle cx="36" cy="46.800000000000004" r="2.88"
+            fill="var(--color-healthy)" stroke="var(--color-surface)" stroke-width="2"/>
+  </svg>
+
+  <!-- Score value -->
+  <div class="speedometer__value" style="color:var(--color-healthy)">100</div>
+  <div class="speedometer__label"></div>
+</div></div>
+  </div>
+  <div class="det-param-card__range-row">
+    <span class="det-param-card__range-label">Ref: 7 – 40</span>
+    <span class="det-param-card__range-unit">U/L</span>
+  </div>
+  
+<div class="range-slider">
+  <div class="range-slider-fill"
+       style="left:11.538461538461538%;width:76.92307692307692%;background:var(--color-bg-light);opacity:0.5"></div>
+  <div class="range-slider-fill"
+       style="left:0;width:100%;background:var(--color-monitor)"></div>
+  <div class="range-slider-dot"
+       style="left:100%;background:var(--color-monitor)"></div>
+</div>
+<div class="range-slider-bounds">
+  <span class="range-bound-label">7</span>
+  <span class="range-bound-label">40</span>
+</div>
+</div>
+
+<div class="det-param-card det-param-card--flagged">
+  <div class="det-param-card__top">
+    <div class="det-param-card__name">AST (SGOT)</div>
+    <span class="det-status-pill det-status--high">HIGH</span>
+  </div>
+  <div class="det-param-card__value-row">
+    <span class="det-param-card__value" style="color:var(--color-monitor)">44</span>
+    <span class="det-param-card__unit">U/L</span>
+    <div class="det-param-card__mini-gauge">
+<div class="speedometer" style="width:72px;margin:0 auto;text-align:center">
+  <svg width="72" height="51.839999999999996" viewBox="0 0 72 51.839999999999996">
+    <!-- Background arc track -->
+    <path d="M 5.760000000000002 46.800000000000004 A 30.24 30.24 0 0 1 66.24 46.800000000000004"
+          fill="none" stroke="var(--color-border)" stroke-width="5.3999999999999995" stroke-linecap="butt"/>
+
+    <!-- Zone arcs: red (0-40%), amber (40-70%), green (70-100%) -->
+    <path d="M 35.99999999999999 77.04 A 30.24 30.24 0 0 1 7.2400509472345576 56.14467390989842"
+                  fill="none" stroke="var(--color-attention)" stroke-width="5.3999999999999995" stroke-linecap="butt"/>
+    <path d="M 7.2400509472345576 56.14467390989842 A 30.24 30.24 0 0 1 11.535326090101595 29.025373970675613"
+                  fill="none" stroke="var(--color-monitor)" stroke-width="5.3999999999999995" stroke-linecap="butt"/>
+    <path d="M 11.535326090101595 29.025373970675613 A 30.24 30.24 0 0 1 36 16.560000000000006"
+                  fill="none" stroke="var(--color-healthy)" stroke-width="5.3999999999999995" stroke-linecap="butt"/>
+
+    <!-- Needle -->
+    <line x1="36" y1="46.800000000000004"
+          x2="61.70399999999999" y2="46.800000000000004"
+          stroke="var(--color-healthy)" stroke-width="3" stroke-linecap="round"/>
+    <!-- Pivot dot -->
+    <circle cx="36" cy="46.800000000000004" r="2.88"
+            fill="var(--color-healthy)" stroke="var(--color-surface)" stroke-width="2"/>
+  </svg>
+
+  <!-- Score value -->
+  <div class="speedometer__value" style="color:var(--color-healthy)">100</div>
+  <div class="speedometer__label"></div>
+</div></div>
+  </div>
+  <div class="det-param-card__range-row">
+    <span class="det-param-card__range-label">Ref: 10 – 40</span>
+    <span class="det-param-card__range-unit">U/L</span>
+  </div>
+  
+<div class="range-slider">
+  <div class="range-slider-fill"
+       style="left:11.538461538461538%;width:76.92307692307692%;background:var(--color-bg-light);opacity:0.5"></div>
+  <div class="range-slider-fill"
+       style="left:0;width:98.71794871794873%;background:var(--color-monitor)"></div>
+  <div class="range-slider-dot"
+       style="left:98.71794871794873%;background:var(--color-monitor)"></div>
+</div>
+<div class="range-slider-bounds">
+  <span class="range-bound-label">10</span>
+  <span class="range-bound-label">40</span>
+</div>
+</div>
+
+<div class="det-param-card ">
+  <div class="det-param-card__top">
+    <div class="det-param-card__name">ALP</div>
+    <span class="det-status-pill det-status--normal">NORMAL</span>
+  </div>
+  <div class="det-param-card__value-row">
+    <span class="det-param-card__value" style="color:var(--color-healthy)">88</span>
+    <span class="det-param-card__unit">U/L</span>
+    <div class="det-param-card__mini-gauge">
+<div class="speedometer" style="width:72px;margin:0 auto;text-align:center">
+  <svg width="72" height="51.839999999999996" viewBox="0 0 72 51.839999999999996">
+    <!-- Background arc track -->
+    <path d="M 5.760000000000002 46.800000000000004 A 30.24 30.24 0 0 1 66.24 46.800000000000004"
+          fill="none" stroke="var(--color-border)" stroke-width="5.3999999999999995" stroke-linecap="butt"/>
+
+    <!-- Zone arcs: red (0-40%), amber (40-70%), green (70-100%) -->
+    <path d="M 35.99999999999999 77.04 A 30.24 30.24 0 0 1 7.2400509472345576 56.14467390989842"
+                  fill="none" stroke="var(--color-attention)" stroke-width="5.3999999999999995" stroke-linecap="butt"/>
+    <path d="M 7.2400509472345576 56.14467390989842 A 30.24 30.24 0 0 1 11.535326090101595 29.025373970675613"
+                  fill="none" stroke="var(--color-monitor)" stroke-width="5.3999999999999995" stroke-linecap="butt"/>
+    <path d="M 11.535326090101595 29.025373970675613 A 30.24 30.24 0 0 1 36 16.560000000000006"
+                  fill="none" stroke="var(--color-healthy)" stroke-width="5.3999999999999995" stroke-linecap="butt"/>
+
+    <!-- Needle -->
+    <line x1="36" y1="46.800000000000004"
+          x2="30.392846123143276" y2="21.715035551126444"
+          stroke="var(--color-monitor)" stroke-width="3" stroke-linecap="round"/>
+    <!-- Pivot dot -->
+    <circle cx="36" cy="46.800000000000004" r="2.88"
+            fill="var(--color-monitor)" stroke="var(--color-surface)" stroke-width="2"/>
+  </svg>
+
+  <!-- Score value -->
+  <div class="speedometer__value" style="color:var(--color-monitor)">43</div>
+  <div class="speedometer__label"></div>
+</div></div>
+  </div>
+  <div class="det-param-card__range-row">
+    <span class="det-param-card__range-label">Ref: 44 – 147</span>
+    <span class="det-param-card__range-unit">U/L</span>
+  </div>
+  
+<div class="range-slider">
+  <div class="range-slider-fill"
+       style="left:11.53846153846154%;width:76.92307692307693%;background:var(--color-bg-light);opacity:0.5"></div>
+  <div class="range-slider-fill"
+       style="left:0;width:44.398805078416736%;background:var(--color-healthy)"></div>
+  <div class="range-slider-dot"
+       style="left:44.398805078416736%;background:var(--color-healthy)"></div>
+</div>
+<div class="range-slider-bounds">
+  <span class="range-bound-label">44</span>
+  <span class="range-bound-label">147</span>
+</div>
+</div>
+
+<div class="det-param-card ">
+  <div class="det-param-card__top">
+    <div class="det-param-card__name">Total Bilirubin</div>
+    <span class="det-status-pill det-status--normal">NORMAL</span>
+  </div>
+  <div class="det-param-card__value-row">
+    <span class="det-param-card__value" style="color:var(--color-healthy)">1.1</span>
+    <span class="det-param-card__unit">mg/dL</span>
+    <div class="det-param-card__mini-gauge">
+<div class="speedometer" style="width:72px;margin:0 auto;text-align:center">
+  <svg width="72" height="51.839999999999996" viewBox="0 0 72 51.839999999999996">
+    <!-- Background arc track -->
+    <path d="M 5.760000000000002 46.800000000000004 A 30.24 30.24 0 0 1 66.24 46.800000000000004"
+          fill="none" stroke="var(--color-border)" stroke-width="5.3999999999999995" stroke-linecap="butt"/>
+
+    <!-- Zone arcs: red (0-40%), amber (40-70%), green (70-100%) -->
+    <path d="M 35.99999999999999 77.04 A 30.24 30.24 0 0 1 7.2400509472345576 56.14467390989842"
+                  fill="none" stroke="var(--color-attention)" stroke-width="5.3999999999999995" stroke-linecap="butt"/>
+    <path d="M 7.2400509472345576 56.14467390989842 A 30.24 30.24 0 0 1 11.535326090101595 29.025373970675613"
+                  fill="none" stroke="var(--color-monitor)" stroke-width="5.3999999999999995" stroke-linecap="butt"/>
+    <path d="M 11.535326090101595 29.025373970675613 A 30.24 30.24 0 0 1 36 16.560000000000006"
+                  fill="none" stroke="var(--color-healthy)" stroke-width="5.3999999999999995" stroke-linecap="butt"/>
+
+    <!-- Needle -->
+    <line x1="36" y1="46.800000000000004"
+          x2="60.683388896640146" y2="39.62881261036766"
+          stroke="var(--color-healthy)" stroke-width="3" stroke-linecap="round"/>
+    <!-- Pivot dot -->
+    <circle cx="36" cy="46.800000000000004" r="2.88"
+            fill="var(--color-healthy)" stroke="var(--color-surface)" stroke-width="2"/>
+  </svg>
+
+  <!-- Score value -->
+  <div class="speedometer__value" style="color:var(--color-healthy)">91</div>
+  <div class="speedometer__label"></div>
+</div></div>
+  </div>
+  <div class="det-param-card__range-row">
+    <span class="det-param-card__range-label">Ref: 0.1 – 1.2</span>
+    <span class="det-param-card__range-unit">mg/dL</span>
+  </div>
+  
+<div class="range-slider">
+  <div class="range-slider-fill"
+       style="left:11.538461538461538%;width:76.92307692307692%;background:var(--color-bg-light);opacity:0.5"></div>
+  <div class="range-slider-fill"
+       style="left:0;width:81.46853146853148%;background:var(--color-healthy)"></div>
+  <div class="range-slider-dot"
+       style="left:81.46853146853148%;background:var(--color-healthy)"></div>
+</div>
+<div class="range-slider-bounds">
+  <span class="range-bound-label">0.1</span>
+  <span class="range-bound-label">1.2</span>
+</div>
+</div>
+
+<div class="det-param-card ">
+  <div class="det-param-card__top">
+    <div class="det-param-card__name">Albumin</div>
+    <span class="det-status-pill det-status--normal">NORMAL</span>
+  </div>
+  <div class="det-param-card__value-row">
+    <span class="det-param-card__value" style="color:var(--color-healthy)">3.8</span>
+    <span class="det-param-card__unit">g/dL</span>
+    <div class="det-param-card__mini-gauge">
+<div class="speedometer" style="width:72px;margin:0 auto;text-align:center">
+  <svg width="72" height="51.839999999999996" viewBox="0 0 72 51.839999999999996">
+    <!-- Background arc track -->
+    <path d="M 5.760000000000002 46.800000000000004 A 30.24 30.24 0 0 1 66.24 46.800000000000004"
+          fill="none" stroke="var(--color-border)" stroke-width="5.3999999999999995" stroke-linecap="butt"/>
+
+    <!-- Zone arcs: red (0-40%), amber (40-70%), green (70-100%) -->
+    <path d="M 35.99999999999999 77.04 A 30.24 30.24 0 0 1 7.2400509472345576 56.14467390989842"
+                  fill="none" stroke="var(--color-attention)" stroke-width="5.3999999999999995" stroke-linecap="butt"/>
+    <path d="M 7.2400509472345576 56.14467390989842 A 30.24 30.24 0 0 1 11.535326090101595 29.025373970675613"
+                  fill="none" stroke="var(--color-monitor)" stroke-width="5.3999999999999995" stroke-linecap="butt"/>
+    <path d="M 11.535326090101595 29.025373970675613 A 30.24 30.24 0 0 1 36 16.560000000000006"
+                  fill="none" stroke="var(--color-healthy)" stroke-width="5.3999999999999995" stroke-linecap="butt"/>
+
+    <!-- Needle -->
+    <line x1="36" y1="46.800000000000004"
+          x2="15.205027176586356" y2="31.691567875074274"
+          stroke="var(--color-attention)" stroke-width="3" stroke-linecap="round"/>
+    <!-- Pivot dot -->
+    <circle cx="36" cy="46.800000000000004" r="2.88"
+            fill="var(--color-attention)" stroke="var(--color-surface)" stroke-width="2"/>
+  </svg>
+
+  <!-- Score value -->
+  <div class="speedometer__value" style="color:var(--color-attention)">20</div>
+  <div class="speedometer__label"></div>
+</div></div>
+  </div>
+  <div class="det-param-card__range-row">
+    <span class="det-param-card__range-label">Ref: 3.5 – 5</span>
+    <span class="det-param-card__range-unit">g/dL</span>
+  </div>
+  
+<div class="range-slider">
+  <div class="range-slider-fill"
+       style="left:11.538461538461545%;width:76.92307692307693%;background:var(--color-bg-light);opacity:0.5"></div>
+  <div class="range-slider-fill"
+       style="left:0;width:26.923076923076923%;background:var(--color-healthy)"></div>
+  <div class="range-slider-dot"
+       style="left:26.923076923076923%;background:var(--color-healthy)"></div>
+</div>
+<div class="range-slider-bounds">
+  <span class="range-bound-label">3.5</span>
+  <span class="range-bound-label">5</span>
+</div>
+</div>
+  </div>
+</section>
+  </main>
+
+  <footer class="page-footer">
+    <span class="footer-brand">Beta Health Labs — Quality Diagnostics</span>
+    <span class="footer-page">Page 6 of 11</span>
+  </footer>
+</div>
+
+<div class="report-page">
+  <div class="page-strip" style="background:#E53935"></div>
+
+  <header class="page-header">
+    <img class="logo" src="https://cdn.example.com/beta/logo.png" alt="Beta Health Labs logo" />
+    <span class="lab-name">Beta Health Labs</span>
+  </header>
+
+  <main class="page-content">
+    
+<section class="indepth-detail">
+  <div class="det-profile-header">
+    <div class="det-profile-header__left">
+      <h2 class="det-profile-name">Kidney Function</h2>
+      <div class="det-abnormal-flag">⚠️ 3 parameters outside reference range</div>
+    </div>
+    <div class="det-profile-header__right">
+      
+<div class="speedometer" style="width:120px;margin:0 auto;text-align:center">
+  <svg width="120" height="86.39999999999999" viewBox="0 0 120 86.39999999999999">
+    <!-- Background arc track -->
+    <path d="M 9.600000000000001 78 A 50.4 50.4 0 0 1 110.4 78"
+          fill="none" stroke="var(--color-border)" stroke-width="9" stroke-linecap="butt"/>
+
+    <!-- Zone arcs: red (0-40%), amber (40-70%), green (70-100%) -->
+    <path d="M 59.99999999999999 128.4 A 50.4 50.4 0 0 1 12.066751578724265 93.57445651649736"
+                  fill="none" stroke="var(--color-attention)" stroke-width="9" stroke-linecap="butt"/>
+    <path d="M 12.066751578724265 93.57445651649736 A 50.4 50.4 0 0 1 19.225543483502655 48.37562328445935"
+                  fill="none" stroke="var(--color-monitor)" stroke-width="9" stroke-linecap="butt"/>
+    <path d="M 19.225543483502655 48.37562328445935 A 50.4 50.4 0 0 1 60 27.6"
+                  fill="none" stroke="var(--color-healthy)" stroke-width="9" stroke-linecap="butt"/>
+
+    <!-- Needle -->
+    <line x1="60" y1="78"
+          x2="99.31660816430175" y2="60.986184365206"
+          stroke="var(--color-healthy)" stroke-width="3" stroke-linecap="round"/>
+    <!-- Pivot dot -->
+    <circle cx="60" cy="78" r="4.8"
+            fill="var(--color-healthy)" stroke="var(--color-surface)" stroke-width="2"/>
+  </svg>
+
+  <!-- Score value -->
+  <div class="speedometer__value" style="color:var(--color-healthy)">87</div>
+  <div class="speedometer__label">Profile Score</div>
+</div>
+    </div>
+    <div class="det-profile-badge" style="background:var(--color-attention)">
+      ATTENTION
+    </div>
+  </div>
+
+  <div class="det-param-grid">
+    
+<div class="det-param-card det-param-card--flagged">
+  <div class="det-param-card__top">
+    <div class="det-param-card__name">Creatinine</div>
+    <span class="det-status-pill det-status--high">HIGH</span>
+  </div>
+  <div class="det-param-card__value-row">
+    <span class="det-param-card__value" style="color:var(--color-monitor)">1.3</span>
+    <span class="det-param-card__unit">mg/dL</span>
+    <div class="det-param-card__mini-gauge">
+<div class="speedometer" style="width:72px;margin:0 auto;text-align:center">
+  <svg width="72" height="51.839999999999996" viewBox="0 0 72 51.839999999999996">
+    <!-- Background arc track -->
+    <path d="M 5.760000000000002 46.800000000000004 A 30.24 30.24 0 0 1 66.24 46.800000000000004"
+          fill="none" stroke="var(--color-border)" stroke-width="5.3999999999999995" stroke-linecap="butt"/>
+
+    <!-- Zone arcs: red (0-40%), amber (40-70%), green (70-100%) -->
+    <path d="M 35.99999999999999 77.04 A 30.24 30.24 0 0 1 7.2400509472345576 56.14467390989842"
+                  fill="none" stroke="var(--color-attention)" stroke-width="5.3999999999999995" stroke-linecap="butt"/>
+    <path d="M 7.2400509472345576 56.14467390989842 A 30.24 30.24 0 0 1 11.535326090101595 29.025373970675613"
+                  fill="none" stroke="var(--color-monitor)" stroke-width="5.3999999999999995" stroke-linecap="butt"/>
+    <path d="M 11.535326090101595 29.025373970675613 A 30.24 30.24 0 0 1 36 16.560000000000006"
+                  fill="none" stroke="var(--color-healthy)" stroke-width="5.3999999999999995" stroke-linecap="butt"/>
+
+    <!-- Needle -->
+    <line x1="36" y1="46.800000000000004"
+          x2="61.70399999999999" y2="46.800000000000004"
+          stroke="var(--color-healthy)" stroke-width="3" stroke-linecap="round"/>
+    <!-- Pivot dot -->
+    <circle cx="36" cy="46.800000000000004" r="2.88"
+            fill="var(--color-healthy)" stroke="var(--color-surface)" stroke-width="2"/>
+  </svg>
+
+  <!-- Score value -->
+  <div class="speedometer__value" style="color:var(--color-healthy)">100</div>
+  <div class="speedometer__label"></div>
+</div></div>
+  </div>
+  <div class="det-param-card__range-row">
+    <span class="det-param-card__range-label">Ref: 0.5 – 1.1</span>
+    <span class="det-param-card__range-unit">mg/dL</span>
+  </div>
+  
+<div class="range-slider">
+  <div class="range-slider-fill"
+       style="left:11.538461538461538%;width:76.92307692307692%;background:var(--color-bg-light);opacity:0.5"></div>
+  <div class="range-slider-fill"
+       style="left:0;width:100%;background:var(--color-monitor)"></div>
+  <div class="range-slider-dot"
+       style="left:100%;background:var(--color-monitor)"></div>
+</div>
+<div class="range-slider-bounds">
+  <span class="range-bound-label">0.5</span>
+  <span class="range-bound-label">1.1</span>
+</div>
+</div>
+
+<div class="det-param-card det-param-card--flagged">
+  <div class="det-param-card__top">
+    <div class="det-param-card__name">Blood Urea Nitrogen</div>
+    <span class="det-status-pill det-status--high">HIGH</span>
+  </div>
+  <div class="det-param-card__value-row">
+    <span class="det-param-card__value" style="color:var(--color-monitor)">22</span>
+    <span class="det-param-card__unit">mg/dL</span>
+    <div class="det-param-card__mini-gauge">
+<div class="speedometer" style="width:72px;margin:0 auto;text-align:center">
+  <svg width="72" height="51.839999999999996" viewBox="0 0 72 51.839999999999996">
+    <!-- Background arc track -->
+    <path d="M 5.760000000000002 46.800000000000004 A 30.24 30.24 0 0 1 66.24 46.800000000000004"
+          fill="none" stroke="var(--color-border)" stroke-width="5.3999999999999995" stroke-linecap="butt"/>
+
+    <!-- Zone arcs: red (0-40%), amber (40-70%), green (70-100%) -->
+    <path d="M 35.99999999999999 77.04 A 30.24 30.24 0 0 1 7.2400509472345576 56.14467390989842"
+                  fill="none" stroke="var(--color-attention)" stroke-width="5.3999999999999995" stroke-linecap="butt"/>
+    <path d="M 7.2400509472345576 56.14467390989842 A 30.24 30.24 0 0 1 11.535326090101595 29.025373970675613"
+                  fill="none" stroke="var(--color-monitor)" stroke-width="5.3999999999999995" stroke-linecap="butt"/>
+    <path d="M 11.535326090101595 29.025373970675613 A 30.24 30.24 0 0 1 36 16.560000000000006"
+                  fill="none" stroke="var(--color-healthy)" stroke-width="5.3999999999999995" stroke-linecap="butt"/>
+
+    <!-- Needle -->
+    <line x1="36" y1="46.800000000000004"
+          x2="61.70399999999999" y2="46.800000000000004"
+          stroke="var(--color-healthy)" stroke-width="3" stroke-linecap="round"/>
+    <!-- Pivot dot -->
+    <circle cx="36" cy="46.800000000000004" r="2.88"
+            fill="var(--color-healthy)" stroke="var(--color-surface)" stroke-width="2"/>
+  </svg>
+
+  <!-- Score value -->
+  <div class="speedometer__value" style="color:var(--color-healthy)">100</div>
+  <div class="speedometer__label"></div>
+</div></div>
+  </div>
+  <div class="det-param-card__range-row">
+    <span class="det-param-card__range-label">Ref: 7 – 20</span>
+    <span class="det-param-card__range-unit">mg/dL</span>
+  </div>
+  
+<div class="range-slider">
+  <div class="range-slider-fill"
+       style="left:11.53846153846154%;width:76.92307692307693%;background:var(--color-bg-light);opacity:0.5"></div>
+  <div class="range-slider-fill"
+       style="left:0;width:100%;background:var(--color-monitor)"></div>
+  <div class="range-slider-dot"
+       style="left:100%;background:var(--color-monitor)"></div>
+</div>
+<div class="range-slider-bounds">
+  <span class="range-bound-label">7</span>
+  <span class="range-bound-label">20</span>
+</div>
+</div>
+
+<div class="det-param-card ">
+  <div class="det-param-card__top">
+    <div class="det-param-card__name">Uric Acid</div>
+    <span class="det-status-pill det-status--normal">NORMAL</span>
+  </div>
+  <div class="det-param-card__value-row">
+    <span class="det-param-card__value" style="color:var(--color-healthy)">5.2</span>
+    <span class="det-param-card__unit">mg/dL</span>
+    <div class="det-param-card__mini-gauge">
+<div class="speedometer" style="width:72px;margin:0 auto;text-align:center">
+  <svg width="72" height="51.839999999999996" viewBox="0 0 72 51.839999999999996">
+    <!-- Background arc track -->
+    <path d="M 5.760000000000002 46.800000000000004 A 30.24 30.24 0 0 1 66.24 46.800000000000004"
+          fill="none" stroke="var(--color-border)" stroke-width="5.3999999999999995" stroke-linecap="butt"/>
+
+    <!-- Zone arcs: red (0-40%), amber (40-70%), green (70-100%) -->
+    <path d="M 35.99999999999999 77.04 A 30.24 30.24 0 0 1 7.2400509472345576 56.14467390989842"
+                  fill="none" stroke="var(--color-attention)" stroke-width="5.3999999999999995" stroke-linecap="butt"/>
+    <path d="M 7.2400509472345576 56.14467390989842 A 30.24 30.24 0 0 1 11.535326090101595 29.025373970675613"
+                  fill="none" stroke="var(--color-monitor)" stroke-width="5.3999999999999995" stroke-linecap="butt"/>
+    <path d="M 11.535326090101595 29.025373970675613 A 30.24 30.24 0 0 1 36 16.560000000000006"
+                  fill="none" stroke="var(--color-healthy)" stroke-width="5.3999999999999995" stroke-linecap="butt"/>
+
+    <!-- Needle -->
+    <line x1="36" y1="46.800000000000004"
+          x2="55.805272392308886" y2="30.415653767499688"
+          stroke="var(--color-healthy)" stroke-width="3" stroke-linecap="round"/>
+    <!-- Pivot dot -->
+    <circle cx="36" cy="46.800000000000004" r="2.88"
+            fill="var(--color-healthy)" stroke="var(--color-surface)" stroke-width="2"/>
+  </svg>
+
+  <!-- Score value -->
+  <div class="speedometer__value" style="color:var(--color-healthy)">78</div>
+  <div class="speedometer__label"></div>
+</div></div>
+  </div>
+  <div class="det-param-card__range-row">
+    <span class="det-param-card__range-label">Ref: 2.4 – 6</span>
+    <span class="det-param-card__range-unit">mg/dL</span>
+  </div>
+  
+<div class="range-slider">
+  <div class="range-slider-fill"
+       style="left:11.53846153846154%;width:76.92307692307693%;background:var(--color-bg-light);opacity:0.5"></div>
+  <div class="range-slider-fill"
+       style="left:0;width:71.36752136752138%;background:var(--color-healthy)"></div>
+  <div class="range-slider-dot"
+       style="left:71.36752136752138%;background:var(--color-healthy)"></div>
+</div>
+<div class="range-slider-bounds">
+  <span class="range-bound-label">2.4</span>
+  <span class="range-bound-label">6</span>
+</div>
+</div>
+
+<div class="det-param-card det-param-card--flagged">
+  <div class="det-param-card__top">
+    <div class="det-param-card__name">eGFR</div>
+    <span class="det-status-pill det-status--low">LOW</span>
+  </div>
+  <div class="det-param-card__value-row">
+    <span class="det-param-card__value" style="color:var(--color-monitor)">68</span>
+    <span class="det-param-card__unit">mL/min/1.73m²</span>
+    <div class="det-param-card__mini-gauge">
+<div class="speedometer" style="width:72px;margin:0 auto;text-align:center">
+  <svg width="72" height="51.839999999999996" viewBox="0 0 72 51.839999999999996">
+    <!-- Background arc track -->
+    <path d="M 5.760000000000002 46.800000000000004 A 30.24 30.24 0 0 1 66.24 46.800000000000004"
+          fill="none" stroke="var(--color-border)" stroke-width="5.3999999999999995" stroke-linecap="butt"/>
+
+    <!-- Zone arcs: red (0-40%), amber (40-70%), green (70-100%) -->
+    <path d="M 35.99999999999999 77.04 A 30.24 30.24 0 0 1 7.2400509472345576 56.14467390989842"
+                  fill="none" stroke="var(--color-attention)" stroke-width="5.3999999999999995" stroke-linecap="butt"/>
+    <path d="M 7.2400509472345576 56.14467390989842 A 30.24 30.24 0 0 1 11.535326090101595 29.025373970675613"
+                  fill="none" stroke="var(--color-monitor)" stroke-width="5.3999999999999995" stroke-linecap="butt"/>
+    <path d="M 11.535326090101595 29.025373970675613 A 30.24 30.24 0 0 1 36 16.560000000000006"
+                  fill="none" stroke="var(--color-healthy)" stroke-width="5.3999999999999995" stroke-linecap="butt"/>
+
+    <!-- Needle -->
+    <line x1="36" y1="46.800000000000004"
+          x2="10.296000000000003" y2="46.800000000000004"
+          stroke="var(--color-attention)" stroke-width="3" stroke-linecap="round"/>
+    <!-- Pivot dot -->
+    <circle cx="36" cy="46.800000000000004" r="2.88"
+            fill="var(--color-attention)" stroke="var(--color-surface)" stroke-width="2"/>
+  </svg>
+
+  <!-- Score value -->
+  <div class="speedometer__value" style="color:var(--color-attention)">0</div>
+  <div class="speedometer__label"></div>
+</div></div>
+  </div>
+  <div class="det-param-card__range-row">
+    <span class="det-param-card__range-label">Ref: 90 – 120</span>
+    <span class="det-param-card__range-unit">mL/min/1.73m²</span>
+  </div>
+  
+<div class="range-slider">
+  <div class="range-slider-fill"
+       style="left:11.538461538461538%;width:76.92307692307692%;background:var(--color-bg-light);opacity:0.5"></div>
+  <div class="range-slider-fill"
+       style="left:0;width:0%;background:var(--color-monitor)"></div>
+  <div class="range-slider-dot"
+       style="left:0%;background:var(--color-monitor)"></div>
+</div>
+<div class="range-slider-bounds">
+  <span class="range-bound-label">90</span>
+  <span class="range-bound-label">120</span>
+</div>
+</div>
+  </div>
+</section>
+  </main>
+
+  <footer class="page-footer">
+    <span class="footer-brand">Beta Health Labs — Quality Diagnostics</span>
+    <span class="footer-page">Page 7 of 11</span>
+  </footer>
+</div>
+
+<div class="report-page">
+  <div class="page-strip" style="background:#E53935"></div>
+
+  <header class="page-header">
+    <img class="logo" src="https://cdn.example.com/beta/logo.png" alt="Beta Health Labs logo" />
+    <span class="lab-name">Beta Health Labs</span>
+  </header>
+
+  <main class="page-content">
+    
+<section class="indepth-detail">
+  <div class="det-profile-header">
+    <div class="det-profile-header__left">
+      <h2 class="det-profile-name">Thyroid Function</h2>
+      <div class="det-abnormal-flag">⚠️ 2 parameters outside reference range</div>
+    </div>
+    <div class="det-profile-header__right">
+      
+<div class="speedometer" style="width:120px;margin:0 auto;text-align:center">
+  <svg width="120" height="86.39999999999999" viewBox="0 0 120 86.39999999999999">
+    <!-- Background arc track -->
+    <path d="M 9.600000000000001 78 A 50.4 50.4 0 0 1 110.4 78"
+          fill="none" stroke="var(--color-border)" stroke-width="9" stroke-linecap="butt"/>
+
+    <!-- Zone arcs: red (0-40%), amber (40-70%), green (70-100%) -->
+    <path d="M 59.99999999999999 128.4 A 50.4 50.4 0 0 1 12.066751578724265 93.57445651649736"
+                  fill="none" stroke="var(--color-attention)" stroke-width="9" stroke-linecap="butt"/>
+    <path d="M 12.066751578724265 93.57445651649736 A 50.4 50.4 0 0 1 19.225543483502655 48.37562328445935"
+                  fill="none" stroke="var(--color-monitor)" stroke-width="9" stroke-linecap="butt"/>
+    <path d="M 19.225543483502655 48.37562328445935 A 50.4 50.4 0 0 1 60 27.6"
+                  fill="none" stroke="var(--color-healthy)" stroke-width="9" stroke-linecap="butt"/>
+
+    <!-- Needle -->
+    <line x1="60" y1="78"
+          x2="82.95481989690022" y2="41.82899167149368"
+          stroke="var(--color-monitor)" stroke-width="3" stroke-linecap="round"/>
+    <!-- Pivot dot -->
+    <circle cx="60" cy="78" r="4.8"
+            fill="var(--color-monitor)" stroke="var(--color-surface)" stroke-width="2"/>
+  </svg>
+
+  <!-- Score value -->
+  <div class="speedometer__value" style="color:var(--color-monitor)">68</div>
+  <div class="speedometer__label">Profile Score</div>
+</div>
+    </div>
+    <div class="det-profile-badge" style="background:var(--color-attention)">
+      ATTENTION
+    </div>
+  </div>
+
+  <div class="det-param-grid">
+    
+<div class="det-param-card det-param-card--flagged">
+  <div class="det-param-card__top">
+    <div class="det-param-card__name">TSH</div>
+    <span class="det-status-pill det-status--critical">CRITICAL</span>
+  </div>
+  <div class="det-param-card__value-row">
+    <span class="det-param-card__value" style="color:var(--color-attention)">6.2</span>
+    <span class="det-param-card__unit">µIU/mL</span>
+    <div class="det-param-card__mini-gauge">
+<div class="speedometer" style="width:72px;margin:0 auto;text-align:center">
+  <svg width="72" height="51.839999999999996" viewBox="0 0 72 51.839999999999996">
+    <!-- Background arc track -->
+    <path d="M 5.760000000000002 46.800000000000004 A 30.24 30.24 0 0 1 66.24 46.800000000000004"
+          fill="none" stroke="var(--color-border)" stroke-width="5.3999999999999995" stroke-linecap="butt"/>
+
+    <!-- Zone arcs: red (0-40%), amber (40-70%), green (70-100%) -->
+    <path d="M 35.99999999999999 77.04 A 30.24 30.24 0 0 1 7.2400509472345576 56.14467390989842"
+                  fill="none" stroke="var(--color-attention)" stroke-width="5.3999999999999995" stroke-linecap="butt"/>
+    <path d="M 7.2400509472345576 56.14467390989842 A 30.24 30.24 0 0 1 11.535326090101595 29.025373970675613"
+                  fill="none" stroke="var(--color-monitor)" stroke-width="5.3999999999999995" stroke-linecap="butt"/>
+    <path d="M 11.535326090101595 29.025373970675613 A 30.24 30.24 0 0 1 36 16.560000000000006"
+                  fill="none" stroke="var(--color-healthy)" stroke-width="5.3999999999999995" stroke-linecap="butt"/>
+
+    <!-- Needle -->
+    <line x1="36" y1="46.800000000000004"
+          x2="61.70399999999999" y2="46.800000000000004"
+          stroke="var(--color-healthy)" stroke-width="3" stroke-linecap="round"/>
+    <!-- Pivot dot -->
+    <circle cx="36" cy="46.800000000000004" r="2.88"
+            fill="var(--color-healthy)" stroke="var(--color-surface)" stroke-width="2"/>
+  </svg>
+
+  <!-- Score value -->
+  <div class="speedometer__value" style="color:var(--color-healthy)">100</div>
+  <div class="speedometer__label"></div>
+</div></div>
+  </div>
+  <div class="det-param-card__range-row">
+    <span class="det-param-card__range-label">Ref: 0.4 – 4</span>
+    <span class="det-param-card__range-unit">µIU/mL</span>
+  </div>
+  
+<div class="range-slider">
+  <div class="range-slider-fill"
+       style="left:11.53846153846154%;width:76.9230769230769%;background:var(--color-bg-light);opacity:0.5"></div>
+  <div class="range-slider-fill"
+       style="left:0;width:100%;background:var(--color-attention)"></div>
+  <div class="range-slider-dot"
+       style="left:100%;background:var(--color-attention)"></div>
+</div>
+<div class="range-slider-bounds">
+  <span class="range-bound-label">0.4</span>
+  <span class="range-bound-label">4</span>
+</div>
+</div>
+
+<div class="det-param-card ">
+  <div class="det-param-card__top">
+    <div class="det-param-card__name">Free T3</div>
+    <span class="det-status-pill det-status--normal">NORMAL</span>
+  </div>
+  <div class="det-param-card__value-row">
+    <span class="det-param-card__value" style="color:var(--color-healthy)">2.6</span>
+    <span class="det-param-card__unit">pg/mL</span>
+    <div class="det-param-card__mini-gauge">
+<div class="speedometer" style="width:72px;margin:0 auto;text-align:center">
+  <svg width="72" height="51.839999999999996" viewBox="0 0 72 51.839999999999996">
+    <!-- Background arc track -->
+    <path d="M 5.760000000000002 46.800000000000004 A 30.24 30.24 0 0 1 66.24 46.800000000000004"
+          fill="none" stroke="var(--color-border)" stroke-width="5.3999999999999995" stroke-linecap="butt"/>
+
+    <!-- Zone arcs: red (0-40%), amber (40-70%), green (70-100%) -->
+    <path d="M 35.99999999999999 77.04 A 30.24 30.24 0 0 1 7.2400509472345576 56.14467390989842"
+                  fill="none" stroke="var(--color-attention)" stroke-width="5.3999999999999995" stroke-linecap="butt"/>
+    <path d="M 7.2400509472345576 56.14467390989842 A 30.24 30.24 0 0 1 11.535326090101595 29.025373970675613"
+                  fill="none" stroke="var(--color-monitor)" stroke-width="5.3999999999999995" stroke-linecap="butt"/>
+    <path d="M 11.535326090101595 29.025373970675613 A 30.24 30.24 0 0 1 36 16.560000000000006"
+                  fill="none" stroke="var(--color-healthy)" stroke-width="5.3999999999999995" stroke-linecap="butt"/>
+
+    <!-- Needle -->
+    <line x1="36" y1="46.800000000000004"
+          x2="13.475413096152536" y2="34.41700356088951"
+          stroke="var(--color-attention)" stroke-width="3" stroke-linecap="round"/>
+    <!-- Pivot dot -->
+    <circle cx="36" cy="46.800000000000004" r="2.88"
+            fill="var(--color-attention)" stroke="var(--color-surface)" stroke-width="2"/>
+  </svg>
+
+  <!-- Score value -->
+  <div class="speedometer__value" style="color:var(--color-attention)">16</div>
+  <div class="speedometer__label"></div>
+</div></div>
+  </div>
+  <div class="det-param-card__range-row">
+    <span class="det-param-card__range-label">Ref: 2.3 – 4.2</span>
+    <span class="det-param-card__range-unit">pg/mL</span>
+  </div>
+  
+<div class="range-slider">
+  <div class="range-slider-fill"
+       style="left:11.538461538461542%;width:76.9230769230769%;background:var(--color-bg-light);opacity:0.5"></div>
+  <div class="range-slider-fill"
+       style="left:0;width:23.6842105263158%;background:var(--color-healthy)"></div>
+  <div class="range-slider-dot"
+       style="left:23.6842105263158%;background:var(--color-healthy)"></div>
+</div>
+<div class="range-slider-bounds">
+  <span class="range-bound-label">2.3</span>
+  <span class="range-bound-label">4.2</span>
+</div>
+</div>
+
+<div class="det-param-card det-param-card--flagged">
+  <div class="det-param-card__top">
+    <div class="det-param-card__name">Free T4</div>
+    <span class="det-status-pill det-status--low">LOW</span>
+  </div>
+  <div class="det-param-card__value-row">
+    <span class="det-param-card__value" style="color:var(--color-monitor)">0.74</span>
+    <span class="det-param-card__unit">ng/dL</span>
+    <div class="det-param-card__mini-gauge">
+<div class="speedometer" style="width:72px;margin:0 auto;text-align:center">
+  <svg width="72" height="51.839999999999996" viewBox="0 0 72 51.839999999999996">
+    <!-- Background arc track -->
+    <path d="M 5.760000000000002 46.800000000000004 A 30.24 30.24 0 0 1 66.24 46.800000000000004"
+          fill="none" stroke="var(--color-border)" stroke-width="5.3999999999999995" stroke-linecap="butt"/>
+
+    <!-- Zone arcs: red (0-40%), amber (40-70%), green (70-100%) -->
+    <path d="M 35.99999999999999 77.04 A 30.24 30.24 0 0 1 7.2400509472345576 56.14467390989842"
+                  fill="none" stroke="var(--color-attention)" stroke-width="5.3999999999999995" stroke-linecap="butt"/>
+    <path d="M 7.2400509472345576 56.14467390989842 A 30.24 30.24 0 0 1 11.535326090101595 29.025373970675613"
+                  fill="none" stroke="var(--color-monitor)" stroke-width="5.3999999999999995" stroke-linecap="butt"/>
+    <path d="M 11.535326090101595 29.025373970675613 A 30.24 30.24 0 0 1 36 16.560000000000006"
+                  fill="none" stroke="var(--color-healthy)" stroke-width="5.3999999999999995" stroke-linecap="butt"/>
+
+    <!-- Needle -->
+    <line x1="36" y1="46.800000000000004"
+          x2="10.296000000000003" y2="46.800000000000004"
+          stroke="var(--color-attention)" stroke-width="3" stroke-linecap="round"/>
+    <!-- Pivot dot -->
+    <circle cx="36" cy="46.800000000000004" r="2.88"
+            fill="var(--color-attention)" stroke="var(--color-surface)" stroke-width="2"/>
+  </svg>
+
+  <!-- Score value -->
+  <div class="speedometer__value" style="color:var(--color-attention)">0</div>
+  <div class="speedometer__label"></div>
+</div></div>
+  </div>
+  <div class="det-param-card__range-row">
+    <span class="det-param-card__range-label">Ref: 0.8 – 1.8</span>
+    <span class="det-param-card__range-unit">ng/dL</span>
+  </div>
+  
+<div class="range-slider">
+  <div class="range-slider-fill"
+       style="left:11.538461538461542%;width:76.92307692307692%;background:var(--color-bg-light);opacity:0.5"></div>
+  <div class="range-slider-fill"
+       style="left:0;width:6.9230769230769225%;background:var(--color-monitor)"></div>
+  <div class="range-slider-dot"
+       style="left:6.9230769230769225%;background:var(--color-monitor)"></div>
+</div>
+<div class="range-slider-bounds">
+  <span class="range-bound-label">0.8</span>
+  <span class="range-bound-label">1.8</span>
+</div>
+</div>
+  </div>
+</section>
+  </main>
+
+  <footer class="page-footer">
+    <span class="footer-brand">Beta Health Labs — Quality Diagnostics</span>
+    <span class="footer-page">Page 8 of 11</span>
+  </footer>
+</div>
+
+<div class="report-page">
+  <div class="page-strip" style="background:#E53935"></div>
+
+  <header class="page-header">
+    <img class="logo" src="https://cdn.example.com/beta/logo.png" alt="Beta Health Labs logo" />
+    <span class="lab-name">Beta Health Labs</span>
+  </header>
+
+  <main class="page-content">
+    
+<section class="indepth-detail">
+  <div class="det-profile-header">
+    <div class="det-profile-header__left">
+      <h2 class="det-profile-name">Blood Sugar</h2>
+      <div class="det-abnormal-flag">⚠️ 3 parameters outside reference range</div>
+    </div>
+    <div class="det-profile-header__right">
+      
+<div class="speedometer" style="width:120px;margin:0 auto;text-align:center">
+  <svg width="120" height="86.39999999999999" viewBox="0 0 120 86.39999999999999">
+    <!-- Background arc track -->
+    <path d="M 9.600000000000001 78 A 50.4 50.4 0 0 1 110.4 78"
+          fill="none" stroke="var(--color-border)" stroke-width="9" stroke-linecap="butt"/>
+
+    <!-- Zone arcs: red (0-40%), amber (40-70%), green (70-100%) -->
+    <path d="M 59.99999999999999 128.4 A 50.4 50.4 0 0 1 12.066751578724265 93.57445651649736"
+                  fill="none" stroke="var(--color-attention)" stroke-width="9" stroke-linecap="butt"/>
+    <path d="M 12.066751578724265 93.57445651649736 A 50.4 50.4 0 0 1 19.225543483502655 48.37562328445935"
+                  fill="none" stroke="var(--color-monitor)" stroke-width="9" stroke-linecap="butt"/>
+    <path d="M 19.225543483502655 48.37562328445935 A 50.4 50.4 0 0 1 60 27.6"
+                  fill="none" stroke="var(--color-healthy)" stroke-width="9" stroke-linecap="butt"/>
+
+    <!-- Needle -->
+    <line x1="60" y1="78"
+          x2="93.85024073017458" y2="51.7430618215065"
+          stroke="var(--color-healthy)" stroke-width="3" stroke-linecap="round"/>
+    <!-- Pivot dot -->
+    <circle cx="60" cy="78" r="4.8"
+            fill="var(--color-healthy)" stroke="var(--color-surface)" stroke-width="2"/>
+  </svg>
+
+  <!-- Score value -->
+  <div class="speedometer__value" style="color:var(--color-healthy)">79</div>
+  <div class="speedometer__label">Profile Score</div>
+</div>
+    </div>
+    <div class="det-profile-badge" style="background:var(--color-attention)">
+      ATTENTION
+    </div>
+  </div>
+
+  <div class="det-param-grid">
+    
+<div class="det-param-card det-param-card--flagged">
+  <div class="det-param-card__top">
+    <div class="det-param-card__name">Fasting Blood Glucose</div>
+    <span class="det-status-pill det-status--high">HIGH</span>
+  </div>
+  <div class="det-param-card__value-row">
+    <span class="det-param-card__value" style="color:var(--color-monitor)">124</span>
+    <span class="det-param-card__unit">mg/dL</span>
+    <div class="det-param-card__mini-gauge">
+<div class="speedometer" style="width:72px;margin:0 auto;text-align:center">
+  <svg width="72" height="51.839999999999996" viewBox="0 0 72 51.839999999999996">
+    <!-- Background arc track -->
+    <path d="M 5.760000000000002 46.800000000000004 A 30.24 30.24 0 0 1 66.24 46.800000000000004"
+          fill="none" stroke="var(--color-border)" stroke-width="5.3999999999999995" stroke-linecap="butt"/>
+
+    <!-- Zone arcs: red (0-40%), amber (40-70%), green (70-100%) -->
+    <path d="M 35.99999999999999 77.04 A 30.24 30.24 0 0 1 7.2400509472345576 56.14467390989842"
+                  fill="none" stroke="var(--color-attention)" stroke-width="5.3999999999999995" stroke-linecap="butt"/>
+    <path d="M 7.2400509472345576 56.14467390989842 A 30.24 30.24 0 0 1 11.535326090101595 29.025373970675613"
+                  fill="none" stroke="var(--color-monitor)" stroke-width="5.3999999999999995" stroke-linecap="butt"/>
+    <path d="M 11.535326090101595 29.025373970675613 A 30.24 30.24 0 0 1 36 16.560000000000006"
+                  fill="none" stroke="var(--color-healthy)" stroke-width="5.3999999999999995" stroke-linecap="butt"/>
+
+    <!-- Needle -->
+    <line x1="36" y1="46.800000000000004"
+          x2="61.70399999999999" y2="46.800000000000004"
+          stroke="var(--color-healthy)" stroke-width="3" stroke-linecap="round"/>
+    <!-- Pivot dot -->
+    <circle cx="36" cy="46.800000000000004" r="2.88"
+            fill="var(--color-healthy)" stroke="var(--color-surface)" stroke-width="2"/>
+  </svg>
+
+  <!-- Score value -->
+  <div class="speedometer__value" style="color:var(--color-healthy)">100</div>
+  <div class="speedometer__label"></div>
+</div></div>
+  </div>
+  <div class="det-param-card__range-row">
+    <span class="det-param-card__range-label">Ref: 70 – 100</span>
+    <span class="det-param-card__range-unit">mg/dL</span>
+  </div>
+  
+<div class="range-slider">
+  <div class="range-slider-fill"
+       style="left:11.538461538461538%;width:76.92307692307692%;background:var(--color-bg-light);opacity:0.5"></div>
+  <div class="range-slider-fill"
+       style="left:0;width:100%;background:var(--color-monitor)"></div>
+  <div class="range-slider-dot"
+       style="left:100%;background:var(--color-monitor)"></div>
+</div>
+<div class="range-slider-bounds">
+  <span class="range-bound-label">70</span>
+  <span class="range-bound-label">100</span>
+</div>
+</div>
+
+<div class="det-param-card det-param-card--flagged">
+  <div class="det-param-card__top">
+    <div class="det-param-card__name">HbA1c</div>
+    <span class="det-status-pill det-status--high">HIGH</span>
+  </div>
+  <div class="det-param-card__value-row">
+    <span class="det-param-card__value" style="color:var(--color-monitor)">6.4</span>
+    <span class="det-param-card__unit">%</span>
+    <div class="det-param-card__mini-gauge">
+<div class="speedometer" style="width:72px;margin:0 auto;text-align:center">
+  <svg width="72" height="51.839999999999996" viewBox="0 0 72 51.839999999999996">
+    <!-- Background arc track -->
+    <path d="M 5.760000000000002 46.800000000000004 A 30.24 30.24 0 0 1 66.24 46.800000000000004"
+          fill="none" stroke="var(--color-border)" stroke-width="5.3999999999999995" stroke-linecap="butt"/>
+
+    <!-- Zone arcs: red (0-40%), amber (40-70%), green (70-100%) -->
+    <path d="M 35.99999999999999 77.04 A 30.24 30.24 0 0 1 7.2400509472345576 56.14467390989842"
+                  fill="none" stroke="var(--color-attention)" stroke-width="5.3999999999999995" stroke-linecap="butt"/>
+    <path d="M 7.2400509472345576 56.14467390989842 A 30.24 30.24 0 0 1 11.535326090101595 29.025373970675613"
+                  fill="none" stroke="var(--color-monitor)" stroke-width="5.3999999999999995" stroke-linecap="butt"/>
+    <path d="M 11.535326090101595 29.025373970675613 A 30.24 30.24 0 0 1 36 16.560000000000006"
+                  fill="none" stroke="var(--color-healthy)" stroke-width="5.3999999999999995" stroke-linecap="butt"/>
+
+    <!-- Needle -->
+    <line x1="36" y1="46.800000000000004"
+          x2="61.70399999999999" y2="46.800000000000004"
+          stroke="var(--color-healthy)" stroke-width="3" stroke-linecap="round"/>
+    <!-- Pivot dot -->
+    <circle cx="36" cy="46.800000000000004" r="2.88"
+            fill="var(--color-healthy)" stroke="var(--color-surface)" stroke-width="2"/>
+  </svg>
+
+  <!-- Score value -->
+  <div class="speedometer__value" style="color:var(--color-healthy)">100</div>
+  <div class="speedometer__label"></div>
+</div></div>
+  </div>
+  <div class="det-param-card__range-row">
+    <span class="det-param-card__range-label">Ref: 4 – 5.7</span>
+    <span class="det-param-card__range-unit">%</span>
+  </div>
+  
+<div class="range-slider">
+  <div class="range-slider-fill"
+       style="left:11.538461538461533%;width:76.92307692307693%;background:var(--color-bg-light);opacity:0.5"></div>
+  <div class="range-slider-fill"
+       style="left:0;width:100%;background:var(--color-monitor)"></div>
+  <div class="range-slider-dot"
+       style="left:100%;background:var(--color-monitor)"></div>
+</div>
+<div class="range-slider-bounds">
+  <span class="range-bound-label">4</span>
+  <span class="range-bound-label">5.7</span>
+</div>
+</div>
+
+<div class="det-param-card det-param-card--flagged">
+  <div class="det-param-card__top">
+    <div class="det-param-card__name">Post-Prandial Glucose</div>
+    <span class="det-status-pill det-status--high">HIGH</span>
+  </div>
+  <div class="det-param-card__value-row">
+    <span class="det-param-card__value" style="color:var(--color-monitor)">178</span>
+    <span class="det-param-card__unit">mg/dL</span>
+    <div class="det-param-card__mini-gauge">
+<div class="speedometer" style="width:72px;margin:0 auto;text-align:center">
+  <svg width="72" height="51.839999999999996" viewBox="0 0 72 51.839999999999996">
+    <!-- Background arc track -->
+    <path d="M 5.760000000000002 46.800000000000004 A 30.24 30.24 0 0 1 66.24 46.800000000000004"
+          fill="none" stroke="var(--color-border)" stroke-width="5.3999999999999995" stroke-linecap="butt"/>
+
+    <!-- Zone arcs: red (0-40%), amber (40-70%), green (70-100%) -->
+    <path d="M 35.99999999999999 77.04 A 30.24 30.24 0 0 1 7.2400509472345576 56.14467390989842"
+                  fill="none" stroke="var(--color-attention)" stroke-width="5.3999999999999995" stroke-linecap="butt"/>
+    <path d="M 7.2400509472345576 56.14467390989842 A 30.24 30.24 0 0 1 11.535326090101595 29.025373970675613"
+                  fill="none" stroke="var(--color-monitor)" stroke-width="5.3999999999999995" stroke-linecap="butt"/>
+    <path d="M 11.535326090101595 29.025373970675613 A 30.24 30.24 0 0 1 36 16.560000000000006"
+                  fill="none" stroke="var(--color-healthy)" stroke-width="5.3999999999999995" stroke-linecap="butt"/>
+
+    <!-- Needle -->
+    <line x1="36" y1="46.800000000000004"
+          x2="61.70399999999999" y2="46.800000000000004"
+          stroke="var(--color-healthy)" stroke-width="3" stroke-linecap="round"/>
+    <!-- Pivot dot -->
+    <circle cx="36" cy="46.800000000000004" r="2.88"
+            fill="var(--color-healthy)" stroke="var(--color-surface)" stroke-width="2"/>
+  </svg>
+
+  <!-- Score value -->
+  <div class="speedometer__value" style="color:var(--color-healthy)">100</div>
+  <div class="speedometer__label"></div>
+</div></div>
+  </div>
+  <div class="det-param-card__range-row">
+    <span class="det-param-card__range-label">Ref: 70 – 140</span>
+    <span class="det-param-card__range-unit">mg/dL</span>
+  </div>
+  
+<div class="range-slider">
+  <div class="range-slider-fill"
+       style="left:11.538461538461538%;width:76.92307692307692%;background:var(--color-bg-light);opacity:0.5"></div>
+  <div class="range-slider-fill"
+       style="left:0;width:100%;background:var(--color-monitor)"></div>
+  <div class="range-slider-dot"
+       style="left:100%;background:var(--color-monitor)"></div>
+</div>
+<div class="range-slider-bounds">
+  <span class="range-bound-label">70</span>
+  <span class="range-bound-label">140</span>
+</div>
+</div>
+  </div>
+</section>
+  </main>
+
+  <footer class="page-footer">
+    <span class="footer-brand">Beta Health Labs — Quality Diagnostics</span>
+    <span class="footer-page">Page 9 of 11</span>
+  </footer>
+</div>
+
+<div class="report-page">
+  <div class="page-strip" style="background:#E53935"></div>
+
+  <header class="page-header">
+    <img class="logo" src="https://cdn.example.com/beta/logo.png" alt="Beta Health Labs logo" />
+    <span class="lab-name">Beta Health Labs</span>
+  </header>
+
+  <main class="page-content">
+    
+<section class="indepth-detail">
+  <div class="det-profile-header">
+    <div class="det-profile-header__left">
+      <h2 class="det-profile-name">Vitamins & Minerals</h2>
+      <div class="det-abnormal-flag">⚠️ 3 parameters outside reference range</div>
+    </div>
+    <div class="det-profile-header__right">
+      
+<div class="speedometer" style="width:120px;margin:0 auto;text-align:center">
+  <svg width="120" height="86.39999999999999" viewBox="0 0 120 86.39999999999999">
+    <!-- Background arc track -->
+    <path d="M 9.600000000000001 78 A 50.4 50.4 0 0 1 110.4 78"
+          fill="none" stroke="var(--color-border)" stroke-width="9" stroke-linecap="butt"/>
+
+    <!-- Zone arcs: red (0-40%), amber (40-70%), green (70-100%) -->
+    <path d="M 59.99999999999999 128.4 A 50.4 50.4 0 0 1 12.066751578724265 93.57445651649736"
+                  fill="none" stroke="var(--color-attention)" stroke-width="9" stroke-linecap="butt"/>
+    <path d="M 12.066751578724265 93.57445651649736 A 50.4 50.4 0 0 1 19.225543483502655 48.37562328445935"
+                  fill="none" stroke="var(--color-monitor)" stroke-width="9" stroke-linecap="butt"/>
+    <path d="M 19.225543483502655 48.37562328445935 A 50.4 50.4 0 0 1 60 27.6"
+                  fill="none" stroke="var(--color-healthy)" stroke-width="9" stroke-linecap="butt"/>
+
+    <!-- Needle -->
+    <line x1="60" y1="78"
+          x2="95.43213180192222" y2="53.920348092814734"
+          stroke="var(--color-healthy)" stroke-width="3" stroke-linecap="round"/>
+    <!-- Pivot dot -->
+    <circle cx="60" cy="78" r="4.8"
+            fill="var(--color-healthy)" stroke="var(--color-surface)" stroke-width="2"/>
+  </svg>
+
+  <!-- Score value -->
+  <div class="speedometer__value" style="color:var(--color-healthy)">81</div>
+  <div class="speedometer__label">Profile Score</div>
+</div>
+    </div>
+    <div class="det-profile-badge" style="background:var(--color-attention)">
+      ATTENTION
+    </div>
+  </div>
+
+  <div class="det-param-grid">
+    
+<div class="det-param-card det-param-card--flagged">
+  <div class="det-param-card__top">
+    <div class="det-param-card__name">Vitamin D</div>
+    <span class="det-status-pill det-status--low">LOW</span>
+  </div>
+  <div class="det-param-card__value-row">
+    <span class="det-param-card__value" style="color:var(--color-monitor)">18</span>
+    <span class="det-param-card__unit">ng/mL</span>
+    <div class="det-param-card__mini-gauge">
+<div class="speedometer" style="width:72px;margin:0 auto;text-align:center">
+  <svg width="72" height="51.839999999999996" viewBox="0 0 72 51.839999999999996">
+    <!-- Background arc track -->
+    <path d="M 5.760000000000002 46.800000000000004 A 30.24 30.24 0 0 1 66.24 46.800000000000004"
+          fill="none" stroke="var(--color-border)" stroke-width="5.3999999999999995" stroke-linecap="butt"/>
+
+    <!-- Zone arcs: red (0-40%), amber (40-70%), green (70-100%) -->
+    <path d="M 35.99999999999999 77.04 A 30.24 30.24 0 0 1 7.2400509472345576 56.14467390989842"
+                  fill="none" stroke="var(--color-attention)" stroke-width="5.3999999999999995" stroke-linecap="butt"/>
+    <path d="M 7.2400509472345576 56.14467390989842 A 30.24 30.24 0 0 1 11.535326090101595 29.025373970675613"
+                  fill="none" stroke="var(--color-monitor)" stroke-width="5.3999999999999995" stroke-linecap="butt"/>
+    <path d="M 11.535326090101595 29.025373970675613 A 30.24 30.24 0 0 1 36 16.560000000000006"
+                  fill="none" stroke="var(--color-healthy)" stroke-width="5.3999999999999995" stroke-linecap="butt"/>
+
+    <!-- Needle -->
+    <line x1="36" y1="46.800000000000004"
+          x2="10.296000000000003" y2="46.800000000000004"
+          stroke="var(--color-attention)" stroke-width="3" stroke-linecap="round"/>
+    <!-- Pivot dot -->
+    <circle cx="36" cy="46.800000000000004" r="2.88"
+            fill="var(--color-attention)" stroke="var(--color-surface)" stroke-width="2"/>
+  </svg>
+
+  <!-- Score value -->
+  <div class="speedometer__value" style="color:var(--color-attention)">0</div>
+  <div class="speedometer__label"></div>
+</div></div>
+  </div>
+  <div class="det-param-card__range-row">
+    <span class="det-param-card__range-label">Ref: 30 – 100</span>
+    <span class="det-param-card__range-unit">ng/mL</span>
+  </div>
+  
+<div class="range-slider">
+  <div class="range-slider-fill"
+       style="left:11.538461538461538%;width:76.92307692307692%;background:var(--color-bg-light);opacity:0.5"></div>
+  <div class="range-slider-fill"
+       style="left:0;width:0%;background:var(--color-monitor)"></div>
+  <div class="range-slider-dot"
+       style="left:0%;background:var(--color-monitor)"></div>
+</div>
+<div class="range-slider-bounds">
+  <span class="range-bound-label">30</span>
+  <span class="range-bound-label">100</span>
+</div>
+</div>
+
+<div class="det-param-card det-param-card--flagged">
+  <div class="det-param-card__top">
+    <div class="det-param-card__name">Vitamin B12</div>
+    <span class="det-status-pill det-status--low">LOW</span>
+  </div>
+  <div class="det-param-card__value-row">
+    <span class="det-param-card__value" style="color:var(--color-monitor)">195</span>
+    <span class="det-param-card__unit">pg/mL</span>
+    <div class="det-param-card__mini-gauge">
+<div class="speedometer" style="width:72px;margin:0 auto;text-align:center">
+  <svg width="72" height="51.839999999999996" viewBox="0 0 72 51.839999999999996">
+    <!-- Background arc track -->
+    <path d="M 5.760000000000002 46.800000000000004 A 30.24 30.24 0 0 1 66.24 46.800000000000004"
+          fill="none" stroke="var(--color-border)" stroke-width="5.3999999999999995" stroke-linecap="butt"/>
+
+    <!-- Zone arcs: red (0-40%), amber (40-70%), green (70-100%) -->
+    <path d="M 35.99999999999999 77.04 A 30.24 30.24 0 0 1 7.2400509472345576 56.14467390989842"
+                  fill="none" stroke="var(--color-attention)" stroke-width="5.3999999999999995" stroke-linecap="butt"/>
+    <path d="M 7.2400509472345576 56.14467390989842 A 30.24 30.24 0 0 1 11.535326090101595 29.025373970675613"
+                  fill="none" stroke="var(--color-monitor)" stroke-width="5.3999999999999995" stroke-linecap="butt"/>
+    <path d="M 11.535326090101595 29.025373970675613 A 30.24 30.24 0 0 1 36 16.560000000000006"
+                  fill="none" stroke="var(--color-healthy)" stroke-width="5.3999999999999995" stroke-linecap="butt"/>
+
+    <!-- Needle -->
+    <line x1="36" y1="46.800000000000004"
+          x2="10.296000000000003" y2="46.800000000000004"
+          stroke="var(--color-attention)" stroke-width="3" stroke-linecap="round"/>
+    <!-- Pivot dot -->
+    <circle cx="36" cy="46.800000000000004" r="2.88"
+            fill="var(--color-attention)" stroke="var(--color-surface)" stroke-width="2"/>
+  </svg>
+
+  <!-- Score value -->
+  <div class="speedometer__value" style="color:var(--color-attention)">0</div>
+  <div class="speedometer__label"></div>
+</div></div>
+  </div>
+  <div class="det-param-card__range-row">
+    <span class="det-param-card__range-label">Ref: 200 – 900</span>
+    <span class="det-param-card__range-unit">pg/mL</span>
+  </div>
+  
+<div class="range-slider">
+  <div class="range-slider-fill"
+       style="left:11.538461538461538%;width:76.92307692307692%;background:var(--color-bg-light);opacity:0.5"></div>
+  <div class="range-slider-fill"
+       style="left:0;width:10.989010989010989%;background:var(--color-monitor)"></div>
+  <div class="range-slider-dot"
+       style="left:10.989010989010989%;background:var(--color-monitor)"></div>
+</div>
+<div class="range-slider-bounds">
+  <span class="range-bound-label">200</span>
+  <span class="range-bound-label">900</span>
+</div>
+</div>
+
+<div class="det-param-card ">
+  <div class="det-param-card__top">
+    <div class="det-param-card__name">Serum Iron</div>
+    <span class="det-status-pill det-status--normal">NORMAL</span>
+  </div>
+  <div class="det-param-card__value-row">
+    <span class="det-param-card__value" style="color:var(--color-healthy)">62</span>
+    <span class="det-param-card__unit">µg/dL</span>
+    <div class="det-param-card__mini-gauge">
+<div class="speedometer" style="width:72px;margin:0 auto;text-align:center">
+  <svg width="72" height="51.839999999999996" viewBox="0 0 72 51.839999999999996">
+    <!-- Background arc track -->
+    <path d="M 5.760000000000002 46.800000000000004 A 30.24 30.24 0 0 1 66.24 46.800000000000004"
+          fill="none" stroke="var(--color-border)" stroke-width="5.3999999999999995" stroke-linecap="butt"/>
+
+    <!-- Zone arcs: red (0-40%), amber (40-70%), green (70-100%) -->
+    <path d="M 35.99999999999999 77.04 A 30.24 30.24 0 0 1 7.2400509472345576 56.14467390989842"
+                  fill="none" stroke="var(--color-attention)" stroke-width="5.3999999999999995" stroke-linecap="butt"/>
+    <path d="M 7.2400509472345576 56.14467390989842 A 30.24 30.24 0 0 1 11.535326090101595 29.025373970675613"
+                  fill="none" stroke="var(--color-monitor)" stroke-width="5.3999999999999995" stroke-linecap="butt"/>
+    <path d="M 11.535326090101595 29.025373970675613 A 30.24 30.24 0 0 1 36 16.560000000000006"
+                  fill="none" stroke="var(--color-healthy)" stroke-width="5.3999999999999995" stroke-linecap="butt"/>
+
+    <!-- Needle -->
+    <line x1="36" y1="46.800000000000004"
+          x2="10.346720972479712" y2="45.186032486018526"
+          stroke="var(--color-attention)" stroke-width="3" stroke-linecap="round"/>
+    <!-- Pivot dot -->
+    <circle cx="36" cy="46.800000000000004" r="2.88"
+            fill="var(--color-attention)" stroke="var(--color-surface)" stroke-width="2"/>
+  </svg>
+
+  <!-- Score value -->
+  <div class="speedometer__value" style="color:var(--color-attention)">2</div>
+  <div class="speedometer__label"></div>
+</div></div>
+  </div>
+  <div class="det-param-card__range-row">
+    <span class="det-param-card__range-label">Ref: 60 – 170</span>
+    <span class="det-param-card__range-unit">µg/dL</span>
+  </div>
+  
+<div class="range-slider">
+  <div class="range-slider-fill"
+       style="left:11.538461538461538%;width:76.92307692307692%;background:var(--color-bg-light);opacity:0.5"></div>
+  <div class="range-slider-fill"
+       style="left:0;width:12.937062937062937%;background:var(--color-healthy)"></div>
+  <div class="range-slider-dot"
+       style="left:12.937062937062937%;background:var(--color-healthy)"></div>
+</div>
+<div class="range-slider-bounds">
+  <span class="range-bound-label">60</span>
+  <span class="range-bound-label">170</span>
+</div>
+</div>
+
+<div class="det-param-card det-param-card--flagged">
+  <div class="det-param-card__top">
+    <div class="det-param-card__name">Ferritin</div>
+    <span class="det-status-pill det-status--low">LOW</span>
+  </div>
+  <div class="det-param-card__value-row">
+    <span class="det-param-card__value" style="color:var(--color-monitor)">8</span>
+    <span class="det-param-card__unit">ng/mL</span>
+    <div class="det-param-card__mini-gauge">
+<div class="speedometer" style="width:72px;margin:0 auto;text-align:center">
+  <svg width="72" height="51.839999999999996" viewBox="0 0 72 51.839999999999996">
+    <!-- Background arc track -->
+    <path d="M 5.760000000000002 46.800000000000004 A 30.24 30.24 0 0 1 66.24 46.800000000000004"
+          fill="none" stroke="var(--color-border)" stroke-width="5.3999999999999995" stroke-linecap="butt"/>
+
+    <!-- Zone arcs: red (0-40%), amber (40-70%), green (70-100%) -->
+    <path d="M 35.99999999999999 77.04 A 30.24 30.24 0 0 1 7.2400509472345576 56.14467390989842"
+                  fill="none" stroke="var(--color-attention)" stroke-width="5.3999999999999995" stroke-linecap="butt"/>
+    <path d="M 7.2400509472345576 56.14467390989842 A 30.24 30.24 0 0 1 11.535326090101595 29.025373970675613"
+                  fill="none" stroke="var(--color-monitor)" stroke-width="5.3999999999999995" stroke-linecap="butt"/>
+    <path d="M 11.535326090101595 29.025373970675613 A 30.24 30.24 0 0 1 36 16.560000000000006"
+                  fill="none" stroke="var(--color-healthy)" stroke-width="5.3999999999999995" stroke-linecap="butt"/>
+
+    <!-- Needle -->
+    <line x1="36" y1="46.800000000000004"
+          x2="10.296000000000003" y2="46.800000000000004"
+          stroke="var(--color-attention)" stroke-width="3" stroke-linecap="round"/>
+    <!-- Pivot dot -->
+    <circle cx="36" cy="46.800000000000004" r="2.88"
+            fill="var(--color-attention)" stroke="var(--color-surface)" stroke-width="2"/>
+  </svg>
+
+  <!-- Score value -->
+  <div class="speedometer__value" style="color:var(--color-attention)">0</div>
+  <div class="speedometer__label"></div>
+</div></div>
+  </div>
+  <div class="det-param-card__range-row">
+    <span class="det-param-card__range-label">Ref: 12 – 150</span>
+    <span class="det-param-card__range-unit">ng/mL</span>
+  </div>
+  
+<div class="range-slider">
+  <div class="range-slider-fill"
+       style="left:11.538461538461538%;width:76.92307692307693%;background:var(--color-bg-light);opacity:0.5"></div>
+  <div class="range-slider-fill"
+       style="left:0;width:9.308807134894092%;background:var(--color-monitor)"></div>
+  <div class="range-slider-dot"
+       style="left:9.308807134894092%;background:var(--color-monitor)"></div>
+</div>
+<div class="range-slider-bounds">
+  <span class="range-bound-label">12</span>
+  <span class="range-bound-label">150</span>
+</div>
+</div>
+  </div>
+</section>
+  </main>
+
+  <footer class="page-footer">
+    <span class="footer-brand">Beta Health Labs — Quality Diagnostics</span>
+    <span class="footer-page">Page 10 of 11</span>
+  </footer>
+</div>
+
+<div class="report-page">
+  <div class="page-strip" style="background:#E53935"></div>
+
+  <header class="page-header">
+    <img class="logo" src="https://cdn.example.com/beta/logo.png" alt="Beta Health Labs logo" />
+    <span class="lab-name">Beta Health Labs</span>
+  </header>
+
+  <main class="page-content">
+    
+<section class="indepth-back">
+  <!-- Hero closing message -->
+  <div class="back-hero" style="border-top:6px solid var(--color-primary)">
+    <div class="back-hero__headline">Thank You for Choosing Us</div>
+    <div class="back-hero__sub">
+      Your health is our priority. If you have any questions about these results,
+      please contact your physician or our support team.
+    </div>
+  </div>
+
+  <!-- Middle row: QR + contact + disclaimer -->
+  <div class="back-mid-row">
+    <div class="back-qr-col">
+      
+<svg class="back-qr" width="90" height="90" viewBox="0 0 90 90"
+     xmlns="http://www.w3.org/2000/svg" aria-label="QR Code placeholder">
+  <!-- Outer border -->
+  <rect x="1" y="1" width="88" height="88" rx="6" fill="none"
+        stroke="#1565C0" stroke-width="2"/>
+  <!-- Top-left finder -->
+  <rect x="8"  y="8"  width="24" height="24" rx="3" fill="#1565C0"/>
+  <rect x="13" y="13" width="14" height="14" rx="1" fill="white"/>
+  <rect x="17" y="17" width="6"  height="6"  rx="1" fill="#1565C0"/>
+  <!-- Top-right finder -->
+  <rect x="58" y="8"  width="24" height="24" rx="3" fill="#1565C0"/>
+  <rect x="63" y="13" width="14" height="14" rx="1" fill="white"/>
+  <rect x="67" y="17" width="6"  height="6"  rx="1" fill="#1565C0"/>
+  <!-- Bottom-left finder -->
+  <rect x="8"  y="58" width="24" height="24" rx="3" fill="#1565C0"/>
+  <rect x="13" y="63" width="14" height="14" rx="1" fill="white"/>
+  <rect x="17" y="67" width="6"  height="6"  rx="1" fill="#1565C0"/>
+  <!-- Data dots (decorative) -->
+  <rect x="40" y="8"  width="5" height="5" rx="1" fill="#1565C0"/>
+  <rect x="48" y="8"  width="5" height="5" rx="1" fill="#1565C0"/>
+  <rect x="40" y="16" width="5" height="5" rx="1" fill="#1565C0"/>
+  <rect x="40" y="40" width="5" height="5" rx="1" fill="#1565C0"/>
+  <rect x="48" y="48" width="5" height="5" rx="1" fill="#1565C0"/>
+  <rect x="56" y="40" width="5" height="5" rx="1" fill="#1565C0"/>
+  <rect x="56" y="56" width="5" height="5" rx="1" fill="#1565C0"/>
+  <rect x="40" y="56" width="5" height="5" rx="1" fill="#1565C0"/>
+</svg>
+      <div class="back-qr-label">Scan to verify report</div>
+    </div>
+
+    <div class="back-info-col">
+      <div class="back-disclaimer">
+        <strong>Disclaimer:</strong> This report is generated by Smart Health Engine
+        and is intended as a summary of laboratory findings. Results must be
+        interpreted by a qualified healthcare provider in the context of the
+        patient's clinical history. This report does not constitute medical advice,
+        diagnosis, or treatment recommendations.
+      </div>
+    </div>
+  </div>
+
+  <!-- Contact block -->
+  <div class="back-contact-row">
+    <!-- Placeholder: replace with real contact from tenant config -->
+    <div class="back-contact">
+      <div class="back-contact__heading">Contact Us</div>
+      <div class="back-contact__line">For queries about this report, please reach out to the issuing laboratory.</div>
+    </div>
+  </div>
+
+  <div class="back-powered-by">Powered by <strong>Smart Health Engine</strong></div>
+
+  <!-- Full-bleed bottom strip -->
+  <div class="back-bottom-strip" style="background:var(--color-primary)"></div>
+</section>
+  </main>
+
+  <footer class="page-footer">
+    <span class="footer-brand">Beta Health Labs — Quality Diagnostics</span>
+    <span class="footer-page">Page 11 of 11</span>
   </footer>
 </div>
 </body>

@@ -7,8 +7,19 @@ import type { TenantConfig } from '../modules/tenants/tenant.types';
 import { resolveStrategy } from './strategies';
 import type { ReportStrategy } from './strategies';
 
+/** Pages that should NOT have header/footer (full-bleed pages) */
+const FULL_BLEED_PAGES = new Set(['indepth-cover', 'indepth-back']);
+
 export interface ReportBuildResult {
+  /** Full HTML document (for HTML output — backward compatible) */
   html: string;
+  /** Separate HTML for cover page only (null if no cover page) */
+  coverHtml: string | null;
+  /** Separate HTML for content pages only (with renderLayout wrappers) */
+  contentHtml: string;
+  /** Separate HTML for back page only (null if no back page) */
+  backHtml: string | null;
+
   overallScore: number;
   overallSeverity: string;
   renderedPages: string[];
@@ -32,20 +43,22 @@ function generatePageSections(
   pageOrder: string[],
   report: NormalizedReport,
   strategy: ReportStrategy,
+  branding: TenantConfig['branding'],
 ): { sections: string[]; rendered: string[]; skipped: string[] } {
   const sections: string[] = [];
   const rendered: string[] = [];
   const skipped: string[] = [];
 
   for (const pageName of pageOrder) {
-    if (pageName === 'profile-detail') {
+    // Both 'profile-detail' and 'indepth-detail' expand to one page per profile
+    if (pageName === 'profile-detail' || pageName === 'indepth-detail') {
       const page = pageRegistry.resolve(pageName);
       if (!page) {
         skipped.push(pageName);
         continue;
       }
       for (const profile of report.profiles) {
-        const ctx: PageRenderContext = { data: profile, strategy };
+        const ctx: PageRenderContext = { data: profile, strategy, branding };
         sections.push(page.generate(ctx));
         rendered.push(`${pageName}:${profile.id}`);
       }
@@ -58,7 +71,7 @@ function generatePageSections(
       continue;
     }
 
-    const ctx: PageRenderContext = { data: report, strategy };
+    const ctx: PageRenderContext = { data: report, strategy, branding };
     sections.push(page.generate(ctx));
     rendered.push(pageName);
   }
@@ -75,8 +88,17 @@ function generatePageSections(
  *   2. Iterate tenantConfig.pageOrder
  *   3. Resolve each page name from the page registry
  *   4. Call page.generate() with PageRenderContext { data, strategy }
- *   5. Wrap each section with the branded layout (header / footer / strip)
- *   6. Combine all wrapped pages into a single HTML document
+ *   5. Wrap content pages with the branded layout (header / footer / strip)
+ *   6. Split output into cover, content, and back segments for multi-pass PDF
+ *   7. Combine all into a single HTML document (backward-compatible)
+ *
+ * Multi-pass PDF strategy:
+ *   - Cover/back pages are "full-bleed" (no header/footer)
+ *   - Content pages get renderLayout() wrappers (HTML header/footer)
+ *   - The PDF generator renders content pages with Puppeteer native headers
+ *     (which repeat on every physical page, even overflow pages)
+ *   - Cover/back are rendered as separate PDFs with no headers
+ *   - All PDFs are merged into the final document
  */
 export function buildReport(
   normalized: NormalizedReport,
@@ -88,6 +110,7 @@ export function buildReport(
     tenantConfig.pageOrder,
     normalized,
     strategy,
+    tenantConfig.branding
   );
 
   const layoutOpts: Omit<LayoutOptions, 'pageNumber' | 'totalPages'> = {
@@ -96,18 +119,49 @@ export function buildReport(
 
   const totalPages = sections.length;
 
-  const wrappedPages = sections.map((content, idx) =>
-    renderLayout(content, {
-      ...layoutOpts,
-      pageNumber: idx + 1,
-      totalPages,
-    }),
-  );
+  // ── Separate pages into cover, content, back ──────────────────
+  const coverRawPages: string[] = [];
+  const contentRawPages: string[] = [];
+  const backRawPages: string[] = [];
 
-  const html = wrapDocument(wrappedPages, tenantConfig.branding);
+  const wrappedAll: string[] = [];
+
+  sections.forEach((content, idx) => {
+    const name = rendered[idx];
+
+    if (name === 'indepth-cover') {
+      coverRawPages.push(content);
+      wrappedAll.push(content); // No layout wrapper for cover
+    } else if (name === 'indepth-back') {
+      backRawPages.push(content);
+      wrappedAll.push(content); // No layout wrapper for back
+    } else {
+      const wrapped = renderLayout(content, {
+        ...layoutOpts,
+        pageNumber: idx + 1,
+        totalPages,
+      });
+      contentRawPages.push(wrapped);
+      wrappedAll.push(wrapped);
+    }
+  });
+
+  // ── Build separate HTML documents for multi-pass PDF ──────────
+  const branding = tenantConfig.branding;
+  const html = wrapDocument(wrappedAll, branding);
+  const coverHtml = coverRawPages.length > 0
+    ? wrapDocument(coverRawPages, branding)
+    : null;
+  const contentHtml = wrapDocument(contentRawPages, branding);
+  const backHtml = backRawPages.length > 0
+    ? wrapDocument(backRawPages, branding)
+    : null;
 
   return {
     html,
+    coverHtml,
+    contentHtml,
+    backHtml,
     overallScore: normalized.overallScore,
     overallSeverity: normalized.overallSeverity,
     renderedPages: rendered,

@@ -3,11 +3,27 @@ import { resolve, basename } from 'node:path';
 import { GenerateReportBodySchema } from '../modules/reports/report.types';
 import type { TenantConfig } from '../modules/tenants/tenant.types';
 import { normalizeReport } from '../domain/normalization/normalize-report';
+import { mapRawReportInput } from '../core/mapping/mapping.service';
 import { buildReport } from '../rendering/report-builder';
 import { generatePdfFromHtml } from '../rendering/pdf/pdf.service';
+import { mergePdfBuffers } from '../rendering/pdf/pdf-merge';
+import { buildHeaderTemplate, buildFooterTemplate, getPdfMargins } from '../rendering/html-layout';
+import { createAuditRecord, recordAudit } from '../audit/audit.service';
+import {
+    generateReportFingerprint,
+    getCachedReport,
+    storeCachedReport,
+} from '../cache/report-cache.service';
 import { pageRegistry } from '../core/page-registry/page.registry';
 import { masterOverviewPage } from '../pages/master-overview.page';
 import { profileDetailPage } from '../pages/profile-detail.page';
+import {
+    inDepthCoverPage,
+    inDepthHowToReadPage,
+    inDepthSummaryPage,
+    inDepthDetailPage,
+    inDepthBackPage,
+} from '../pages/indepth/index';
 import type { PageRenderContext } from '../core/page-registry/page.types';
 
 /* ---------------------------------------------------------------
@@ -29,7 +45,13 @@ const MOCK_TENANTS: Record<string, TenantConfig> = {
     'tenant-beta': {
         tenantId: 'tenant-beta',
         reportType: 'inDepth',
-        pageOrder: ['master-overview', 'profile-detail'],
+        pageOrder: [
+            'indepth-cover',
+            'indepth-how-to-read',
+            'indepth-summary',
+            'indepth-detail',
+            'indepth-back',
+        ],
         branding: {
             labName: 'Beta Health Labs',
             logoUrl: 'https://cdn.example.com/beta/logo.png',
@@ -50,6 +72,13 @@ const MOCK_TENANTS: Record<string, TenantConfig> = {
 function seedPages(): void {
     pageRegistry.register(masterOverviewPage);
     pageRegistry.register(profileDetailPage);
+
+    // InDepth pages
+    pageRegistry.register(inDepthCoverPage);
+    pageRegistry.register(inDepthHowToReadPage);
+    pageRegistry.register(inDepthSummaryPage);
+    pageRegistry.register(inDepthDetailPage);
+    pageRegistry.register(inDepthBackPage);
 
     const placeholders = [
         'cover', 'summary', 'executiveSummary', 'bloodPanel',
@@ -78,14 +107,19 @@ async function main(): Promise<void> {
 
     // Parse flags
     const pdfFlag = args.includes('--pdf');
+    const noCacheFlag = args.includes('--no-cache');
+    const noAuditFlag = args.includes('--no-audit');
     const inputPath = args.find((a) => !a.startsWith('--'));
 
+    if (noCacheFlag) process.env.DISABLE_CACHE = 'true';
+    if (noAuditFlag) process.env.DISABLE_AUDIT = 'true';
+
     if (!inputPath) {
-        console.error('Usage: npm run generate <input.json> [--pdf]');
+        console.error('Usage: npm run generate <input.json> [--pdf] [--no-cache] [--no-audit]');
         console.error('');
         console.error('Examples:');
         console.error('  npm run generate examples/sample-report.json');
-        console.error('  npm run generate examples/sample-report.json -- --pdf');
+        console.error('  npm run generate examples/sample-report.json -- --pdf --no-cache --no-audit');
         process.exit(1);
     }
 
@@ -125,19 +159,121 @@ async function main(): Promise<void> {
         process.exit(1);
     }
 
-    // 4. Seed pages & build report
+    // 4. Seed pages, map
     seedPages();
-    const normalized = normalizeReport(reportData);
+    const { report: mappedData, unmappedParameters } = mapRawReportInput(reportData, tenant);
+
+    // 5. Cache check
+    const fingerprint = generateReportFingerprint(mappedData, tenantId);
+    const cached = getCachedReport(fingerprint);
+
+    if (cached) {
+        console.log('');
+        console.log('⚡ Cache hit — using cached report');
+        console.log(`  Fingerprint: ${fingerprint}`);
+
+        const outputDir = resolve('output');
+        mkdirSync(outputDir, { recursive: true });
+
+        if (pdfFlag) {
+            console.log('⏳ Generating PDF from cached HTML...');
+            // For cached HTML, we only have the full HTML — generate as single PDF
+            const pdfBuffer = await generatePdfFromHtml(cached.html, {
+                margin: getPdfMargins(tenant.branding),
+                headerTemplate: buildHeaderTemplate(tenant.branding),
+                footerTemplate: buildFooterTemplate(tenant.branding),
+            });
+            const outPath = resolve(outputDir, 'report.pdf');
+            writeFileSync(outPath, pdfBuffer);
+            console.log(`  File:     ${outPath}`);
+            console.log(`  Size:     ${(pdfBuffer.length / 1024).toFixed(1)} KB`);
+        } else {
+            const outPath = resolve(outputDir, 'report.html');
+            writeFileSync(outPath, cached.html, 'utf-8');
+            console.log(`  File:     ${outPath}`);
+            console.log(`  Size:     ${(cached.html.length / 1024).toFixed(1)} KB`);
+        }
+
+        console.log(`  Score:    ${cached.overallScore}/100`);
+        console.log(`  Severity: ${cached.overallSeverity}`);
+        console.log('  Audit:    skipped (cached)');
+        return;
+    }
+
+    // 6. Normalize + Build
+    const normalized = normalizeReport(mappedData);
     const result = buildReport(normalized, tenant);
 
-    // 5. Ensure output directory
+    // 7. Audit (new generation only)
+    const audit = createAuditRecord({
+        tenantId,
+        rawInput: reportData,
+        mappingWarnings: unmappedParameters,
+        normalized,
+        source: 'cli',
+    });
+    const auditPath = recordAudit(audit);
+
+    // 8. Cache store
+    storeCachedReport(fingerprint, {
+        tenantId,
+        html: result.html,
+        overallScore: result.overallScore,
+        overallSeverity: result.overallSeverity,
+        renderedPages: result.renderedPages,
+        skippedPages: result.skippedPages,
+    });
+
+    // 9. Ensure output directory
     const outputDir = resolve('output');
     mkdirSync(outputDir, { recursive: true });
 
-    // 6. Write output
+    // 10. Write output
     if (pdfFlag) {
-        console.log('⏳ Generating PDF...');
-        const pdfBuffer = await generatePdfFromHtml(result.html);
+        console.log('⏳ Generating PDF (multi-pass)...');
+
+        // Multi-pass PDF strategy:
+        //   Pass 1: Cover page — no headers/footers, no margins
+        //   Pass 2: Content pages — Puppeteer native headers on every physical page
+        //   Pass 3: Back page — no headers/footers, no margins
+        //   Final: Merge all PDFs in order
+        const pdfSegments: Buffer[] = [];
+
+        // Pass 1: Cover (if present)
+        if (result.coverHtml) {
+            console.log('  → Rendering cover page...');
+            const coverPdf = await generatePdfFromHtml(result.coverHtml, {
+                margin: { top: '0px', bottom: '0px', left: '0px', right: '0px' },
+                // No headerTemplate / footerTemplate → displayHeaderFooter = false
+            });
+            pdfSegments.push(coverPdf);
+        }
+
+        // Pass 2: Content pages (with Puppeteer native headers/footers)
+        console.log('  → Rendering content pages...');
+        const contentPdf = await generatePdfFromHtml(result.contentHtml, {
+            margin: getPdfMargins(tenant.branding),
+            headerTemplate: buildHeaderTemplate(tenant.branding),
+            footerTemplate: buildFooterTemplate(tenant.branding),
+        });
+        pdfSegments.push(contentPdf);
+
+        // Pass 3: Back page (if present)
+        if (result.backHtml) {
+            console.log('  → Rendering back page...');
+            const backPdf = await generatePdfFromHtml(result.backHtml, {
+                margin: { top: '0px', bottom: '0px', left: '0px', right: '0px' },
+                // No headerTemplate / footerTemplate → displayHeaderFooter = false
+            });
+            pdfSegments.push(backPdf);
+        }
+
+        // Merge all segments
+        console.log('  → Merging PDF segments...');
+        const pdfBuffer = pdfSegments.length === 1
+            ? pdfSegments[0]
+            : await mergePdfBuffers(pdfSegments);
+
         const outPath = resolve(outputDir, 'report.pdf');
         writeFileSync(outPath, pdfBuffer);
 
@@ -162,6 +298,17 @@ async function main(): Promise<void> {
     if (result.skippedPages.length > 0) {
         console.log(`  Skipped:  ${result.skippedPages.join(', ')}`);
     }
+
+    if (unmappedParameters.length > 0) {
+        console.log(`  Unmapped: ${unmappedParameters.join(', ')}`);
+    }
+
+    console.log('');
+    console.log('📋 Audit');
+    console.log(`  Report ID:  ${audit.reportId}`);
+    console.log(`  Input Hash: ${audit.inputHash}`);
+    console.log(`  Saved To:   ${auditPath}`);
+    console.log(`  Cache Key:  ${fingerprint}`);
 }
 
 main().catch((err) => {
