@@ -27,6 +27,9 @@ COPY . .
 # Build the TypeScript code
 RUN npm run build
 
+# Copy static assets (CSS, etc.) that tsc doesn't emit
+RUN cp -r src/rendering/*.css dist/rendering/ 2>/dev/null || true
+
 # Expose the standard port
 EXPOSE 3000
 
