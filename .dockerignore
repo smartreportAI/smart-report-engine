@@ -1,11 +1,12 @@
 node_modules
 dist
-output
+/output
 test
 tests
 coverage
 tmp
-cache
+/cache
+/audit
 .git
 .env
 .env.*
