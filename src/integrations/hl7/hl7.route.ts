@@ -50,7 +50,13 @@ const MOCK_TENANTS: Record<string, TenantConfig> = {
     'tenant-beta': {
         tenantId: 'tenant-beta',
         reportType: 'inDepth',
-        pageOrder: ['master-overview', 'profile-detail'],
+        pageOrder: [
+            'indepth-cover',
+            'indepth-how-to-read',
+            'indepth-summary',
+            'indepth-detail',
+            'indepth-back',
+        ],
         branding: {
             labName: 'Beta Health Labs',
             logoUrl: 'https://cdn.example.com/beta/logo.png',
