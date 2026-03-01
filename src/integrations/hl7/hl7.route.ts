@@ -151,15 +151,23 @@ export async function hl7Routes(app: FastifyInstance): Promise<void> {
                 if (output === 'pdf') {
                     const cachedPdf = getCachedPdf(fingerprint);
                     if (cachedPdf) {
-                        return reply.code(200).header('Content-Type', 'application/pdf')
-                            .header('Content-Disposition', `inline; filename="${tenantId}-hl7-report.pdf"`)
-                            .send(cachedPdf);
+                        return reply.code(200).send(successResponse({
+                            pdfBase64: cachedPdf.toString('base64'),
+                            overallScore: cached.overallScore,
+                            overallSeverity: cached.overallSeverity,
+                            renderedPages: cached.renderedPages,
+                            skippedPages: cached.skippedPages,
+                        }));
                     }
                     const pdfBuffer = await generatePdfFromHtml(cached.html);
                     storeCachedPdf(fingerprint, pdfBuffer);
-                    return reply.code(200).header('Content-Type', 'application/pdf')
-                        .header('Content-Disposition', `inline; filename="${tenantId}-hl7-report.pdf"`)
-                        .send(pdfBuffer);
+                    return reply.code(200).send(successResponse({
+                        pdfBase64: pdfBuffer.toString('base64'),
+                        overallScore: cached.overallScore,
+                        overallSeverity: cached.overallSeverity,
+                        renderedPages: cached.renderedPages,
+                        skippedPages: cached.skippedPages,
+                    }));
                 }
                 const response: ReportGenerationResult = {
                     html: cached.html, overallScore: cached.overallScore,
@@ -203,9 +211,13 @@ export async function hl7Routes(app: FastifyInstance): Promise<void> {
                     observeDuration(METRIC.PDF_DURATION_MS, Date.now() - pdfStartMs, { source });
                     storeCachedReport(fingerprint, cacheEntry, pdfBuffer);
                     observeDuration(METRIC.REPORT_DURATION_MS, Date.now() - startMs, { source });
-                    return reply.code(200).header('Content-Type', 'application/pdf')
-                        .header('Content-Disposition', `inline; filename="${tenantId}-hl7-report.pdf"`)
-                        .send(pdfBuffer);
+                    return reply.code(200).send(successResponse({
+                        pdfBase64: pdfBuffer.toString('base64'),
+                        overallScore: result.overallScore,
+                        overallSeverity: result.overallSeverity,
+                        renderedPages: result.renderedPages,
+                        skippedPages: result.skippedPages,
+                    }));
                 } catch (err) {
                     app.log.error({ err }, 'PDF generation failed (HL7)');
                     return reply.code(500).send(errorResponse('PDF_GENERATION_FAILED', 'Failed to generate PDF.'));

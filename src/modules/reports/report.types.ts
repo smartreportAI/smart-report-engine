@@ -41,7 +41,8 @@ export const GenerateReportBodySchema = z.object({
 export type GenerateReportBody = z.infer<typeof GenerateReportBodySchema>;
 
 export interface ReportGenerationResult {
-  html: string;
+  html?: string;
+  pdfBase64?: string;
   overallScore: number;
   overallSeverity: string;
   renderedPages: string[];

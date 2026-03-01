@@ -123,11 +123,13 @@ export async function reportRoutes(app: FastifyInstance): Promise<void> {
         if (output === 'pdf') {
           const cachedPdf = getCachedPdf(fingerprint);
           if (cachedPdf) {
-            return reply
-              .code(200)
-              .header('Content-Type', 'application/pdf')
-              .header('Content-Disposition', `inline; filename="${tenantId}-report.pdf"`)
-              .send(cachedPdf);
+            return reply.code(200).send(successResponse({
+              pdfBase64: cachedPdf.toString('base64'),
+              overallScore: cached.overallScore,
+              overallSeverity: cached.overallSeverity,
+              renderedPages: cached.renderedPages,
+              skippedPages: cached.skippedPages,
+            }));
           }
           // Generate PDF from cached HTML
           const pdfBuffer = await generatePdfFromHtml(cached.html, {
@@ -136,11 +138,13 @@ export async function reportRoutes(app: FastifyInstance): Promise<void> {
             footerTemplate: buildFooterTemplate(tenant.branding),
           });
           storeCachedPdf(fingerprint, pdfBuffer);
-          return reply
-            .code(200)
-            .header('Content-Type', 'application/pdf')
-            .header('Content-Disposition', `inline; filename="${tenantId}-report.pdf"`)
-            .send(pdfBuffer);
+          return reply.code(200).send(successResponse({
+            pdfBase64: pdfBuffer.toString('base64'),
+            overallScore: cached.overallScore,
+            overallSeverity: cached.overallSeverity,
+            renderedPages: cached.renderedPages,
+            skippedPages: cached.skippedPages,
+          }));
         }
 
         const response: ReportGenerationResult = {
@@ -198,11 +202,13 @@ export async function reportRoutes(app: FastifyInstance): Promise<void> {
             skippedPages: result.skippedPages,
           }, pdfBuffer);
 
-          return reply
-            .code(200)
-            .header('Content-Type', 'application/pdf')
-            .header('Content-Disposition', `inline; filename="${tenantId}-report.pdf"`)
-            .send(pdfBuffer);
+          return reply.code(200).send(successResponse({
+            pdfBase64: pdfBuffer.toString('base64'),
+            overallScore: result.overallScore,
+            overallSeverity: result.overallSeverity,
+            renderedPages: result.renderedPages,
+            skippedPages: result.skippedPages,
+          }));
         } catch (err) {
           app.log.error({ err }, 'PDF generation failed');
           return reply
