@@ -7,6 +7,7 @@ import { normalizeReport } from '../../domain/normalization/normalize-report';
 import { mapRawReportInput } from '../../core/mapping/mapping.service';
 import { buildReport } from '../../rendering/report-builder';
 import { generatePdfFromHtml } from '../../rendering/pdf/pdf.service';
+import { generateMultipassPdf } from '../../rendering/pdf/pdf-multipass';
 import { buildHeaderTemplate, buildFooterTemplate, getPdfMargins } from '../../rendering/html-layout';
 import { createAuditRecord, recordAudit } from '../../audit/audit.service';
 import {
@@ -131,12 +132,8 @@ export async function reportRoutes(app: FastifyInstance): Promise<void> {
               skippedPages: cached.skippedPages,
             }));
           }
-          // Generate PDF from cached HTML
-          const pdfBuffer = await generatePdfFromHtml(cached.html, {
-            margin: getPdfMargins(tenant.branding),
-            headerTemplate: buildHeaderTemplate(tenant.branding),
-            footerTemplate: buildFooterTemplate(tenant.branding),
-          });
+          // Generate multipass PDF from cached HTML elements
+          const pdfBuffer = await generateMultipassPdf(cached, tenant);
           storeCachedPdf(fingerprint, pdfBuffer);
           return reply.code(200).send(successResponse({
             pdfBase64: pdfBuffer.toString('base64'),
@@ -183,11 +180,7 @@ export async function reportRoutes(app: FastifyInstance): Promise<void> {
       if (output === 'pdf') {
         try {
           const pdfStartMs = Date.now();
-          const pdfBuffer = await generatePdfFromHtml(result.html, {
-            margin: getPdfMargins(tenant.branding),
-            headerTemplate: buildHeaderTemplate(tenant.branding),
-            footerTemplate: buildFooterTemplate(tenant.branding),
-          });
+          const pdfBuffer = await generateMultipassPdf(result, tenant);
           const pdfDuration = Date.now() - pdfStartMs;
           incrementCounter(METRIC.PDF_GENERATION_TOTAL, { source });
           observeDuration(METRIC.PDF_DURATION_MS, pdfDuration, { source });
@@ -196,6 +189,9 @@ export async function reportRoutes(app: FastifyInstance): Promise<void> {
           storeCachedReport(fingerprint, {
             tenantId,
             html: result.html,
+            coverHtml: result.coverHtml,
+            contentHtml: result.contentHtml,
+            backHtml: result.backHtml,
             overallScore: result.overallScore,
             overallSeverity: result.overallSeverity,
             renderedPages: result.renderedPages,
@@ -220,6 +216,9 @@ export async function reportRoutes(app: FastifyInstance): Promise<void> {
       storeCachedReport(fingerprint, {
         tenantId,
         html: result.html,
+        coverHtml: result.coverHtml,
+        contentHtml: result.contentHtml,
+        backHtml: result.backHtml,
         overallScore: result.overallScore,
         overallSeverity: result.overallSeverity,
         renderedPages: result.renderedPages,

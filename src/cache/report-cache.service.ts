@@ -22,6 +22,9 @@ export interface CachedReportEntry {
     fingerprint: string;
     tenantId: string;
     html: string;
+    coverHtml?: string | null;
+    contentHtml?: string;
+    backHtml?: string | null;
     overallScore: number;
     overallSeverity: string;
     renderedPages: string[];

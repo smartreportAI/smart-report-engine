@@ -5,6 +5,7 @@ import { normalizeReport } from '../../domain/normalization/normalize-report';
 import { mapRawReportInput } from '../../core/mapping/mapping.service';
 import { buildReport } from '../../rendering/report-builder';
 import { generatePdfFromHtml } from '../../rendering/pdf/pdf.service';
+import { generateMultipassPdf } from '../../rendering/pdf/pdf-multipass';
 import { createAuditRecord, recordAudit } from '../../audit/audit.service';
 import {
     generateReportFingerprint,
@@ -159,7 +160,7 @@ export async function hl7Routes(app: FastifyInstance): Promise<void> {
                             skippedPages: cached.skippedPages,
                         }));
                     }
-                    const pdfBuffer = await generatePdfFromHtml(cached.html);
+                    const pdfBuffer = await generateMultipassPdf(cached, tenant);
                     storeCachedPdf(fingerprint, pdfBuffer);
                     return reply.code(200).send(successResponse({
                         pdfBase64: pdfBuffer.toString('base64'),
@@ -196,17 +197,22 @@ export async function hl7Routes(app: FastifyInstance): Promise<void> {
                 app.log.error({ err }, 'Failed to save audit record (HL7)');
             }
 
-            /* ---- 8. Cache store + respond ---- */
             const cacheEntry = {
-                tenantId, html: result.html, overallScore: result.overallScore,
+                tenantId,
+                html: result.html,
+                coverHtml: result.coverHtml,
+                contentHtml: result.contentHtml,
+                backHtml: result.backHtml,
+                overallScore: result.overallScore,
                 overallSeverity: result.overallSeverity,
-                renderedPages: result.renderedPages, skippedPages: result.skippedPages,
+                renderedPages: result.renderedPages,
+                skippedPages: result.skippedPages,
             };
 
             if (output === 'pdf') {
                 try {
                     const pdfStartMs = Date.now();
-                    const pdfBuffer = await generatePdfFromHtml(result.html);
+                    const pdfBuffer = await generateMultipassPdf(result, tenant);
                     incrementCounter(METRIC.PDF_GENERATION_TOTAL, { source });
                     observeDuration(METRIC.PDF_DURATION_MS, Date.now() - pdfStartMs, { source });
                     storeCachedReport(fingerprint, cacheEntry, pdfBuffer);

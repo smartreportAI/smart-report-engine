@@ -6,7 +6,7 @@ import { normalizeReport } from '../domain/normalization/normalize-report';
 import { mapRawReportInput } from '../core/mapping/mapping.service';
 import { buildReport } from '../rendering/report-builder';
 import { generatePdfFromHtml } from '../rendering/pdf/pdf.service';
-import { mergePdfBuffers } from '../rendering/pdf/pdf-merge';
+import { generateMultipassPdf } from '../rendering/pdf/pdf-multipass';
 import { buildHeaderTemplate, buildFooterTemplate, getPdfMargins } from '../rendering/html-layout';
 import { createAuditRecord, recordAudit } from '../audit/audit.service';
 import {
@@ -177,12 +177,7 @@ async function main(): Promise<void> {
 
         if (pdfFlag) {
             console.log('⏳ Generating PDF from cached HTML...');
-            // For cached HTML, we only have the full HTML — generate as single PDF
-            const pdfBuffer = await generatePdfFromHtml(cached.html, {
-                margin: getPdfMargins(tenant.branding),
-                headerTemplate: buildHeaderTemplate(tenant.branding),
-                footerTemplate: buildFooterTemplate(tenant.branding),
-            });
+            const pdfBuffer = await generateMultipassPdf(cached, tenant);
             const outPath = resolve(outputDir, 'report.pdf');
             writeFileSync(outPath, pdfBuffer);
             console.log(`  File:     ${outPath}`);
@@ -214,10 +209,12 @@ async function main(): Promise<void> {
     });
     const auditPath = recordAudit(audit);
 
-    // 8. Cache store
     storeCachedReport(fingerprint, {
         tenantId,
         html: result.html,
+        coverHtml: result.coverHtml,
+        contentHtml: result.contentHtml,
+        backHtml: result.backHtml,
         overallScore: result.overallScore,
         overallSeverity: result.overallSeverity,
         renderedPages: result.renderedPages,
@@ -232,47 +229,7 @@ async function main(): Promise<void> {
     if (pdfFlag) {
         console.log('⏳ Generating PDF (multi-pass)...');
 
-        // Multi-pass PDF strategy:
-        //   Pass 1: Cover page — no headers/footers, no margins
-        //   Pass 2: Content pages — Puppeteer native headers on every physical page
-        //   Pass 3: Back page — no headers/footers, no margins
-        //   Final: Merge all PDFs in order
-        const pdfSegments: Buffer[] = [];
-
-        // Pass 1: Cover (if present)
-        if (result.coverHtml) {
-            console.log('  → Rendering cover page...');
-            const coverPdf = await generatePdfFromHtml(result.coverHtml, {
-                margin: { top: '0px', bottom: '0px', left: '0px', right: '0px' },
-                // No headerTemplate / footerTemplate → displayHeaderFooter = false
-            });
-            pdfSegments.push(coverPdf);
-        }
-
-        // Pass 2: Content pages (with Puppeteer native headers/footers)
-        console.log('  → Rendering content pages...');
-        const contentPdf = await generatePdfFromHtml(result.contentHtml, {
-            margin: getPdfMargins(tenant.branding),
-            headerTemplate: buildHeaderTemplate(tenant.branding),
-            footerTemplate: buildFooterTemplate(tenant.branding),
-        });
-        pdfSegments.push(contentPdf);
-
-        // Pass 3: Back page (if present)
-        if (result.backHtml) {
-            console.log('  → Rendering back page...');
-            const backPdf = await generatePdfFromHtml(result.backHtml, {
-                margin: { top: '0px', bottom: '0px', left: '0px', right: '0px' },
-                // No headerTemplate / footerTemplate → displayHeaderFooter = false
-            });
-            pdfSegments.push(backPdf);
-        }
-
-        // Merge all segments
-        console.log('  → Merging PDF segments...');
-        const pdfBuffer = pdfSegments.length === 1
-            ? pdfSegments[0]
-            : await mergePdfBuffers(pdfSegments);
+        const pdfBuffer = await generateMultipassPdf(result, tenant);
 
         const outPath = resolve(outputDir, 'report.pdf');
         writeFileSync(outPath, pdfBuffer);
