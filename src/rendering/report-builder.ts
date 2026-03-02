@@ -1,7 +1,7 @@
 import { pageRegistry } from '../core/page-registry/page.registry';
 import type { PageRenderContext } from '../core/page-registry/page.types';
 import { renderLayout, wrapDocument } from './html-layout';
-import type { LayoutOptions } from './html-layout';
+import type { LayoutOptions, PatientStripInfo } from './html-layout';
 import type { NormalizedReport } from '../domain/models/report.model';
 import type { TenantConfig } from '../modules/tenants/tenant.types';
 import { resolveStrategy } from './strategies';
@@ -18,7 +18,9 @@ export interface ReportBuildResult {
   /** Separate HTML for content pages only (with renderLayout wrappers) */
   contentHtml: string;
   /** Separate HTML for back page only (null if no back page) */
-  backHtml: string | null;
+  backHtml?: string | null;
+  /** Metadata for the patient strip (passed to PDF header) */
+  patient?: PatientStripInfo;
 
   overallScore: number;
   overallSeverity: string;
@@ -113,8 +115,18 @@ export function buildReport(
     tenantConfig.branding
   );
 
+  const reportDate = new Date().toLocaleDateString('en-IN', {
+    day: '2-digit', month: 'long', year: 'numeric',
+  });
+
   const layoutOpts: Omit<LayoutOptions, 'pageNumber' | 'totalPages'> = {
     branding: tenantConfig.branding,
+    patient: {
+      patientId: normalized.patientId,
+      age: normalized.age,
+      gender: normalized.gender,
+      reportDate,
+    },
   };
 
   const totalPages = sections.length;
@@ -166,5 +178,6 @@ export function buildReport(
     overallSeverity: normalized.overallSeverity,
     renderedPages: rendered,
     skippedPages: skipped,
+    patient: layoutOpts.patient,
   };
 }

@@ -40,6 +40,8 @@ const MOCK_TENANTS: Record<string, TenantConfig> = {
             logoUrl: 'https://cdn.example.com/alpha/logo.png',
             primaryColor: '#1A73E8',
             footerText: 'Alpha Diagnostics Pvt. Ltd.',
+            headerHeight: '80px',
+            headerMargin: '20px',
         },
     },
     'tenant-beta': {
@@ -53,13 +55,15 @@ const MOCK_TENANTS: Record<string, TenantConfig> = {
             'indepth-back',
         ],
         branding: {
-            labName: 'Beta Health Labs',
-            logoUrl: 'https://cdn.example.com/beta/logo.png',
-            primaryColor: '#E53935',
-            secondaryColor: '#1B5E20',
+            labName: 'NexaHealth Analytics',
+            logoUrl: '',
+            primaryColor: '#2D4A9A',
+            secondaryColor: '#20BFDD',
             accentHealthy: '#388E3C',
-            footerText: 'Beta Health Labs — Quality Diagnostics',
-            contactEmail: 'reports@betahealthlabs.com',
+            footerText: 'NexaHealth Analytics — Smart Health Insights',
+            headerHeight: '80px',
+            headerMargin: '20px',
+            contactEmail: 'reports@nexahealth.com',
             showPoweredBy: true,
         },
     },
@@ -219,6 +223,7 @@ async function main(): Promise<void> {
         overallSeverity: result.overallSeverity,
         renderedPages: result.renderedPages,
         skippedPages: result.skippedPages,
+        patient: result.patient,
     });
 
     // 9. Ensure output directory

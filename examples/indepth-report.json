@@ -119,15 +119,6 @@
                         }
                     },
                     {
-                        "testName": "AST (SGOT)",
-                        "value": 44,
-                        "unit": "U/L",
-                        "referenceRange": {
-                            "min": 10,
-                            "max": 40
-                        }
-                    },
-                    {
                         "testName": "ALP",
                         "value": 88,
                         "unit": "U/L",
@@ -159,15 +150,6 @@
             {
                 "profileName": "Kidney Function",
                 "parameters": [
-                    {
-                        "testName": "Creatinine",
-                        "value": 1.3,
-                        "unit": "mg/dL",
-                        "referenceRange": {
-                            "min": 0.5,
-                            "max": 1.1
-                        }
-                    },
                     {
                         "testName": "Blood Urea Nitrogen",
                         "value": 22,

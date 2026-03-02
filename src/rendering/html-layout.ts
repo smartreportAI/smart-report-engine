@@ -6,10 +6,23 @@ import type { TenantBrandingConfig } from '../modules/tenants/tenant.types';
    Layout Options
    --------------------------------------------------------------- */
 
+/**
+ * Minimal patient fields needed to render the patient strip.
+ * Sourced from NormalizedReport — passed by the report builder.
+ */
+export interface PatientStripInfo {
+  patientId: string;
+  age: number;
+  gender: string;
+  reportDate?: string;
+}
+
 export interface LayoutOptions {
   branding: TenantBrandingConfig;
   pageNumber?: number;
   totalPages?: number;
+  /** When provided, renders the patient info strip below the header. */
+  patient?: PatientStripInfo;
 }
 
 /* ---------------------------------------------------------------
@@ -45,22 +58,60 @@ export function getPdfMargins(branding: TenantBrandingConfig) {
     return num;
   };
 
-  const headerH = parsePx(branding.headerHeight, 48);
-  const headerM = parsePx(branding.headerMargin, 15); // Default 15px gap
+  const headerH = parsePx(branding.headerHeight, 80);
+  const patientH = 54; // Total height including buffer (42 + 12 gap)
+  const headerM = parsePx(branding.headerMargin, 20);
 
   const footerH = parsePx(branding.footerHeight, 36);
-  const footerM = parsePx(branding.footerMargin, 15); // Default 15px gap
+  const footerM = parsePx(branding.footerMargin, 15);
 
   return {
-    top: Math.ceil(headerH + headerM) + 'px',
+    top: Math.ceil(headerH + patientH + headerM) + 'px',
     bottom: Math.ceil(footerH + footerM) + 'px',
     left: '0px',
     right: '0px'
   };
 }
 
+/* ---------------------------------------------------------------
+   Patient Strip Renderer
+
+   Renders a compact 4-column patient info bar:
+     Patient ID | Age / Gender | Lab ID | Report Date
+
+   Placed immediately below the branded header with no gap,
+   so the visual order is: [header] [patient strip] [page content].
+   --------------------------------------------------------------- */
+
+function renderPatientStrip(patient: PatientStripInfo): string {
+  const ageGender = `${patient.gender.charAt(0).toUpperCase() + patient.gender.slice(1)} \u2022 ${patient.age} yrs`;
+  const date = patient.reportDate ?? new Date().toLocaleDateString('en-IN', {
+    day: '2-digit', month: 'long', year: 'numeric',
+  });
+
+  const items: Array<{ label: string; value: string }> = [
+    { label: 'Patient ID', value: patient.patientId },
+    { label: 'Age / Gender', value: ageGender },
+    { label: 'Lab ID', value: patient.patientId },
+    { label: 'Report Date', value: date },
+  ];
+
+  const cells = items.map((item) => `
+    <div class="ps-item">
+      <p class="ps-label">${item.label}</p>
+      <p class="ps-value">${item.value}</p>
+    </div>`).join('');
+
+  return `
+<div class="patient-strip">
+  <div class="ps-grid">
+    ${cells}
+  </div>
+</div>`;
+}
+
 export function renderLayout(content: string, options: LayoutOptions): string {
-  const { branding, pageNumber, totalPages } = options;
+  const { branding, pageNumber, totalPages, patient } = options;
 
   const paginationText =
     pageNumber !== undefined && totalPages !== undefined
@@ -68,16 +119,10 @@ export function renderLayout(content: string, options: LayoutOptions): string {
       : '';
 
   const footerLabel = branding.footerText ?? branding.labName;
+  const patientStrip = patient ? renderPatientStrip(patient) : '';
 
   return `
 <div class="report-page">
-  <div class="page-strip" style="background:${branding.primaryColor}"></div>
-
-  <header class="page-header">
-    <img class="logo" src="${branding.logoUrl}" alt="${branding.labName} logo" />
-    <span class="lab-name">${branding.labName}</span>
-  </header>
-
   <main class="page-content">
     ${content}
   </main>
@@ -173,9 +218,36 @@ export function generateBrandCSSVariables(
      .pageNumber   — current physical page number
      .totalPages   — total physical pages
    --------------------------------------------------------------- */
+export function buildHeaderTemplate(branding: TenantBrandingConfig, patient?: PatientStripInfo): string {
+  const height = branding.headerHeight ?? '80px';
 
-export function buildHeaderTemplate(branding: TenantBrandingConfig): string {
-  const height = branding.headerHeight ?? '48px';
+  let patientHtml = '';
+  if (patient) {
+    const ageGender = `${patient.gender.charAt(0).toUpperCase() + patient.gender.slice(1)} \u2022 ${patient.age} yrs`;
+    const date = patient.reportDate ?? new Date().toLocaleDateString('en-IN', {
+      day: '2-digit', month: 'long', year: 'numeric',
+    });
+
+    patientHtml = `
+    <div style="background-color:#f8fafc; border-bottom:1px solid #e2e8f0; padding:8px 32px; margin-top:3px; margin-bottom:12px; display:grid; grid-template-columns:repeat(4,1fr); gap:16px;">
+       <div>
+         <div style="font-size:8.5px; font-weight:600; letter-spacing:0.08em; text-transform:uppercase; color:#94a3b8; margin-bottom:2px;">Patient ID</div>
+         <div style="font-size:11px; font-weight:600; color:#1e293b;">${patient.patientId}</div>
+       </div>
+       <div>
+         <div style="font-size:8.5px; font-weight:600; letter-spacing:0.08em; text-transform:uppercase; color:#94a3b8; margin-bottom:2px;">Age / Gender</div>
+         <div style="font-size:11px; font-weight:600; color:#1e293b;">${ageGender}</div>
+       </div>
+       <div>
+         <div style="font-size:8.5px; font-weight:600; letter-spacing:0.08em; text-transform:uppercase; color:#94a3b8; margin-bottom:2px;">Lab ID</div>
+         <div style="font-size:11px; font-weight:600; color:#1e293b;">${patient.patientId}</div>
+       </div>
+       <div>
+         <div style="font-size:8.5px; font-weight:600; letter-spacing:0.08em; text-transform:uppercase; color:#94a3b8; margin-bottom:2px;">Report Date</div>
+         <div style="font-size:11px; font-weight:600; color:#1e293b;">${date}</div>
+       </div>
+    </div>`;
+  }
 
   return `
 <style>
@@ -183,29 +255,73 @@ export function buildHeaderTemplate(branding: TenantBrandingConfig): string {
     margin: 0 !important;
     padding: 0 !important;
     -webkit-print-color-adjust: exact !important;
+    font-family: 'Inter', system-ui, sans-serif;
   }
+  .ph-wrapper {
+    width: 100%;
+    margin: 0; padding: 0;
+    box-sizing: border-box;
+  }
+  .ph-bar {
+    width: 100%; height: ${height};
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 32px; border-bottom: 1px solid #E5E7EB; background: white;
+    box-sizing: border-box;
+  }
+  .ph-left { display: flex; align-items: center; gap: 12px; }
+  .ph-icon {
+    width: 36px; height: 36px; border-radius: 12px;
+    background: linear-gradient(135deg, #2D4A9A 0%, #20BFDD 100%);
+    display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+  }
+  .ph-lab-info { display: flex; flex-direction: column; }
+  .ph-tagline {
+    font-size: 9px; letter-spacing: 0.12em; text-transform: uppercase;
+    color: #9CA3AF; margin-bottom: 1px;
+  }
+  .ph-name { font-size: 14px; font-weight: 700; color: #2D4A9A; }
+  
+  .ph-right { display: flex; align-items: center; gap: 24px; }
+  .ph-nabl {
+    display: flex; align-items: center; gap: 6px; padding: 6px 12px;
+    border-radius: 8px; background-color: #EBF5FF; border: 1px solid #BFDBFE;
+  }
+  .ph-nabl span { font-size: 9px; font-weight: 600; color: #2D4A9A; }
+  
+  .ph-meta { text-align: right; display: flex; flex-direction: column; gap: 1px; }
+  .ph-meta-id { font-size: 10px; color: #9CA3AF; }
+  .ph-meta-page { font-size: 10px; color: #6B7280; }
 </style>
-<div style="
-  width:100%;
-  height:${height};
-  display:flex;
-  align-items:center;
-  gap:10px;
-  padding:0 20px;
-  border-bottom:1px solid #e2e8f0;
-  font-family:'Inter','Segoe UI',system-ui,sans-serif;
-  font-size:12px;
-  box-sizing:border-box;
-">
-  <div style="
-    width:100%;
-    height:6px;
-    background:${branding.primaryColor};
-    position:absolute;
-    top:0;left:0;right:0;
-  "></div>
-  <img src="${branding.logoUrl}" style="height:28px;width:auto;object-fit:contain;" />
-  <span style="font-size:13px;font-weight:600;color:#475569;">${branding.labName}</span>
+<div class="ph-wrapper">
+  <div class="ph-bar">
+    <div class="ph-left">
+      <div class="ph-icon">
+         <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
+           <path d="M9 2v14M2 9h14" stroke="white" stroke-width="2.2" stroke-linecap="round"/>
+           <circle cx="9" cy="9" r="6.5" stroke="white" stroke-width="1.2" opacity="0.45"/>
+         </svg>
+      </div>
+      <div class="ph-lab-info">
+        <div class="ph-tagline">DIAGNOSTIC LABORATORY</div>
+        <div class="ph-name">${branding.labName}</div>
+      </div>
+    </div>
+
+    <div class="ph-right">
+      <div class="ph-nabl">
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+          <circle cx="7" cy="7" r="6" stroke="#2D4A9A" stroke-width="1.2"/>
+          <path d="M4.5 7L6.5 9L9.5 5" stroke="#2D4A9A" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        <span>NABL Accredited</span>
+      </div>
+      <div class="ph-meta">
+        <div class="ph-meta-id">Report ID: RPT-${new Date().getFullYear()}-REF</div>
+        <div class="ph-meta-page">In-Depth Profile &middot; Page <span class="pageNumber"></span> of <span class="totalPages"></span></div>
+      </div>
+    </div>
+  </div>
+  ${patientHtml}
 </div>`;
 }
 

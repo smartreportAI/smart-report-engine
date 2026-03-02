@@ -381,9 +381,6 @@ export const inDepthCoverPage: ReportPage = {
       </div>
     </div>
 
-    <!-- Separator -->
-    <div class="cv-separator"></div>
-
     <!-- ═══ TITLE BLOCK ═══ -->
     <div class="cv-title-block">
       <div class="cv-ornament">

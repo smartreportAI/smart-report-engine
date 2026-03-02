@@ -1,6 +1,7 @@
 import { readFileSync, writeFileSync, existsSync, mkdirSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { generateInputHash } from '../audit/audit.utils';
+import type { PatientStripInfo } from '../rendering/html-layout';
 
 /**
  * Deterministic report cache.
@@ -30,6 +31,7 @@ export interface CachedReportEntry {
     renderedPages: string[];
     skippedPages: string[];
     createdAt: string;
+    patient?: PatientStripInfo;
 }
 
 // ---------------------------------------------------------------------------
