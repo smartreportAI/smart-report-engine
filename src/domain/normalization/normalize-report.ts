@@ -29,9 +29,9 @@ function normalizeParameter(raw: RawParameterInput): ParameterResult {
     typeof raw.value === 'number' ? raw.value : parseFloat(raw.value);
 
   const range =
-    raw.referenceRange !== undefined &&
-    (raw.referenceRange.min !== undefined || raw.referenceRange.max !== undefined)
-      ? { min: raw.referenceRange.min, max: raw.referenceRange.max }
+    raw.referenceRange !== undefined && raw.referenceRange !== null &&
+      (raw.referenceRange.min != null || raw.referenceRange.max != null)
+      ? { min: raw.referenceRange.min ?? undefined, max: raw.referenceRange.max ?? undefined }
       : undefined;
 
   const canClassifyNumeric = !isNaN(numericValue) && range !== undefined;
@@ -44,7 +44,7 @@ function normalizeParameter(raw: RawParameterInput): ParameterResult {
     id: toId(raw.testName),
     name: raw.testName,
     value: raw.value,
-    unit: raw.unit,
+    unit: raw.unit ?? undefined,
     range,
     status,
     signalScore,
@@ -79,8 +79,8 @@ function normalizeProfile(raw: RawProfileInput): ProfileResult {
   const profileScore =
     parameters.length > 0
       ? Math.round(
-          parameters.reduce((sum, p) => sum + p.signalScore, 0) / parameters.length,
-        )
+        parameters.reduce((sum, p) => sum + p.signalScore, 0) / parameters.length,
+      )
       : 100;
 
   const severity = deriveProfileSeverity(parameters);
@@ -120,21 +120,24 @@ function deriveOverallSeverity(profiles: ProfileResult[]): OverallSeverity {
 export function normalizeReport(raw: RawReportInput): NormalizedReport {
   const profiles = raw.profiles.map(normalizeProfile);
 
-  const overallScore =
+  const overallScore = raw.aiAssessment?.healthScore ?? (
     profiles.length > 0
       ? Math.round(
-          profiles.reduce((sum, p) => sum + p.profileScore, 0) / profiles.length,
-        )
-      : 100;
+        profiles.reduce((sum, p) => sum + p.profileScore, 0) / profiles.length,
+      )
+      : 100
+  );
 
   const overallSeverity = deriveOverallSeverity(profiles);
 
   return {
     patientId: raw.patientId,
+    patientName: raw.patientName,
     age: raw.age,
     gender: raw.gender,
     profiles,
     overallScore,
     overallSeverity,
+    aiAssessment: raw.aiAssessment,
   };
 }

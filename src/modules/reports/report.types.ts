@@ -14,6 +14,7 @@ export const GenerateReportBodySchema = z.object({
   output: OutputFormatSchema,
   reportData: z.object({
     patientId: z.string().min(1),
+    patientName: z.string().optional(),
     age: z.number().int().positive(),
     gender: z.enum(['male', 'female', 'other']),
     profiles: z.array(
@@ -23,18 +24,22 @@ export const GenerateReportBodySchema = z.object({
           z.object({
             testName: z.string().min(1),
             value: z.union([z.number(), z.string()]),
-            unit: z.string().optional(),
+            unit: z.string().nullable().optional(),
             referenceRange: z
               .object({
-                min: z.number().optional(),
-                max: z.number().optional(),
-                text: z.string().optional(),
+                min: z.number().nullable().optional(),
+                max: z.number().nullable().optional(),
+                text: z.string().nullable().optional(),
               })
               .optional(),
           }),
         ),
       }),
     ),
+    aiAssessment: z.object({
+      healthScore: z.number(),
+      overallRecommendations: z.array(z.string()),
+    }).optional(),
   }),
 });
 

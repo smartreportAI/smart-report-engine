@@ -9,16 +9,16 @@
  */
 
 export interface RawReferenceRange {
-  min?: number;
-  max?: number;
+  min?: number | null;
+  max?: number | null;
   /** Free-text range description when numeric bounds are not available. */
-  text?: string;
+  text?: string | null;
 }
 
 export interface RawParameterInput {
   testName: string;
   value: number | string;
-  unit?: string;
+  unit?: string | null;
   referenceRange?: RawReferenceRange;
 }
 
@@ -31,7 +31,12 @@ export type Gender = 'male' | 'female' | 'other';
 
 export interface RawReportInput {
   patientId: string;
+  patientName?: string;
   age: number;
   gender: Gender;
   profiles: RawProfileInput[];
+  aiAssessment?: {
+    healthScore: number;
+    overallRecommendations: string[];
+  };
 }

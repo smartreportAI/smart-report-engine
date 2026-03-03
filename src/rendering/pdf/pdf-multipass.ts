@@ -29,7 +29,7 @@ export async function generateMultipassPdf(
     // If the input doesn't have split HTML (e.g., from an old cache), do a single pass
     if (!input.contentHtml) {
         return generatePdfFromHtml(input.html, {
-            margin: getPdfMargins(tenant.branding),
+            margin: getPdfMargins(tenant.branding, !!input.patient),
             headerTemplate: buildHeaderTemplate(tenant.branding, input.patient),
             footerTemplate: buildFooterTemplate(tenant.branding),
         });
@@ -47,7 +47,7 @@ export async function generateMultipassPdf(
 
     // Pass 2: Content pages (with branded headers/footers + margins)
     const contentPdf = await generatePdfFromHtml(input.contentHtml, {
-        margin: getPdfMargins(tenant.branding),
+        margin: getPdfMargins(tenant.branding, !!input.patient),
         headerTemplate: buildHeaderTemplate(tenant.branding, input.patient),
         footerTemplate: buildFooterTemplate(tenant.branding),
     });

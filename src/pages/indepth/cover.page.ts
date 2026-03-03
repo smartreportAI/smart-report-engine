@@ -285,7 +285,7 @@ export const inDepthCoverPage: ReportPage = {
 
 /* ── Details Grid ──────────────────────────────────────────────── */
 .cv-details-grid {
-  display: grid; grid-template-columns: repeat(5, 1fr);
+  display: grid; grid-template-columns: repeat(3, 1fr);
   gap: 6px 8px; padding-left: 4px;
 }
 .cv-detail-col { border-right: 1px solid rgb(var(--brand-rgb) / 0.1); padding-right: 8px; }
@@ -424,7 +424,7 @@ export const inDepthCoverPage: ReportPage = {
         <div class="cv-card-top">
           <div>
             <div class="cv-pname-label">FULL NAME</div>
-            <div class="cv-pname">Confidential Patient</div>
+            <div class="cv-pname">${report.patientName || 'Confidential Patient'}</div>
             <div class="cv-pid">Patient ID: <span>${report.patientId}</span></div>
           </div>
           <div class="cv-qr-col">
@@ -496,23 +496,6 @@ export const inDepthCoverPage: ReportPage = {
           <div class="cv-detail-col">
             <div class="cv-d-label">REPORT DATE</div>
             <div class="cv-d-value">${today}</div>
-          </div>
-          <div class="cv-detail-col">
-             <!-- Blank to keep symmetry since no blood group available -->
-          </div>
-          <div class="cv-detail-col">
-            <!-- Blank to keep symmetry -->
-          </div>
-        </div>
-
-        <div class="cv-doctor-row">
-          <div>
-            <span class="cv-dr-ref">REFERRED BY </span>
-            <span class="cv-dr-name">Internal Clinic</span>
-          </div>
-          <div class="cv-verified">
-            <span class="cv-v-dot"></span>
-            REPORT VERIFIED &amp; AUTHENTICATED
           </div>
         </div>
       </div>

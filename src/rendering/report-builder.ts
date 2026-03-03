@@ -115,6 +115,8 @@ export function buildReport(
     tenantConfig.branding
   );
 
+  const reportId = `RPT-${new Date().getFullYear()}-${normalized.patientId.slice(-4).toUpperCase()}`;
+
   const reportDate = new Date().toLocaleDateString('en-IN', {
     day: '2-digit', month: 'long', year: 'numeric',
   });
@@ -123,6 +125,9 @@ export function buildReport(
     branding: tenantConfig.branding,
     patient: {
       patientId: normalized.patientId,
+      patientName: normalized.patientName,
+      labId: normalized.patientId, // Defaulting labId to patientId as per current data structure
+      reportId: reportId,
       age: normalized.age,
       gender: normalized.gender,
       reportDate,

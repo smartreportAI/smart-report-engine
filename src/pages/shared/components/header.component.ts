@@ -41,13 +41,6 @@ export function renderPageHeader(
   </div>
 
   <div class="header-right">
-    <div class="nabl-badge">
-      <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
-        <circle cx="7" cy="7" r="6" stroke="#2D4A9A" stroke-width="1.2"/>
-        <path d="M4.5 7L6.5 9L9.5 5" stroke="#2D4A9A" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
-      </svg>
-      <span>NABL Accredited</span>
-    </div>
     <div class="header-meta">
       <div class="header-meta-id">Report ID: ${reportId}</div>
       ${pageText ? `<div class="header-meta-page">${pageText}</div>` : ''}

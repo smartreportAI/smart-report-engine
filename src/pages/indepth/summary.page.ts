@@ -81,13 +81,17 @@ function renderStatusGrid(report: NormalizedReport): string {
     summaryText = 'indicating several areas that require immediate attention and consultation.';
   }
 
+  // If we have an AI assessment, make it clear that the score is AI-generated
+  const introText = report.aiAssessment
+    ? `Based on a comprehensive AI evaluation of all parameters, your Master Health Score is <strong style="color:${scoreColor}">${report.overallScore}/100</strong>, ${summaryText}`
+    : `Your overall health score is <strong style="color:${scoreColor}">${report.overallScore}/100</strong>, ${summaryText}`;
+
   return `
         <div class="health-score-breakdown">
             <h2 class="section-heading-v2">Master Health Score</h2>
             <div class="status-grid">${cards}</div>
             <p class="score-summary-text">
-                Your overall health score is <strong style="color:${scoreColor}">${report.overallScore}/100</strong>,
-                ${summaryText} Refer to the "Key Clinical Observations" for specific details.
+                ${introText}
             </p>
         </div>
     `;
@@ -170,6 +174,30 @@ function renderClinicalObservations(report: NormalizedReport): string {
     `;
 }
 
+function renderAiRecommendations(report: NormalizedReport): string {
+  if (!report.aiAssessment || !report.aiAssessment.overallRecommendations.length) {
+    return ''; // No AI assessment provided
+  }
+
+  const recList = report.aiAssessment.overallRecommendations.map(rec => {
+    return `
+            <div class="observation-row" style="background-color:#eff6ff">
+                <div class="observation-dot" style="background-color:#3b82f6"></div>
+                <p class="observation-text">${rec}</p>
+            </div>
+    `;
+  }).join('');
+
+  return `
+    <div class="clinical-observations-section">
+      <div class="clinical-observations-header">
+        <h2 class="section-heading-v2">Top Clinical Recommendations</h2>
+      </div>
+      <div class="clinical-list">${recList}</div>
+    </div>
+  `;
+}
+
 /* ────────────────────────────────────────────────────────────────── */
 
 export const inDepthSummaryPage: ReportPage = {
@@ -188,15 +216,18 @@ export const inDepthSummaryPage: ReportPage = {
         ${renderStatusGrid(report)}
     </div>
 
-    <div class="summary-divider"></div>
+    <div class="summary-divider" style="margin-top: 24px; margin-bottom: 24px;"></div>
 
     <!-- ORGAN SYSTEM SUMMARY -->
     ${renderOrganSystems(report)}
 
-    <div class="summary-divider"></div>
+    <div class="summary-divider" style="margin-top: 24px; margin-bottom: 24px;"></div>
 
     <!-- KEY CLINICAL OBSERVATIONS -->
     ${renderClinicalObservations(report)}
+
+    <!-- AI CLINICAL RECOMMENDATIONS (if present) -->
+    ${renderAiRecommendations(report)}
 </section>`;
   },
 };

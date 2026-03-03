@@ -13,6 +13,7 @@ export type OverallSeverity = 'stable' | 'monitor' | 'critical';
 
 export interface NormalizedReport {
   patientId: string;
+  patientName?: string;
   age: number;
   gender: Gender;
   profiles: ProfileResult[];
@@ -29,4 +30,10 @@ export interface NormalizedReport {
    * critical → overallScore < 50
    */
   overallSeverity: OverallSeverity;
+
+  /** AI-generated holistic health assessment (override score + doctor recommendations) */
+  aiAssessment?: {
+    healthScore: number;
+    overallRecommendations: string[];
+  };
 }

@@ -36,20 +36,10 @@ type Hl7IngestBody = z.infer<typeof Hl7IngestBodySchema>;
 // TenantService in a future phase)
 // ---------------------------------------------------------------------------
 
+/** Demo tenant — single config for the prototype. */
 const MOCK_TENANTS: Record<string, TenantConfig> = {
-    'tenant-alpha': {
-        tenantId: 'tenant-alpha',
-        reportType: 'essential',
-        pageOrder: ['master-overview', 'profile-detail'],
-        branding: {
-            labName: 'Alpha Diagnostics',
-            logoUrl: 'https://cdn.example.com/alpha/logo.png',
-            primaryColor: '#1A73E8',
-            footerText: 'Alpha Diagnostics Pvt. Ltd.',
-        },
-    },
-    'tenant-beta': {
-        tenantId: 'tenant-beta',
+    demo: {
+        tenantId: 'demo',
         reportType: 'inDepth',
         pageOrder: [
             'indepth-cover',
@@ -59,13 +49,15 @@ const MOCK_TENANTS: Record<string, TenantConfig> = {
             'indepth-back',
         ],
         branding: {
-            labName: 'Beta Health Labs',
-            logoUrl: 'https://cdn.example.com/beta/logo.png',
-            primaryColor: '#E53935',
-            secondaryColor: '#1B5E20',
-            accentHealthy: '#388E3C',
-            footerText: 'Beta Health Labs — Quality Diagnostics',
-            contactEmail: 'reports@betahealthlabs.com',
+            labName: 'Smart Health Labs',
+            logoUrl: 'https://cdn.example.com/demo/logo.png',
+            primaryColor: '#4F46E5',
+            secondaryColor: '#0EA5E9',
+            accentHealthy: '#16A34A',
+            accentMonitor: '#D97706',
+            accentAttention: '#DC2626',
+            footerText: 'Smart Health Labs — Intelligent Diagnostics',
+            contactEmail: 'reports@smarthealthlabs.com',
             showPoweredBy: true,
         },
     },

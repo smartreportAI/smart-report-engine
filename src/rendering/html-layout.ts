@@ -10,11 +10,32 @@ import type { TenantBrandingConfig } from '../modules/tenants/tenant.types';
  * Minimal patient fields needed to render the patient strip.
  * Sourced from NormalizedReport — passed by the report builder.
  */
+/**
+ * Minimal patient fields needed to render the patient strip.
+ * Sourced from NormalizedReport — passed by the report builder.
+ */
 export interface PatientStripInfo {
   patientId: string;
+  patientName?: string;
+  labId?: string;
+  reportId?: string;
   age: number;
   gender: string;
   reportDate?: string;
+}
+
+/**
+ * Utility to escape HTML special characters to prevent XSS.
+ */
+function escapeHtml(str: string | number | undefined): string {
+  if (str === undefined || str === null) return '';
+  const s = String(str);
+  return s
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#039;');
 }
 
 export interface LayoutOptions {
@@ -40,7 +61,7 @@ export interface LayoutOptions {
  * Ensures that if a tenant specifies a 120px header, Puppeteer explicitly
  * leaves exactly 120px + user gap in the margin to prevent overlap.
  */
-export function getPdfMargins(branding: TenantBrandingConfig) {
+export function getPdfMargins(branding: TenantBrandingConfig, hasPatient: boolean) {
   const parsePx = (val: string | undefined, defaultPx: number): number => {
     if (!val) return defaultPx;
     // Regex matches numbers with optional decimals and standard physical units
@@ -59,7 +80,7 @@ export function getPdfMargins(branding: TenantBrandingConfig) {
   };
 
   const headerH = parsePx(branding.headerHeight, 80);
-  const patientH = 54; // Total height including buffer (42 + 12 gap)
+  const patientH = hasPatient ? 54 : 0; // Only add patient height if present
   const headerM = parsePx(branding.headerMargin, 20);
 
   const footerH = parsePx(branding.footerHeight, 36);
@@ -84,21 +105,23 @@ export function getPdfMargins(branding: TenantBrandingConfig) {
    --------------------------------------------------------------- */
 
 function renderPatientStrip(patient: PatientStripInfo): string {
-  const ageGender = `${patient.gender.charAt(0).toUpperCase() + patient.gender.slice(1)} \u2022 ${patient.age} yrs`;
+  const genderFormatted = patient.gender.charAt(0).toUpperCase() + patient.gender.slice(1);
+  const ageGender = `${genderFormatted} \u2022 ${patient.age} yrs`;
   const date = patient.reportDate ?? new Date().toLocaleDateString('en-IN', {
     day: '2-digit', month: 'long', year: 'numeric',
   });
 
   const items: Array<{ label: string; value: string }> = [
-    { label: 'Patient ID', value: patient.patientId },
-    { label: 'Age / Gender', value: ageGender },
-    { label: 'Lab ID', value: patient.patientId },
-    { label: 'Report Date', value: date },
+    { label: 'Patient Name', value: escapeHtml(patient.patientName || 'Confidential Patient') },
+    { label: 'Patient ID', value: escapeHtml(patient.patientId) },
+    { label: 'Age / Gender', value: escapeHtml(ageGender) },
+    { label: 'Lab ID', value: escapeHtml(patient.labId || patient.patientId) },
+    { label: 'Report Date', value: escapeHtml(date) },
   ];
 
   const cells = items.map((item) => `
     <div class="ps-item">
-      <p class="ps-label">${item.label}</p>
+      <p class="ps-label">${escapeHtml(item.label)}</p>
       <p class="ps-value">${item.value}</p>
     </div>`).join('');
 
@@ -220,19 +243,25 @@ export function generateBrandCSSVariables(
    --------------------------------------------------------------- */
 export function buildHeaderTemplate(branding: TenantBrandingConfig, patient?: PatientStripInfo): string {
   const height = branding.headerHeight ?? '80px';
+  const labNameEscaped = escapeHtml(branding.labName);
 
   let patientHtml = '';
   if (patient) {
-    const ageGender = `${patient.gender.charAt(0).toUpperCase() + patient.gender.slice(1)} \u2022 ${patient.age} yrs`;
-    const date = patient.reportDate ?? new Date().toLocaleDateString('en-IN', {
+    const genderFormatted = patient.gender.charAt(0).toUpperCase() + patient.gender.slice(1);
+    const ageGender = escapeHtml(`${genderFormatted} \u2022 ${patient.age} yrs`);
+    const date = escapeHtml(patient.reportDate ?? new Date().toLocaleDateString('en-IN', {
       day: '2-digit', month: 'long', year: 'numeric',
-    });
+    }));
 
     patientHtml = `
-    <div style="background-color:#f8fafc; border-bottom:1px solid #e2e8f0; padding:8px 32px; margin-top:3px; margin-bottom:12px; display:grid; grid-template-columns:repeat(4,1fr); gap:16px;">
+    <div style="background-color:#f8fafc; border-bottom:1px solid #e2e8f0; padding:8px 32px; margin-top:3px; margin-bottom:12px; display:grid; grid-template-columns:repeat(5,1fr); gap:16px;">
+       <div>
+         <div style="font-size:8.5px; font-weight:600; letter-spacing:0.08em; text-transform:uppercase; color:#94a3b8; margin-bottom:2px;">Patient Name</div>
+         <div style="font-size:11px; font-weight:600; color:#1e293b;">${escapeHtml(patient.patientName || 'Confidential Patient')}</div>
+       </div>
        <div>
          <div style="font-size:8.5px; font-weight:600; letter-spacing:0.08em; text-transform:uppercase; color:#94a3b8; margin-bottom:2px;">Patient ID</div>
-         <div style="font-size:11px; font-weight:600; color:#1e293b;">${patient.patientId}</div>
+         <div style="font-size:11px; font-weight:600; color:#1e293b;">${escapeHtml(patient.patientId)}</div>
        </div>
        <div>
          <div style="font-size:8.5px; font-weight:600; letter-spacing:0.08em; text-transform:uppercase; color:#94a3b8; margin-bottom:2px;">Age / Gender</div>
@@ -240,7 +269,7 @@ export function buildHeaderTemplate(branding: TenantBrandingConfig, patient?: Pa
        </div>
        <div>
          <div style="font-size:8.5px; font-weight:600; letter-spacing:0.08em; text-transform:uppercase; color:#94a3b8; margin-bottom:2px;">Lab ID</div>
-         <div style="font-size:11px; font-weight:600; color:#1e293b;">${patient.patientId}</div>
+         <div style="font-size:11px; font-weight:600; color:#1e293b;">${escapeHtml(patient.labId || patient.patientId)}</div>
        </div>
        <div>
          <div style="font-size:8.5px; font-weight:600; letter-spacing:0.08em; text-transform:uppercase; color:#94a3b8; margin-bottom:2px;">Report Date</div>
@@ -303,20 +332,13 @@ export function buildHeaderTemplate(branding: TenantBrandingConfig, patient?: Pa
       </div>
       <div class="ph-lab-info">
         <div class="ph-tagline">DIAGNOSTIC LABORATORY</div>
-        <div class="ph-name">${branding.labName}</div>
+        <div class="ph-name">${labNameEscaped}</div>
       </div>
     </div>
 
     <div class="ph-right">
-      <div class="ph-nabl">
-        <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
-          <circle cx="7" cy="7" r="6" stroke="#2D4A9A" stroke-width="1.2"/>
-          <path d="M4.5 7L6.5 9L9.5 5" stroke="#2D4A9A" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
-        </svg>
-        <span>NABL Accredited</span>
-      </div>
       <div class="ph-meta">
-        <div class="ph-meta-id">Report ID: RPT-${new Date().getFullYear()}-REF</div>
+        <div class="ph-meta-id">Report ID: ${escapeHtml(patient?.reportId || 'N/A')}</div>
         <div class="ph-meta-page">In-Depth Profile &middot; Page <span class="pageNumber"></span> of <span class="totalPages"></span></div>
       </div>
     </div>

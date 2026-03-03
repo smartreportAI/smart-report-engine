@@ -3,6 +3,7 @@
     "output": "pdf",
     "reportData": {
         "patientId": "PAT-BETA-2024",
+        "patientName": "John Doe",
         "age": 55,
         "gender": "female",
         "profiles": [
@@ -284,6 +285,16 @@
                     }
                 ]
             }
-        ]
+        ],
+        "aiAssessment": {
+            "healthScore": 64,
+            "overallRecommendations": [
+                "Initiate a lipid-lowering therapy and lifestyle modifications to address elevated Total Cholesterol, LDL Cholesterol, Triglycerides, and VLDL.",
+                "Investigate and manage the cause of anemia, given the low Haemoglobin and Hematocrit.",
+                "Evaluate and manage the elevated ALT (SGPT) and Blood Urea Nitrogen, considering potential liver and kidney issues.",
+                "Initiate tight glycemic control to manage elevated Fasting Blood Glucose, HbA1c, and Post-Prandial Glucose.",
+                "Correct Vitamin D, Vitamin B12, and Iron deficiencies to improve overall wellbeing and treat anemia."
+            ]
+        }
     }
 }

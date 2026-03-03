@@ -100,6 +100,7 @@ export function mapRawReportInput(
     return {
         report: {
             patientId: raw.patientId,
+            patientName: raw.patientName,
             age: raw.age,
             gender: raw.gender,
             profiles,
