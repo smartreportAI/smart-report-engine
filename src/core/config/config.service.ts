@@ -19,6 +19,7 @@ function loadConfig(): AppConfig {
     port: env.PORT,
     host: env.HOST,
     logLevel: env.LOG_LEVEL,
+    corsOrigin: env.CORS_ORIGIN,
   };
 }
 

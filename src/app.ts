@@ -1,5 +1,6 @@
 import Fastify, { type FastifyError } from 'fastify';
 import sensible from '@fastify/sensible';
+import cors from '@fastify/cors';
 import { config } from './core/config/config.service';
 import { healthRoutes } from './modules/health/health.route';
 import { tenantRoutes } from './modules/tenants/tenant.route';
@@ -43,6 +44,20 @@ export function buildApp() {
   });
 
   app.register(sensible);
+
+  /* ---- CORS: allow browser requests from frontend origin ---- */
+  const allowedOrigins = config.corsOrigin
+    ? config.corsOrigin.split(',').map((o) => o.trim()).filter(Boolean)
+    : [
+        'http://localhost:3000',
+        'http://127.0.0.1:3000',
+        'https://company-website-dr65l6wn6-sais-projects-c150b1ba.vercel.app',
+      ];
+  app.register(cors, {
+    origin: allowedOrigins.length > 0 ? allowedOrigins : true,
+    methods: ['GET', 'POST', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Accept', 'X-Request-ID'],
+  });
 
   /* ---- Request ID injection ---- */
   app.addHook('onRequest', async (request) => {

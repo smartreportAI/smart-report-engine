@@ -3,4 +3,6 @@ export interface AppConfig {
   port: number;
   host: string;
   logLevel: 'trace' | 'debug' | 'info' | 'warn' | 'error' | 'fatal';
+  /** Comma-separated CORS origins (optional). */
+  corsOrigin?: string;
 }
