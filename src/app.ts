@@ -52,6 +52,7 @@ export function buildApp() {
         'http://localhost:3000',
         'http://127.0.0.1:3000',
         'https://company-website-dr65l6wn6-sais-projects-c150b1ba.vercel.app',
+        'https://company-website-7qmjnqle8-sais-projects-c150b1ba.vercel.app'
       ];
   app.register(cors, {
     origin: allowedOrigins.length > 0 ? allowedOrigins : true,
