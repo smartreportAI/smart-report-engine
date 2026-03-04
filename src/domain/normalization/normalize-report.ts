@@ -24,17 +24,36 @@ function toId(name: string): string {
 // Parameter normalization
 // ---------------------------------------------------------------------------
 
+/**
+ * Coerces a reference range bound (number, string, or null) to a number.
+ * Used so missing or non-numeric lab values (e.g. null, "N/A", "<5") never
+ * break report generation; we simply treat them as missing and show "—".
+ */
+function toOptionalNumber(v: number | string | null | undefined): number | undefined {
+  if (v === null || v === undefined) return undefined;
+  if (typeof v === 'number') return Number.isNaN(v) ? undefined : v;
+  const n = parseFloat(String(v).trim());
+  return Number.isNaN(n) ? undefined : n;
+}
+
 function normalizeParameter(raw: RawParameterInput): ParameterResult {
   const numericValue =
-    typeof raw.value === 'number' ? raw.value : parseFloat(raw.value);
+    typeof raw.value === 'number' ? raw.value : parseFloat(String(raw.value));
+
+  const ref = raw.referenceRange;
+  const min = ref && (ref.min != null || ref.max != null)
+    ? toOptionalNumber(ref.min as number | string | null | undefined)
+    : undefined;
+  const max = ref && (ref.min != null || ref.max != null)
+    ? toOptionalNumber(ref.max as number | string | null | undefined)
+    : undefined;
 
   const range =
-    raw.referenceRange !== undefined && raw.referenceRange !== null &&
-      (raw.referenceRange.min != null || raw.referenceRange.max != null)
-      ? { min: raw.referenceRange.min ?? undefined, max: raw.referenceRange.max ?? undefined }
+    min !== undefined || max !== undefined
+      ? { min, max }
       : undefined;
 
-  const canClassifyNumeric = !isNaN(numericValue) && range !== undefined;
+  const canClassifyNumeric = !Number.isNaN(numericValue) && range !== undefined;
 
   const { status, signalScore } = canClassifyNumeric
     ? classifyParameter(numericValue, range?.min, range?.max)

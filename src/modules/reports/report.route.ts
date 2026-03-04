@@ -26,10 +26,8 @@ import {
 /**
  * Inline mock tenant store — will be replaced by a shared TenantService
  * backed by a database in a future phase.
- */
-/**
- * Demo tenant — single config for the prototype.
- * Parser Backend always sends tenantId: "demo".
+ * Kept in sync with tenant.route.ts so GET /tenants/:id and POST /reports/generate
+ * accept the same tenant IDs (tenant-alpha, tenant-beta, demo).
  */
 const MOCK_TENANTS: Record<string, TenantConfig> = {
   demo: {
@@ -52,6 +50,41 @@ const MOCK_TENANTS: Record<string, TenantConfig> = {
       accentAttention: '#DC2626',
       footerText: 'Smart Health Labs — Intelligent Diagnostics',
       contactEmail: 'reports@smarthealthlabs.com',
+      showPoweredBy: true,
+    },
+  },
+  'tenant-alpha': {
+    tenantId: 'tenant-alpha',
+    reportType: 'essential',
+    pageOrder: ['cover', 'summary', 'bloodPanel', 'recommendations'],
+    branding: {
+      labName: 'Alpha Diagnostics',
+      logoUrl: 'https://cdn.example.com/alpha/logo.png',
+      primaryColor: '#1A73E8',
+      footerText: 'Alpha Diagnostics Pvt. Ltd.',
+      headerMargin: '40px',
+    },
+  },
+  'tenant-beta': {
+    tenantId: 'tenant-beta',
+    reportType: 'inDepth',
+    pageOrder: [
+      'indepth-cover',
+      'indepth-how-to-read',
+      'indepth-summary',
+      'indepth-detail',
+      'indepth-back',
+    ],
+    branding: {
+      labName: 'NexaHealth Analytics',
+      logoUrl: '',
+      primaryColor: '#2D4A9A',
+      secondaryColor: '#20BFDD',
+      accentHealthy: '#388E3C',
+      footerText: 'NexaHealth Analytics — Smart Health Insights',
+      headerHeight: '80px',
+      headerMargin: '20px',
+      contactEmail: 'reports@nexahealth.com',
       showPoweredBy: true,
     },
   },

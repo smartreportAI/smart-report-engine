@@ -1,299 +1,143 @@
 {
-    "tenantId": "tenant-beta",
+    "tenantId": "demo",
     "output": "pdf",
     "reportData": {
-        "patientId": "PAT-BETA-2024",
-        "patientName": "John Doe",
-        "age": 55,
-        "gender": "female",
+        "patientId": "APUN.0000214807",
+        "patientName": "Mr. ISHWAR LIMBANI",
+        "age": 48,
+        "gender": "male",
         "profiles": [
             {
-                "profileName": "Lipid Profile",
+                "profileName": "DEPARTMENT OF BIOCHEMISTRY",
                 "parameters": [
                     {
-                        "testName": "Total Cholesterol",
-                        "value": 238,
+                        "testName": "Calcium",
+                        "value": 9.83,
                         "unit": "mg/dL",
                         "referenceRange": {
-                            "min": 0,
-                            "max": 200
-                        }
-                    },
-                    {
-                        "testName": "LDL Cholesterol",
-                        "value": 162,
-                        "unit": "mg/dL",
-                        "referenceRange": {
-                            "min": 0,
-                            "max": 130
-                        }
-                    },
-                    {
-                        "testName": "HDL Cholesterol",
-                        "value": 52,
-                        "unit": "mg/dL",
-                        "referenceRange": {
-                            "min": 40,
-                            "max": 60
-                        }
-                    },
-                    {
-                        "testName": "Triglycerides",
-                        "value": 210,
-                        "unit": "mg/dL",
-                        "referenceRange": {
-                            "min": 0,
-                            "max": 150
-                        }
-                    },
-                    {
-                        "testName": "VLDL",
-                        "value": 42,
-                        "unit": "mg/dL",
-                        "referenceRange": {
-                            "min": 5,
-                            "max": 40
+                            "min": 8.6,
+                            "max": 10.2
                         }
                     }
                 ]
             },
             {
-                "profileName": "Complete Blood Count",
+                "profileName": "EGFR (ESTIMATED GLOMERULAR FILTRATION RATE)",
                 "parameters": [
                     {
-                        "testName": "Haemoglobin",
-                        "value": 11.4,
-                        "unit": "g/dL",
-                        "referenceRange": {
-                            "min": 12.0,
-                            "max": 16.0
-                        }
-                    },
-                    {
-                        "testName": "RBC Count",
-                        "value": 3.9,
-                        "unit": "million/µL",
-                        "referenceRange": {
-                            "min": 3.8,
-                            "max": 5.2
-                        }
-                    },
-                    {
-                        "testName": "WBC Count",
-                        "value": 6500,
-                        "unit": "/µL",
-                        "referenceRange": {
-                            "min": 4000,
-                            "max": 11000
-                        }
-                    },
-                    {
-                        "testName": "Platelets",
-                        "value": 185000,
-                        "unit": "/µL",
-                        "referenceRange": {
-                            "min": 150000,
-                            "max": 400000
-                        }
-                    },
-                    {
-                        "testName": "Hematocrit",
-                        "value": 34.8,
-                        "unit": "%",
-                        "referenceRange": {
-                            "min": 36,
-                            "max": 46
-                        }
-                    }
-                ]
-            },
-            {
-                "profileName": "Liver Function",
-                "parameters": [
-                    {
-                        "testName": "ALT (SGPT)",
-                        "value": 52,
-                        "unit": "U/L",
-                        "referenceRange": {
-                            "min": 7,
-                            "max": 40
-                        }
-                    },
-                    {
-                        "testName": "ALP",
-                        "value": 88,
-                        "unit": "U/L",
-                        "referenceRange": {
-                            "min": 44,
-                            "max": 147
-                        }
-                    },
-                    {
-                        "testName": "Total Bilirubin",
-                        "value": 1.1,
+                        "testName": "Creatinine",
+                        "value": 0.91,
                         "unit": "mg/dL",
                         "referenceRange": {
-                            "min": 0.1,
-                            "max": 1.2
+                            "min": 0.7,
+                            "max": 1.4
                         }
                     },
                     {
-                        "testName": "Albumin",
-                        "value": 3.8,
-                        "unit": "g/dL",
-                        "referenceRange": {
-                            "min": 3.5,
-                            "max": 5.0
-                        }
-                    }
-                ]
-            },
-            {
-                "profileName": "Kidney Function",
-                "parameters": [
-                    {
-                        "testName": "Blood Urea Nitrogen",
-                        "value": 22,
+                        "testName": "Blood Urea Nitrogen (BUN)",
+                        "value": 8.42,
                         "unit": "mg/dL",
                         "referenceRange": {
-                            "min": 7,
+                            "min": 6,
                             "max": 20
                         }
                     },
                     {
-                        "testName": "Uric Acid",
-                        "value": 5.2,
-                        "unit": "mg/dL",
+                        "testName": "Albumin (Serum)",
+                        "value": 4.66,
+                        "unit": "g/dL",
                         "referenceRange": {
-                            "min": 2.4,
-                            "max": 6.0
+                            "min": 3.5,
+                            "max": 5.5
                         }
                     },
                     {
-                        "testName": "eGFR",
-                        "value": 68,
-                        "unit": "mL/min/1.73m²",
+                        "testName": "EGFR BY MDRD",
+                        "value": 94.66,
+                        "unit": "mL/min/1.73 m2",
                         "referenceRange": {
-                            "min": 90,
-                            "max": 120
+                            "min": 3.5,
+                            "max": 5.5
                         }
                     }
                 ]
             },
             {
-                "profileName": "Thyroid Function",
+                "profileName": "IRON PROFILE BASIC",
                 "parameters": [
                     {
-                        "testName": "TSH",
-                        "value": 6.2,
-                        "unit": "µIU/mL",
+                        "testName": "Iron, Serum",
+                        "value": 68.33,
+                        "unit": "ug/dL",
                         "referenceRange": {
-                            "min": 0.4,
-                            "max": 4.0
+                            "min": 59,
+                            "max": 158
                         }
                     },
                     {
-                        "testName": "Free T3",
-                        "value": 2.6,
-                        "unit": "pg/mL",
+                        "testName": "Total Iron Binding Capacity-(TIBC)",
+                        "value": 354.59,
+                        "unit": "ug/dL",
                         "referenceRange": {
-                            "min": 2.3,
-                            "max": 4.2
+                            "min": 250,
+                            "max": 400
                         }
                     },
                     {
-                        "testName": "Free T4",
-                        "value": 0.74,
-                        "unit": "ng/dL",
+                        "testName": "UIBC-SERUM",
+                        "value": 286.26,
+                        "unit": "ug/dL",
                         "referenceRange": {
-                            "min": 0.8,
-                            "max": 1.8
-                        }
-                    }
-                ]
-            },
-            {
-                "profileName": "Blood Sugar",
-                "parameters": [
-                    {
-                        "testName": "Fasting Blood Glucose",
-                        "value": 124,
-                        "unit": "mg/dL",
-                        "referenceRange": {
-                            "min": 70,
-                            "max": 100
+                            "min": 110,
+                            "max": 370
                         }
                     },
                     {
-                        "testName": "HbA1c",
-                        "value": 6.4,
+                        "testName": "Transferrin Saturation",
+                        "value": 19.27,
                         "unit": "%",
                         "referenceRange": {
-                            "min": 4.0,
-                            "max": 5.7
-                        }
-                    },
-                    {
-                        "testName": "Post-Prandial Glucose",
-                        "value": 178,
-                        "unit": "mg/dL",
-                        "referenceRange": {
-                            "min": 70,
-                            "max": 140
+                            "min": 16,
+                            "max": 50
                         }
                     }
                 ]
             },
             {
-                "profileName": "Vitamins & Minerals",
+                "profileName": "CRP QUANTITATIVE:-",
                 "parameters": [
                     {
-                        "testName": "Vitamin D",
-                        "value": 18,
-                        "unit": "ng/mL",
+                        "testName": "CRP(C-Reactive Protein)-Quantitative:-",
+                        "value": 1.58,
+                        "unit": "mg/L",
                         "referenceRange": {
-                            "min": 30,
-                            "max": 100
+                            "min": 3.5,
+                            "max": 5.5
                         }
-                    },
+                    }
+                ]
+            },
+            {
+                "profileName": "CA19.9 (PANCREATIC CANCER) - CANCER MARKERS",
+                "parameters": [
                     {
-                        "testName": "Vitamin B12",
-                        "value": 195,
-                        "unit": "pg/mL",
+                        "testName": "CA 19.9",
+                        "value": 6.6,
+                        "unit": "U/mL",
                         "referenceRange": {
-                            "min": 200,
-                            "max": 900
-                        }
-                    },
-                    {
-                        "testName": "Serum Iron",
-                        "value": 62,
-                        "unit": "µg/dL",
-                        "referenceRange": {
-                            "min": 60,
-                            "max": 170
-                        }
-                    },
-                    {
-                        "testName": "Ferritin",
-                        "value": 8,
-                        "unit": "ng/mL",
-                        "referenceRange": {
-                            "min": 12,
-                            "max": 150
+                            "min": 0,
+                            "max": 37
                         }
                     }
                 ]
             }
         ],
         "aiAssessment": {
-            "healthScore": 64,
+            "healthScore": 85,
             "overallRecommendations": [
-                "Initiate a lipid-lowering therapy and lifestyle modifications to address elevated Total Cholesterol, LDL Cholesterol, Triglycerides, and VLDL.",
-                "Investigate and manage the cause of anemia, given the low Haemoglobin and Hematocrit.",
-                "Evaluate and manage the elevated ALT (SGPT) and Blood Urea Nitrogen, considering potential liver and kidney issues.",
-                "Initiate tight glycemic control to manage elevated Fasting Blood Glucose, HbA1c, and Post-Prandial Glucose.",
-                "Correct Vitamin D, Vitamin B12, and Iron deficiencies to improve overall wellbeing and treat anemia."
+                "Monitor serum calcium levels regularly due to potential risk of hypocalcemia or hypercalcemia.",
+                "Continue to monitor kidney function via eGFR, albuminuria, and urine sediment analysis.",
+                "Follow up on iron profile with consideration of liver function tests if abnormalities persist."
             ]
         }
     }

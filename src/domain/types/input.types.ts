@@ -9,8 +9,10 @@
  */
 
 export interface RawReferenceRange {
-  min?: number | null;
-  max?: number | null;
+  /** Lower bound; may be number, string (e.g. "<5"), or null from lab systems. */
+  min?: number | string | null;
+  /** Upper bound; may be number, string (e.g. "N/A"), or null from lab systems. */
+  max?: number | string | null;
   /** Free-text range description when numeric bounds are not available. */
   text?: string | null;
 }

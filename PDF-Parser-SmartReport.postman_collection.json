@@ -1,63 +1,224 @@
 {
     "info": {
-        "_postman_id": "pdf-parser-backend-api",
-        "name": "PDF Parser Backend API",
-        "description": "Test collection for the PDF Parser Backend.\n\nThis API accepts a raw medical lab report PDF, uses Vertex AI Gemini to extract all text, and returns a fully enriched JSON response containing:\n- Extracted Patient Metadata (Name, Age, Gender, IDs)\n- All test parameters grouped by profile\n- AI status classifications (HIGH, LOW, NORMAL)\n- Custom AI recommendations for abnormal results\n- A top-level summary of the report state.",
+        "_postman_id": "pdf-parser-smart-report-v2",
+        "name": "PDF Parser + Smart Report Engine",
+        "description": "Test collection for the PDF Parser Backend and Smart Report Engine.\n\nNEW: Just upload a PDF — Gemini extracts everything automatically:\n• Patient name, age, gender\n• Patient ID, Lab ID, Report ID, Report Date, Package Name\n• All test results grouped by profile panel\n\nSetup:\n1. Start Smart Report Engine: npm run dev → http://localhost:3000\n2. Start PDF Parser Backend → https://pdf-parser-backend-ucsr.onrender.com",
         "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
     },
     "variable": [
         {
             "key": "PARSER_URL",
-            "value": "http://localhost:4000",
+            "value": "https://pdf-parser-backend-ucsr.onrender.com",
+            "type": "string"
+        },
+        {
+            "key": "SRE_URL",
+            "value": "http://localhost:3000",
             "type": "string"
         }
     ],
     "item": [
         {
-            "name": "🟢 1. Check Server Health",
-            "request": {
-                "method": "GET",
-                "url": {
-                    "raw": "{{PARSER_URL}}/health",
-                    "host": [
-                        "{{PARSER_URL}}"
-                    ],
-                    "path": [
-                        "health"
-                    ]
+            "name": "🟢 1. Health Checks",
+            "item": [
+                {
+                    "name": "Parser Backend — Health",
+                    "request": {
+                        "method": "GET",
+                        "url": {
+                            "raw": "{{PARSER_URL}}/health",
+                            "host": [
+                                "{{PARSER_URL}}"
+                            ],
+                            "path": [
+                                "health"
+                            ]
+                        },
+                        "description": "Check if the PDF Parser Backend is alive.\n\nExpected: { status: 'ok', service: 'pdf-parser-backend', timestamp: '...' }"
+                    }
                 },
-                "description": "Simple endpoint to check if the PDF Parser Backend is running successfully."
-            },
-            "response": []
+                {
+                    "name": "Smart Report Engine — Health",
+                    "request": {
+                        "method": "GET",
+                        "url": {
+                            "raw": "{{SRE_URL}}/health",
+                            "host": [
+                                "{{SRE_URL}}"
+                            ],
+                            "path": [
+                                "health"
+                            ]
+                        },
+                        "description": "Check if the Smart Report Engine is alive."
+                    }
+                }
+            ]
         },
         {
-            "name": "🚀 2. Parse Lab Report PDF",
-            "request": {
-                "method": "POST",
-                "url": {
-                    "raw": "{{PARSER_URL}}/parse-and-report",
-                    "host": [
-                        "{{PARSER_URL}}"
-                    ],
-                    "path": [
-                        "parse-and-report"
-                    ]
+            "name": "🚀 2. Main Flow — Upload PDF",
+            "item": [
+                {
+                    "name": "Parse PDF + Generate Report",
+                    "request": {
+                        "method": "POST",
+                        "url": {
+                            "raw": "{{PARSER_URL}}/parse-and-report",
+                            "host": [
+                                "{{PARSER_URL}}"
+                            ],
+                            "path": [
+                                "parse-and-report"
+                            ]
+                        },
+                        "header": [],
+                        "body": {
+                            "mode": "formdata",
+                            "formdata": [
+                                {
+                                    "key": "pdf",
+                                    "type": "file",
+                                    "src": "",
+                                    "description": "📎 SELECT YOUR LAB REPORT PDF — this is the ONLY field you need!"
+                                }
+                            ]
+                        },
+                        "description": "## 📤 Upload a Lab Report PDF — ONE field only!\n\nJust attach the PDF. Gemini reads the PDF like a doctor and automatically extracts:\n✅ Patient Name\n✅ Age\n✅ Gender (Male/Female)\n✅ Patient ID / MRN\n✅ Lab ID / Sample ID / Barcode\n✅ Report ID & Report Date\n✅ Package Name (e.g. Full Body Checkup)\n✅ All test results grouped by profile\n\nHow to test:\n1. Click the pdf row → Select Files → pick any lab report PDF\n2. Click Send\n3. Response panel → Save Response → Save to a file → name it report.pdf → open it!\n\nResponse: Raw PDF binary (application/pdf)\nHeader X-Patient-Info: JSON string with all extracted patient details"
+                    }
+                }
+            ]
+        },
+        {
+            "name": "� 3. Direct SRE (Skip Parsing)",
+            "item": [
+                {
+                    "name": "Generate Report from JSON — demo tenant",
+                    "request": {
+                        "method": "POST",
+                        "url": {
+                            "raw": "{{SRE_URL}}/reports/generate",
+                            "host": [
+                                "{{SRE_URL}}"
+                            ],
+                            "path": [
+                                "reports",
+                                "generate"
+                            ]
+                        },
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"tenantId\": \"demo\",\n  \"output\": \"pdf\",\n  \"reportData\": {\n    \"patientId\": \"DEMO-001\",\n    \"age\": 45,\n    \"gender\": \"female\",\n    \"profiles\": [\n      {\n        \"profileName\": \"Lipid Profile\",\n        \"parameters\": [\n          { \"testName\": \"Total Cholesterol\", \"value\": 238, \"unit\": \"mg/dL\", \"referenceRange\": { \"min\": 0, \"max\": 200 } },\n          { \"testName\": \"LDL Cholesterol\", \"value\": 162, \"unit\": \"mg/dL\", \"referenceRange\": { \"min\": 0, \"max\": 130 } },\n          { \"testName\": \"HDL Cholesterol\", \"value\": 52, \"unit\": \"mg/dL\", \"referenceRange\": { \"min\": 40, \"max\": 60 } },\n          { \"testName\": \"Triglycerides\", \"value\": 210, \"unit\": \"mg/dL\", \"referenceRange\": { \"min\": 0, \"max\": 150 } }\n        ]\n      },\n      {\n        \"profileName\": \"Thyroid Function\",\n        \"parameters\": [\n          { \"testName\": \"TSH\", \"value\": 6.2, \"unit\": \"µIU/mL\", \"referenceRange\": { \"min\": 0.4, \"max\": 4.0 } },\n          { \"testName\": \"Free T3\", \"value\": 2.6, \"unit\": \"pg/mL\", \"referenceRange\": { \"min\": 2.3, \"max\": 4.2 } },\n          { \"testName\": \"Free T4\", \"value\": 1.1, \"unit\": \"ng/dL\", \"referenceRange\": { \"min\": 0.8, \"max\": 1.8 } }\n        ]\n      },\n      {\n        \"profileName\": \"Complete Blood Count\",\n        \"parameters\": [\n          { \"testName\": \"Haemoglobin\", \"value\": 11.4, \"unit\": \"g/dL\", \"referenceRange\": { \"min\": 12.0, \"max\": 16.0 } },\n          { \"testName\": \"WBC Count\", \"value\": 6500, \"unit\": \"/µL\", \"referenceRange\": { \"min\": 4000, \"max\": 11000 } },\n          { \"testName\": \"Platelets\", \"value\": 185000, \"unit\": \"/µL\", \"referenceRange\": { \"min\": 150000, \"max\": 400000 } }\n        ]\n      }\n    ]\n  }\n}",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            }
+                        },
+                        "description": "Directly call the Smart Report Engine with known JSON data — no PDF parsing.\nUseful for testing the engine independently."
+                    }
                 },
-                "header": [],
-                "body": {
-                    "mode": "formdata",
-                    "formdata": [
-                        {
-                            "key": "pdf",
-                            "type": "file",
-                            "src": [],
-                            "description": "📎 SELECT YOUR LAB REPORT PDF FILE HERE"
-                        }
-                    ]
+                {
+                    "name": "Generate Report as HTML — demo tenant",
+                    "request": {
+                        "method": "POST",
+                        "url": {
+                            "raw": "{{SRE_URL}}/reports/generate",
+                            "host": [
+                                "{{SRE_URL}}"
+                            ],
+                            "path": [
+                                "reports",
+                                "generate"
+                            ]
+                        },
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"tenantId\": \"demo\",\n  \"output\": \"html\",\n  \"reportData\": {\n    \"patientId\": \"DEMO-001\",\n    \"age\": 45,\n    \"gender\": \"female\",\n    \"profiles\": [\n      {\n        \"profileName\": \"Blood Sugar\",\n        \"parameters\": [\n          { \"testName\": \"Fasting Blood Glucose\", \"value\": 124, \"unit\": \"mg/dL\", \"referenceRange\": { \"min\": 70, \"max\": 100 } },\n          { \"testName\": \"HbA1c\", \"value\": 6.4, \"unit\": \"%\", \"referenceRange\": { \"min\": 4.0, \"max\": 5.7 } }\n        ]\n      }\n    ]\n  }\n}",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            }
+                        },
+                        "description": "Returns HTML instead of PDF — you can preview the rendered HTML directly in Postman."
+                    }
+                }
+            ]
+        },
+        {
+            "name": "❌ 4. Validation Tests",
+            "item": [
+                {
+                    "name": "Upload without PDF — should fail 400",
+                    "request": {
+                        "method": "POST",
+                        "url": {
+                            "raw": "{{PARSER_URL}}/parse-and-report",
+                            "host": [
+                                "{{PARSER_URL}}"
+                            ],
+                            "path": [
+                                "parse-and-report"
+                            ]
+                        },
+                        "body": {
+                            "mode": "formdata",
+                            "formdata": [
+                                {
+                                    "key": "someOtherField",
+                                    "value": "test",
+                                    "type": "text"
+                                }
+                            ]
+                        },
+                        "description": "Should return HTTP 400: No PDF file uploaded."
+                    }
                 },
-                "description": "## 📤 Upload a Lab Report PDF\n\n**Instructions:**\n1. In the `Body` tab, make sure `form-data` is selected.\n2. Hover over the `VALUE` column next to `pdf` and click **Select Files**.\n3. Choose any lab report PDF from your computer.\n4. Click **Send**.\n\n**Response:**\nThe response will be a JSON object containing:\n1. `patient`: Extracted patient information.\n2. `profiles`: Arrays of test results, complete with reference ranges, HIGH/LOW flags, and AI recommendations.\n3. `summary`: An overall tally of the tests."
-            },
-            "response": []
+                {
+                    "name": "Wrong tenant on SRE — should fail 404",
+                    "request": {
+                        "method": "POST",
+                        "url": {
+                            "raw": "{{SRE_URL}}/reports/generate",
+                            "host": [
+                                "{{SRE_URL}}"
+                            ],
+                            "path": [
+                                "reports",
+                                "generate"
+                            ]
+                        },
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"tenantId\": \"tenant-beta\",\n  \"output\": \"html\",\n  \"reportData\": { \"patientId\": \"P001\", \"age\": 30, \"gender\": \"male\", \"profiles\": [] }\n}",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            }
+                        },
+                        "description": "Old tenant name 'tenant-beta' — should return 404 TENANT_NOT_FOUND. Only 'demo' is accepted."
+                    }
+                }
+            ]
         }
     ]
 }

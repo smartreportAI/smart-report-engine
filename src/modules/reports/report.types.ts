@@ -4,6 +4,43 @@ import { z } from 'zod';
 export const OutputFormatSchema = z.enum(['html', 'pdf']).default('html');
 export type OutputFormat = z.infer<typeof OutputFormatSchema>;
 
+/**
+ * Coerces a value that may be number, string, or null/undefined into a number
+ * for reference range bounds. Invalid or non-numeric strings become undefined
+ * so report generation never fails on missing or malformed ranges.
+ */
+function coerceOptionalNumber(
+  v: unknown,
+): number | undefined {
+  if (v === null || v === undefined) return undefined;
+  if (typeof v === 'number' && !Number.isNaN(v)) return v;
+  const n = typeof v === 'string' ? parseFloat(v) : Number(v);
+  return Number.isNaN(n) ? undefined : n;
+}
+
+const OptionalRangeBoundSchema = z
+  .union([z.number(), z.string()])
+  .optional()
+  .nullable()
+  .transform(coerceOptionalNumber);
+
+/** Reference range: accepts null, missing, or string min/max (e.g. "<5", "N/A"). */
+const ReferenceRangeSchema = z
+  .object({
+    min: OptionalRangeBoundSchema,
+    max: OptionalRangeBoundSchema,
+    text: z.string().nullable().optional(),
+  })
+  .optional()
+  .nullable()
+  .transform((v) => {
+    if (v === null || v === undefined) return undefined;
+    const min = coerceOptionalNumber(v.min);
+    const max = coerceOptionalNumber(v.max);
+    if (min === undefined && max === undefined) return undefined;
+    return { min, max, text: v.text ?? undefined };
+  });
+
 export const GenerateReportBodySchema = z.object({
   tenantId: z.string().min(1),
   /**
@@ -25,13 +62,7 @@ export const GenerateReportBodySchema = z.object({
             testName: z.string().min(1),
             value: z.union([z.number(), z.string()]),
             unit: z.string().nullable().optional(),
-            referenceRange: z
-              .object({
-                min: z.number().nullable().optional(),
-                max: z.number().nullable().optional(),
-                text: z.string().nullable().optional(),
-              })
-              .optional(),
+            referenceRange: ReferenceRangeSchema,
           }),
         ),
       }),

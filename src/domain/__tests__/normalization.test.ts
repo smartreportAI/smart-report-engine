@@ -153,3 +153,94 @@ describe('severity derivation', () => {
         expect(report.overallScore).toBe(100);
     });
 });
+
+/* ---------------------------------------------------------------
+   Null / missing / string reference ranges (lab data tolerance)
+   --------------------------------------------------------------- */
+
+describe('null and string reference ranges', () => {
+    it('treats null referenceRange as missing and assigns normal status', () => {
+        const raw: RawReportInput = {
+            patientId: 'P1',
+            age: 30,
+            gender: 'male',
+            profiles: [{
+                profileName: 'Panel',
+                parameters: [{
+                    testName: 'Test',
+                    value: 42,
+                    unit: 'mg/dL',
+                    referenceRange: null as unknown as undefined,
+                }],
+            }],
+        };
+        const report = normalizeReport(raw);
+        expect(report.profiles[0].parameters[0].status).toBe('normal');
+        expect(report.profiles[0].parameters[0].range).toBeUndefined();
+        expect(report.profiles[0].parameters[0].signalScore).toBe(100);
+    });
+
+    it('treats referenceRange with null min/max as missing', () => {
+        const raw: RawReportInput = {
+            patientId: 'P1',
+            age: 30,
+            gender: 'male',
+            profiles: [{
+                profileName: 'Panel',
+                parameters: [{
+                    testName: 'CRP',
+                    value: 2.5,
+                    unit: 'mg/L',
+                    referenceRange: { min: null, max: 5 },
+                }],
+            }],
+        };
+        const report = normalizeReport(raw);
+        const param = report.profiles[0].parameters[0];
+        expect(param.range).toEqual({ min: undefined, max: 5 });
+        expect(param.status).toBe('normal'); // 2.5 within max-only range
+    });
+
+    it('coerces string min/max to numbers when parseable', () => {
+        const raw: RawReportInput = {
+            patientId: 'P1',
+            age: 30,
+            gender: 'male',
+            profiles: [{
+                profileName: 'Panel',
+                parameters: [{
+                    testName: 'Glucose',
+                    value: 110,
+                    unit: 'mg/dL',
+                    referenceRange: { min: '70', max: '100' },
+                }],
+            }],
+        };
+        const report = normalizeReport(raw);
+        const param = report.profiles[0].parameters[0];
+        expect(param.range).toEqual({ min: 70, max: 100 });
+        expect(param.status).toBe('high');
+    });
+
+    it('treats non-numeric string min/max as missing and keeps normal', () => {
+        const raw: RawReportInput = {
+            patientId: 'P1',
+            age: 30,
+            gender: 'male',
+            profiles: [{
+                profileName: 'Panel',
+                parameters: [{
+                    testName: 'Qualitative',
+                    value: 15,
+                    unit: 'U/mL',
+                    referenceRange: { min: 'N/A', max: 'See comment' },
+                }],
+            }],
+        };
+        const report = normalizeReport(raw);
+        const param = report.profiles[0].parameters[0];
+        expect(param.range).toBeUndefined();
+        expect(param.status).toBe('normal');
+        expect(param.signalScore).toBe(100);
+    });
+});
