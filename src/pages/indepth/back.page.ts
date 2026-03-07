@@ -69,16 +69,14 @@ export const inDepthBackPage: ReportPage = {
   name: 'indepth-back',
 
   generate(ctx: PageRenderContext): string {
-    // For the back page we abuse ctx.strategy as branding (the builder
-    // passes strategy; we pull primaryColor from the CSS variable fallback)
     const report = ctx.data as NormalizedReport;
     const strategy = ctx.strategy;
     void report;
 
-    // Branding is injected via CSS variables — we use a sentinel value
-    // for the QR and accents so it respects the tenant's primaryColor.
+    // Use actual CSS variable so it responds dynamically to the tenant's primary UI color
     const primaryColor = 'var(--color-primary)';
-    const qr = renderQrPlaceholder('#1565C0'); // static fallback colour
+    // Passing the CSS variable so the QR code adopts the dynamic tenant color natively in the SVG
+    const qr = renderQrPlaceholder(primaryColor);
 
     const poweredBy = strategy.allowRecommendations
       ? `<div class="back-powered-by">Powered by <strong>Smart Health Engine</strong></div>`
@@ -87,60 +85,207 @@ export const inDepthBackPage: ReportPage = {
     return `
 <style>
 .back-wrapper {
-  /* Full-bleed back page — no renderLayout wrapper means no header/footer */
+  /* True full-bleed background */
   width: 210mm;
   height: 297mm;
-  position: relative;
+  background: #ffffff;
   display: flex;
   flex-direction: column;
-  background: white;
+  position: relative;
   box-sizing: border-box;
-  padding: 12mm 0 0 0; /* Replicate the native top margin space */
+  margin: 0;
+  padding: 0;
+}
+
+/* Very thin top edge accent border */
+.back-top-strip {
+  height: 10px;
+  width: 100%;
+  background: ${primaryColor};
+}
+
+.back-hero {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 0 35mm;
+  text-align: center;
+}
+
+.back-hero__headline {
+  font-size: 38px;
+  font-weight: 300;
+  color: #111827;
+  margin: 0 0 12px 0;
+  letter-spacing: 4px;
+  text-transform: uppercase;
+}
+
+.back-hero__sub {
+  font-size: 20px;
+  color: ${primaryColor};
+  margin: 0 0 40px 0;
+  font-weight: 500;
+  letter-spacing: 0.5px;
+}
+
+.back-divider {
+  width: 80px;
+  height: 4px;
+  background: ${primaryColor};
+  margin: 0 auto 40px auto;
+  border-radius: 2px;
+}
+
+.back-hero__message {
+  font-size: 16px;
+  color: #4b5563;
+  line-height: 1.8;
+  max-width: 500px;
+}
+
+/* Subtle grey section that bleeds to left and right edges */
+.back-footer-area {
+  background: #f8fafc;
+  padding: 25mm 25mm 15mm 25mm;
+  display: flex;
+  flex-direction: column;
+  border-top: 1px solid #e2e8f0;
+}
+
+.back-footer-grid {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 30px;
+  align-items: end;
+}
+
+.back-disclaimer-box {
+  background: #ffffff;
+  border-left: 5px solid ${primaryColor};
+  padding: 22px 25px;
+  font-size: 12px;
+  color: #4b5563;
+  line-height: 1.6;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+  border-radius: 0 4px 4px 0;
+  margin-bottom: 25px;
+}
+
+.back-disclaimer-box strong {
+  color: #111827;
+  font-weight: 700;
+  text-transform: uppercase;
+  font-size: 11px;
+  letter-spacing: 0.5px;
+}
+
+.back-qr-card {
+  background: #ffffff;
+  padding: 16px 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.back-qr-card svg {
+  margin-bottom: 12px;
+}
+
+.back-qr-label {
+  font-size: 10px;
+  color: #6b7280;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  font-weight: 600;
+}
+
+.back-contact-info h3 {
+  font-size: 14px;
+  color: #111827;
+  margin: 0 0 8px 0;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  font-weight: 700;
+}
+
+.back-contact-info p {
+  font-size: 13px;
+  color: #4b5563;
+  margin: 0;
+  line-height: 1.6;
+  max-width: 320px;
+}
+
+.back-footer-bottom {
+  display: flex;
+  justify-content: center;
+  padding-top: 15px;
+  margin-top: 20px;
+  border-top: 1px solid #e2e8f0;
+}
+
+.back-powered-by {
+  font-size: 11px;
+  color: #94a3b8;
+}
+
+.back-powered-by strong {
+  color: #4b5563;
+  font-weight: 600;
+}
+
+.back-bottom-strip {
+  height: 12px;
+  width: 100%;
+  background: ${primaryColor};
 }
 </style>
 <div class="back-wrapper">
-  <section class="indepth-back" style="flex: 1;">
-    <!-- Hero closing message -->
-    <div class="back-hero" style="border-top:6px solid ${primaryColor}">
-      <div class="back-hero__headline">Thank You for Choosing Us</div>
-    <div class="back-hero__sub">
-      Your health is our priority. If you have any questions about these results,
-      please contact your physician or our support team.
+  <div class="back-top-strip"></div>
+  
+  <div class="back-hero">
+    <div class="back-hero__headline">End of Report</div>
+    <div class="back-hero__sub">Thank you for choosing us</div>
+    <div class="back-divider"></div>
+    <div class="back-hero__message">
+      Your health is our priority. If you have any questions regarding these findings, 
+      please consult your physician or our support team.
     </div>
   </div>
 
-  <!-- Middle row: QR + contact + disclaimer -->
-  <div class="back-mid-row">
-    <div class="back-qr-col">
-      ${qr}
-      <div class="back-qr-label">Scan to verify report</div>
+  <div class="back-footer-area">
+    <div class="back-disclaimer-box">
+      <strong>Disclaimer:</strong> This report is intended as a summary of laboratory findings 
+      and is generated by Smart Health Engine. Results must be interpreted by a qualified 
+      healthcare provider in the context of the patient's clinical history. This report does 
+      not constitute medical advice, diagnosis, or treatment recommendations.
     </div>
-
-    <div class="back-info-col">
-      <div class="back-disclaimer">
-        <strong>Disclaimer:</strong> This report is generated by Smart Health Engine
-        and is intended as a summary of laboratory findings. Results must be
-        interpreted by a qualified healthcare provider in the context of the
-        patient's clinical history. This report does not constitute medical advice,
-        diagnosis, or treatment recommendations.
+    
+    <div class="back-footer-grid">
+      <div class="back-contact-info">
+        <h3>Contact Info</h3>
+        <p>For queries about this report, please reach out directly to the issuing laboratory.</p>
+      </div>
+      
+      <div class="back-qr-card">
+        ${qr}
+        <div class="back-qr-label">Scan to verify</div>
       </div>
     </div>
-  </div>
-
-  <!-- Contact block -->
-  <div class="back-contact-row">
-    <!-- Placeholder: replace with real contact from tenant config -->
-    <div class="back-contact">
-      <div class="back-contact__heading">Contact Us</div>
-      <div class="back-contact__line">For queries about this report, please reach out to the issuing laboratory.</div>
+    
+    <div class="back-footer-bottom">
+      ${poweredBy}
     </div>
   </div>
-
-  ${poweredBy}
-
-  <!-- Full-bleed bottom strip -->
-  <div class="back-bottom-strip" style="background:${primaryColor}"></div>
-  </section>
+  
+  <div class="back-bottom-strip"></div>
 </div>`;
   },
 };

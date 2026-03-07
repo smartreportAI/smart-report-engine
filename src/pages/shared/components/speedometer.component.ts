@@ -48,68 +48,116 @@ export interface ScoreGaugeOptions {
     label?: string;
 }
 
+function gaugeLabel(value: number): string {
+    if (value >= 70) return 'HEALTHY';
+    if (value >= 40) return 'MONITOR';
+    return 'ATTENTION';
+}
+
 /**
  * Semi-circular speedometer for an overall score.
- * needle angle: score=0 → -90°, score=100 → +90°
+ * A modern half-donut gauge with a dynamic, rounded progress bar and a sleek needle.
  */
 export function renderScoreGauge(opts: ScoreGaugeOptions): string {
     const { score, size = 160, label = 'Overall Score' } = opts;
     const clamped = Math.max(0, Math.min(100, score));
-    const color = gaugeColor(clamped);
+    const activeColor = gaugeColor(clamped);
+    const activeLabel = gaugeLabel(clamped);
 
-    // Needle angle: map 0–100 to -90°..+90°
+    // Geometry
+    const strokeWidth = size * 0.12;
+    const r = (size - strokeWidth) / 2;
+    const cx = size / 2;
+    const cy = size * 0.7; // Pivot is slightly lower
     const needleAngle = -90 + (clamped / 100) * 180;
 
-    const cx = size / 2;
-    const cy = size * 0.65;   // gauge arc sits in upper 65%
-    const r = size * 0.42;
-
-    // Arc path: semi-circle from left (-180°) to right (0°) in SVG coords
-    const arcStartX = cx - r;
-    const arcStartY = cy;
-    const arcEndX = cx + r;
-    const arcEndY = cy;
-
-    // Zone arcs (red, amber, green) — each covers 60° of the 180° span
-    function arcSegment(fromDeg: number, toDeg: number, color: string): string {
-        const toRad = (d: number) => ((d - 90) * Math.PI) / 180;
-        const x1 = cx + r * Math.cos(toRad(fromDeg));
-        const y1 = cy + r * Math.sin(toRad(fromDeg));
-        const x2 = cx + r * Math.cos(toRad(toDeg));
-        const y2 = cy + r * Math.sin(toRad(toDeg));
-        return `<path d="M ${x1} ${y1} A ${r} ${r} 0 0 1 ${x2} ${y2}"
-                  fill="none" stroke="${color}" stroke-width="${size * 0.075}" stroke-linecap="butt"/>`;
+    /** Helper to generate ARC path */
+    function getArcPath(startDeg: number, endDeg: number): string {
+        const toRad = (d: number) => (d * Math.PI) / 180;
+        const x1 = cx + r * Math.cos(toRad(startDeg));
+        const y1 = cy + r * Math.sin(toRad(startDeg));
+        const x2 = cx + r * Math.cos(toRad(endDeg));
+        const y2 = cy + r * Math.sin(toRad(endDeg));
+        return `M ${x1} ${y1} A ${r} ${r} 0 0 1 ${x2} ${y2}`;
     }
 
-    // Needle tip point
-    const needleRad = ((needleAngle - 90) * Math.PI) / 180;
-    const needleTipX = cx + (r * 0.85) * Math.cos(needleRad);
-    const needleTipY = cy + (r * 0.85) * Math.sin(needleRad);
+    // 3 distinct phases (Red, Amber, Green)
+    const d1 = getArcPath(-175, -125);
+    const d2 = getArcPath(-115, -65);
+    const d3 = getArcPath(-55, -5);
+
+    // Pure SVG Face (to avoid browser-specific emoji rendering issues)
+    const faceScale = (size * 0.07) / 12; // Base features were designed for r=12
+    let faceSvg = '';
+
+    if (clamped >= 70) {
+        // Happy Face
+        faceSvg = `
+          <circle cx="-3.5" cy="-2.5" r="1.5" fill="rgba(0,0,0,0.6)"/>
+          <circle cx="3.5" cy="-2.5" r="1.5" fill="rgba(0,0,0,0.6)"/>
+          <path d="M -4 2 Q 0 5 4 2" fill="none" stroke="rgba(0,0,0,0.6)" stroke-width="1.5" stroke-linecap="round"/>
+        `;
+    } else if (clamped >= 40) {
+        // Neutral Face
+        faceSvg = `
+          <circle cx="-3.5" cy="-2" r="1.5" fill="rgba(0,0,0,0.6)"/>
+          <circle cx="3.5" cy="-2" r="1.5" fill="rgba(0,0,0,0.6)"/>
+          <line x1="-3.5" y1="3" x2="3.5" y2="3" stroke="rgba(0,0,0,0.6)" stroke-width="1.5" stroke-linecap="round"/>
+        `;
+    } else {
+        // Worried Face
+        faceSvg = `
+          <circle cx="-3.5" cy="-1.5" r="1.5" fill="rgba(0,0,0,0.6)"/>
+          <circle cx="3.5" cy="-1.5" r="1.5" fill="rgba(0,0,0,0.6)"/>
+          <path d="M -4 4 Q 0 1 4 4" fill="none" stroke="rgba(0,0,0,0.6)" stroke-width="1.5" stroke-linecap="round"/>
+          <line x1="-5.5" y1="-4.5" x2="-2" y2="-3" stroke="rgba(0,0,0,0.6)" stroke-width="1" stroke-linecap="round"/>
+          <line x1="5.5" y1="-4.5" x2="2" y2="-3" stroke="rgba(0,0,0,0.6)" stroke-width="1" stroke-linecap="round"/>
+        `;
+    }
 
     return `
-<div class="speedometer" style="width:${size}px;margin:0 auto;text-align:center">
-  <svg width="${size}" height="${size * 0.72}" viewBox="0 0 ${size} ${size * 0.72}">
-    <!-- Background arc track -->
-    <path d="M ${arcStartX} ${arcStartY} A ${r} ${r} 0 0 1 ${arcEndX} ${arcEndY}"
-          fill="none" stroke="var(--color-border)" stroke-width="${size * 0.075}" stroke-linecap="butt"/>
+<div class="speedometer" style="width:${size}px; margin:0 auto; text-align:center; position:relative;">
+  <svg width="100%" height="auto" viewBox="0 -20 ${size} ${size * 0.85 + 20}" style="overflow:visible; display:block;">
+    <defs>
+      <filter id="shadowTip">
+        <feDropShadow dx="0" dy="1" stdDeviation="1.5" flood-opacity="0.3"/>
+      </filter>
+    </defs>
 
-    <!-- Zone arcs: red (0-40%), amber (40-70%), green (70-100%) -->
-    ${arcSegment(-180, -108, 'var(--color-attention)')}
-    ${arcSegment(-108, -54, 'var(--color-monitor)')}
-    ${arcSegment(-54, 0, 'var(--color-healthy)')}
+    <!-- Top Label Pill -->
+    <g transform="translate(${cx}, ${cy - r - strokeWidth - 5})">
+        <rect x="-44" y="-12" width="88" height="24" rx="12" fill="${activeColor}" />
+        <text x="0" y="4" fill="#ffffff" font-size="11" font-weight="700" text-anchor="middle" letter-spacing="0.5">${activeLabel}</text>
+    </g>
 
-    <!-- Needle -->
-    <line x1="${cx}" y1="${cy}"
-          x2="${needleTipX}" y2="${needleTipY}"
-          stroke="${color}" stroke-width="3" stroke-linecap="round"/>
-    <!-- Pivot dot -->
-    <circle cx="${cx}" cy="${cy}" r="${size * 0.04}"
-            fill="${color}" stroke="var(--color-surface)" stroke-width="2"/>
+    <!-- Base Solid Zones -->
+    <path d="${d1}" fill="none" stroke="#f87171" stroke-width="${strokeWidth}" stroke-linecap="round"/>
+    <path d="${d2}" fill="none" stroke="#fbbf24" stroke-width="${strokeWidth}" stroke-linecap="round"/>
+    <path d="${d3}" fill="none" stroke="#4ade80" stroke-width="${strokeWidth}" stroke-linecap="round"/>
+
+    <!-- Scale labels pushed further out so needle doesn't overlap them at 0 or 100 -->
+    <text x="${cx - r - 8}" y="${cy + 25}" fill="#9ca3af" font-size="14" font-weight="500" text-anchor="middle">0</text>
+    <text x="${cx + r + 8}" y="${cy + 25}" fill="#9ca3af" font-size="14" font-weight="500" text-anchor="middle">100</text>
+
+    <!-- The Needle Group -->
+    <g transform="translate(${cx}, ${cy}) rotate(${needleAngle})">
+        <!-- Needle Arm -->
+        <line x1="0" y1="0" x2="0" y2="-${r - strokeWidth * 0.3}" stroke="#334155" stroke-width="${size * 0.025}" stroke-linecap="round"/>
+        <!-- Pivot base (hollow donut) -->
+        <circle cx="0" cy="0" r="${size * 0.04}" fill="#ffffff" stroke="#334155" stroke-width="${size * 0.025}"/>
+        <!-- Tip circle sitting on the arc -->
+        <circle cx="0" cy="-${r}" r="${size * 0.07}" fill="${activeColor}" stroke="#ffffff" stroke-width="${size * 0.012}" filter="url(#shadowTip)"/>
+        <!-- SVG Face inside the tip circle! Note: counter-rotate it so it stays upright! -->
+        <g transform="translate(0, -${r}) rotate(${-needleAngle}) scale(${faceScale})">
+             ${faceSvg}
+        </g>
+    </g>
   </svg>
-
-  <!-- Score value -->
-  <div class="speedometer__value" style="color:${color}">${score}</div>
-  <div class="speedometer__label">${label}</div>
+  
+  <div style="margin-top: -2px;">
+      <div class="speedometer__value" style="color:#374151; font-size:${size * 0.22}px; font-weight:800; line-height: 1;">${score}</div>
+      ${label ? `<div class="speedometer__label" style="font-size:12px; margin-top:2px; color:#6b7280; font-weight:500;">${label}</div>` : ''}
+  </div>
 </div>`;
 }
 

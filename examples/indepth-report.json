@@ -2,142 +2,748 @@
     "tenantId": "demo",
     "output": "pdf",
     "reportData": {
-        "patientId": "APUN.0000214807",
-        "patientName": "Mr. ISHWAR LIMBANI",
-        "age": 48,
+        "patientId": "QKB.0000046637",
+        "patientName": "Demo User",
+        "age": 40,
         "gender": "male",
+        "labId": "85003320",
+        "reportId": "QKB46677",
+        "reportDate": "25/Aug/2025",
+        "packageName": "QUICK FIT PACKAGE",
         "profiles": [
             {
-                "profileName": "DEPARTMENT OF BIOCHEMISTRY",
+                "profileName": "PLASMA GLUCOSE - FASTING",
                 "parameters": [
                     {
-                        "testName": "Calcium",
-                        "value": 9.83,
+                        "testName": "Plasma Glucose Fasting",
+                        "value": 91,
                         "unit": "mg/dL",
                         "referenceRange": {
-                            "min": 8.6,
-                            "max": 10.2
+                            "min": null,
+                            "max": 100
                         }
                     }
                 ]
             },
             {
-                "profileName": "EGFR (ESTIMATED GLOMERULAR FILTRATION RATE)",
+                "profileName": "INSULIN (FASTING)",
                 "parameters": [
                     {
-                        "testName": "Creatinine",
-                        "value": 0.91,
+                        "testName": "Insulin, Fasting",
+                        "value": 70.7,
+                        "unit": "mU/L",
+                        "referenceRange": {
+                            "min": 3,
+                            "max": 25
+                        }
+                    }
+                ]
+            },
+            {
+                "profileName": "LIPID PROFILE",
+                "parameters": [
+                    {
+                        "testName": "Total Cholesterol",
+                        "value": 172,
                         "unit": "mg/dL",
                         "referenceRange": {
-                            "min": 0.7,
-                            "max": 1.4
+                            "min": null,
+                            "max": 200
+                        }
+                    },
+                    {
+                        "testName": "Triglycerides",
+                        "value": 109,
+                        "unit": "mg/dL",
+                        "referenceRange": {
+                            "min": null,
+                            "max": 150
+                        }
+                    },
+                    {
+                        "testName": "HDL Cholesterol",
+                        "value": 52.1,
+                        "unit": "mg/dL",
+                        "referenceRange": {
+                            "min": 40,
+                            "max": null
+                        }
+                    },
+                    {
+                        "testName": "LDL Cholesterol",
+                        "value": 98,
+                        "unit": "mg/dL",
+                        "referenceRange": {
+                            "min": null,
+                            "max": 100
+                        }
+                    },
+                    {
+                        "testName": "VLDL Cholesterol",
+                        "value": 21.8,
+                        "unit": "mg/dL",
+                        "referenceRange": {
+                            "min": null,
+                            "max": 30
+                        }
+                    },
+                    {
+                        "testName": "Total CHOL / HDL Ratio",
+                        "value": 3.3,
+                        "unit": "Ratio",
+                        "referenceRange": {
+                            "min": 3.3,
+                            "max": 4.4
+                        }
+                    },
+                    {
+                        "testName": "LDL / HDL Cholesterol Ratio",
+                        "value": 1.88,
+                        "unit": "Ratio",
+                        "referenceRange": {
+                            "min": 0,
+                            "max": 3.5
+                        }
+                    },
+                    {
+                        "testName": "Non-HDL Cholesterol",
+                        "value": 119.9,
+                        "unit": "mg/dL",
+                        "referenceRange": {
+                            "min": null,
+                            "max": 130
+                        }
+                    }
+                ]
+            },
+            {
+                "profileName": "LIVER FUNCTION TEST",
+                "parameters": [
+                    {
+                        "testName": "Total Bilirubin",
+                        "value": 0.46,
+                        "unit": "mg/dL",
+                        "referenceRange": {
+                            "min": 0.3,
+                            "max": 1.2
+                        }
+                    },
+                    {
+                        "testName": "Direct Bilirubin",
+                        "value": 0.07,
+                        "unit": "mg/dL",
+                        "referenceRange": {
+                            "min": 0,
+                            "max": 0.3
+                        }
+                    },
+                    {
+                        "testName": "Indirect Bilirubin",
+                        "value": 0.39,
+                        "unit": "mg/dL",
+                        "referenceRange": {
+                            "min": 0.2,
+                            "max": 0.8
+                        }
+                    },
+                    {
+                        "testName": "Total Protein",
+                        "value": 7,
+                        "unit": "g/dL",
+                        "referenceRange": {
+                            "min": 6.6,
+                            "max": 8.3
+                        }
+                    },
+                    {
+                        "testName": "Albumin",
+                        "value": 4.12,
+                        "unit": "g/dL",
+                        "referenceRange": {
+                            "min": 3.5,
+                            "max": 5.2
+                        }
+                    },
+                    {
+                        "testName": "Globulin",
+                        "value": 2.88,
+                        "unit": "g/dL",
+                        "referenceRange": {
+                            "min": 2,
+                            "max": 3.5
+                        }
+                    },
+                    {
+                        "testName": "A/G Ratio",
+                        "value": 1.43,
+                        "unit": null,
+                        "referenceRange": {
+                            "min": 1,
+                            "max": 2.1
+                        }
+                    },
+                    {
+                        "testName": "SGOT (AST)",
+                        "value": 41,
+                        "unit": "U/L",
+                        "referenceRange": {
+                            "min": null,
+                            "max": 50
+                        }
+                    },
+                    {
+                        "testName": "SGPT (ALT)",
+                        "value": 44,
+                        "unit": "U/L",
+                        "referenceRange": {
+                            "min": null,
+                            "max": 50
+                        }
+                    },
+                    {
+                        "testName": "Alkaline Phosphatase",
+                        "value": 63,
+                        "unit": "U/L",
+                        "referenceRange": {
+                            "min": 30,
+                            "max": 120
+                        }
+                    },
+                    {
+                        "testName": "Gamma Glutamyl Transferase",
+                        "value": 23,
+                        "unit": "U/L",
+                        "referenceRange": {
+                            "min": null,
+                            "max": 55
+                        }
+                    }
+                ]
+            },
+            {
+                "profileName": "TSH - THYROID STIMULATING HORMONE",
+                "parameters": [
+                    {
+                        "testName": "TSH (Ultrasensitive)",
+                        "value": 1.7,
+                        "unit": "µIU/mL",
+                        "referenceRange": {
+                            "min": 0.35,
+                            "max": 5.5
+                        }
+                    }
+                ]
+            },
+            {
+                "profileName": "25 HYDROXY VITAMIN D",
+                "parameters": [
+                    {
+                        "testName": "Vitamin D, 25 Hydroxy (OH)",
+                        "value": 6.59,
+                        "unit": "ng/mL",
+                        "referenceRange": {
+                            "min": 30,
+                            "max": 100
+                        }
+                    }
+                ]
+            },
+            {
+                "profileName": "General Panel",
+                "parameters": [
+                    {
+                        "testName": "HbA1c (Glycated Haemoglobin)",
+                        "value": 6.5,
+                        "unit": "%",
+                        "referenceRange": {
+                            "min": 4.2,
+                            "max": 5.7
+                        }
+                    },
+                    {
+                        "testName": "Estimated Average Glucose (eAG)",
+                        "value": 139.85,
+                        "unit": "mg/dl",
+                        "referenceRange": {
+                            "min": null,
+                            "max": null
+                        }
+                    }
+                ]
+            },
+            {
+                "profileName": "General Panel",
+                "parameters": [
+                    {
+                        "testName": "Serum Urea",
+                        "value": 32,
+                        "unit": "mg/dL",
+                        "referenceRange": {
+                            "min": 17,
+                            "max": 43
                         }
                     },
                     {
                         "testName": "Blood Urea Nitrogen (BUN)",
-                        "value": 8.42,
+                        "value": 14.95,
                         "unit": "mg/dL",
                         "referenceRange": {
-                            "min": 6,
-                            "max": 20
+                            "min": 5,
+                            "max": 25
                         }
                     },
                     {
-                        "testName": "Albumin (Serum)",
-                        "value": 4.66,
+                        "testName": "Serum Creatinine",
+                        "value": 1.17,
+                        "unit": "mg/dL",
+                        "referenceRange": {
+                            "min": 0.9,
+                            "max": 1.3
+                        }
+                    }
+                ]
+            },
+            {
+                "profileName": "HOMA-IR (INSULIN RESISTANCE INDEX)",
+                "parameters": [
+                    {
+                        "testName": "Plasma Glucose Fasting",
+                        "value": 91,
+                        "unit": "mg/dL",
+                        "referenceRange": {
+                            "min": null,
+                            "max": 100
+                        }
+                    },
+                    {
+                        "testName": "Insulin, Fasting",
+                        "value": 70.7,
+                        "unit": "mU/L",
+                        "referenceRange": {
+                            "min": 3,
+                            "max": 25
+                        }
+                    },
+                    {
+                        "testName": "Homa IR Index",
+                        "value": 15.89,
+                        "unit": "Index",
+                        "referenceRange": {
+                            "min": null,
+                            "max": 1.9
+                        }
+                    }
+                ]
+            },
+            {
+                "profileName": "COMPLETE BLOOD COUNT",
+                "parameters": [
+                    {
+                        "testName": "Haemoglobin (HB)",
+                        "value": 14.2,
                         "unit": "g/dL",
                         "referenceRange": {
-                            "min": 3.5,
-                            "max": 5.5
+                            "min": 13.5,
+                            "max": 17.5
                         }
                     },
                     {
-                        "testName": "EGFR BY MDRD",
-                        "value": 94.66,
-                        "unit": "mL/min/1.73 m2",
-                        "referenceRange": {
-                            "min": 3.5,
-                            "max": 5.5
-                        }
-                    }
-                ]
-            },
-            {
-                "profileName": "IRON PROFILE BASIC",
-                "parameters": [
-                    {
-                        "testName": "Iron, Serum",
-                        "value": 68.33,
-                        "unit": "ug/dL",
-                        "referenceRange": {
-                            "min": 59,
-                            "max": 158
-                        }
-                    },
-                    {
-                        "testName": "Total Iron Binding Capacity-(TIBC)",
-                        "value": 354.59,
-                        "unit": "ug/dL",
-                        "referenceRange": {
-                            "min": 250,
-                            "max": 400
-                        }
-                    },
-                    {
-                        "testName": "UIBC-SERUM",
-                        "value": 286.26,
-                        "unit": "ug/dL",
-                        "referenceRange": {
-                            "min": 110,
-                            "max": 370
-                        }
-                    },
-                    {
-                        "testName": "Transferrin Saturation",
-                        "value": 19.27,
+                        "testName": "Hematocrit (PCV)",
+                        "value": 45.6,
                         "unit": "%",
                         "referenceRange": {
-                            "min": 16,
-                            "max": 50
+                            "min": 40,
+                            "max": 54
                         }
-                    }
-                ]
-            },
-            {
-                "profileName": "CRP QUANTITATIVE:-",
-                "parameters": [
+                    },
                     {
-                        "testName": "CRP(C-Reactive Protein)-Quantitative:-",
-                        "value": 1.58,
-                        "unit": "mg/L",
+                        "testName": "Red Blood Cell Count (RBC)",
+                        "value": 5.7,
+                        "unit": "10^6/μL",
                         "referenceRange": {
-                            "min": 3.5,
+                            "min": 4,
                             "max": 5.5
                         }
+                    },
+                    {
+                        "testName": "Mean Corpuscular Volume (MCV)",
+                        "value": 79.9,
+                        "unit": "fL",
+                        "referenceRange": {
+                            "min": 80,
+                            "max": 100
+                        }
+                    },
+                    {
+                        "testName": "Mean Corpuscular Hb (MCH)",
+                        "value": 24.9,
+                        "unit": "pg",
+                        "referenceRange": {
+                            "min": 27,
+                            "max": 32
+                        }
+                    },
+                    {
+                        "testName": "Mean Corp Hb Con (MCHC)",
+                        "value": 31.1,
+                        "unit": "%",
+                        "referenceRange": {
+                            "min": 32,
+                            "max": 36
+                        }
+                    },
+                    {
+                        "testName": "RDW - CV",
+                        "value": 13.7,
+                        "unit": "%",
+                        "referenceRange": {
+                            "min": 11,
+                            "max": 16
+                        }
+                    },
+                    {
+                        "testName": "RDW - SD",
+                        "value": 40.7,
+                        "unit": "fL",
+                        "referenceRange": {
+                            "min": 35,
+                            "max": 56
+                        }
+                    },
+                    {
+                        "testName": "Total Leucocyte Count (TLC)",
+                        "value": 6540,
+                        "unit": "/uL",
+                        "referenceRange": {
+                            "min": 4000,
+                            "max": 11000
+                        }
+                    },
+                    {
+                        "testName": "Neutrophils",
+                        "value": 59.5,
+                        "unit": "%",
+                        "referenceRange": {
+                            "min": 40,
+                            "max": 70
+                        }
+                    },
+                    {
+                        "testName": "Lymphocytes",
+                        "value": 28.6,
+                        "unit": "%",
+                        "referenceRange": {
+                            "min": 20,
+                            "max": 40
+                        }
+                    },
+                    {
+                        "testName": "Eosinophils",
+                        "value": 4.8,
+                        "unit": "%",
+                        "referenceRange": {
+                            "min": 0,
+                            "max": 6
+                        }
+                    },
+                    {
+                        "testName": "Monocytes",
+                        "value": 7,
+                        "unit": "%",
+                        "referenceRange": {
+                            "min": 2,
+                            "max": 10
+                        }
+                    },
+                    {
+                        "testName": "Basophils",
+                        "value": 0.1,
+                        "unit": "%",
+                        "referenceRange": {
+                            "min": 0,
+                            "max": 2
+                        }
+                    },
+                    {
+                        "testName": "Absolute Neutrophil Count (ANC)",
+                        "value": 3891.3,
+                        "unit": "/μL",
+                        "referenceRange": {
+                            "min": 1500,
+                            "max": 8500
+                        }
+                    },
+                    {
+                        "testName": "Absolute Lymphocyte Count (ALC)",
+                        "value": 1870.44,
+                        "unit": "/μL",
+                        "referenceRange": {
+                            "min": 1000,
+                            "max": 4000
+                        }
+                    },
+                    {
+                        "testName": "Absolute Monocyte Count",
+                        "value": 457.8,
+                        "unit": "/μL",
+                        "referenceRange": {
+                            "min": 120,
+                            "max": 1200
+                        }
+                    },
+                    {
+                        "testName": "Absolute Eosinophil Count (AEC)",
+                        "value": 313.92,
+                        "unit": "/uL",
+                        "referenceRange": {
+                            "min": 20,
+                            "max": 500
+                        }
+                    },
+                    {
+                        "testName": "Absolute Basophil Count",
+                        "value": 6.54,
+                        "unit": "/μL",
+                        "referenceRange": {
+                            "min": 0,
+                            "max": 200
+                        }
+                    },
+                    {
+                        "testName": "Platelet Count (PLT)",
+                        "value": 2.01,
+                        "unit": "lakhs/ µL",
+                        "referenceRange": {
+                            "min": 1.5,
+                            "max": 4.5
+                        }
+                    },
+                    {
+                        "testName": "Mean Platelet Volume (MPV)",
+                        "value": 9.7,
+                        "unit": "fL",
+                        "referenceRange": {
+                            "min": 6.5,
+                            "max": 12
+                        }
+                    },
+                    {
+                        "testName": "Plateletcrit (PCT)",
+                        "value": 0.2,
+                        "unit": "%",
+                        "referenceRange": {
+                            "min": 0.108,
+                            "max": 0.282
+                        }
                     }
                 ]
             },
             {
-                "profileName": "CA19.9 (PANCREATIC CANCER) - CANCER MARKERS",
+                "profileName": "ERYTHROCYTE SEDIMENTATION RATE",
                 "parameters": [
                     {
-                        "testName": "CA 19.9",
-                        "value": 6.6,
-                        "unit": "U/mL",
+                        "testName": "ERYTHROCYTE SEDIMENTATION RATE (ESR)",
+                        "value": 18,
+                        "unit": "mm/hr",
+                        "referenceRange": {
+                            "min": 1,
+                            "max": 15
+                        }
+                    }
+                ]
+            },
+            {
+                "profileName": "URINE ROUTINE EXAMINATION",
+                "parameters": [
+                    {
+                        "testName": "VOLUME",
+                        "value": "20 ML",
+                        "unit": "mL",
+                        "referenceRange": {
+                            "min": null,
+                            "max": null
+                        }
+                    },
+                    {
+                        "testName": "COLOUR",
+                        "value": "PALE YELLOW",
+                        "unit": null,
+                        "referenceRange": {
+                            "min": null,
+                            "max": null
+                        }
+                    },
+                    {
+                        "testName": "APPEARANCE",
+                        "value": "Clear",
+                        "unit": null,
+                        "referenceRange": {
+                            "min": null,
+                            "max": null
+                        }
+                    },
+                    {
+                        "testName": "PH (REACTION)",
+                        "value": 5,
+                        "unit": null,
+                        "referenceRange": {
+                            "min": 5,
+                            "max": 8
+                        }
+                    },
+                    {
+                        "testName": "SPECIFIC GRAVITY",
+                        "value": 1.025,
+                        "unit": null,
+                        "referenceRange": {
+                            "min": 1.005,
+                            "max": 1.03
+                        }
+                    },
+                    {
+                        "testName": "PROTEIN",
+                        "value": "ABSENT",
+                        "unit": null,
+                        "referenceRange": {
+                            "min": null,
+                            "max": null
+                        }
+                    },
+                    {
+                        "testName": "GLUCOSE",
+                        "value": "Negative",
+                        "unit": null,
+                        "referenceRange": {
+                            "min": null,
+                            "max": null
+                        }
+                    },
+                    {
+                        "testName": "BLOOD",
+                        "value": "ABSENT",
+                        "unit": "NA",
+                        "referenceRange": {
+                            "min": null,
+                            "max": null
+                        }
+                    },
+                    {
+                        "testName": "KETONES",
+                        "value": "ABSENT",
+                        "unit": null,
+                        "referenceRange": {
+                            "min": null,
+                            "max": null
+                        }
+                    },
+                    {
+                        "testName": "BILIRUBIN",
+                        "value": "ABSENT",
+                        "unit": null,
+                        "referenceRange": {
+                            "min": null,
+                            "max": null
+                        }
+                    },
+                    {
+                        "testName": "UROBILINOGEN",
+                        "value": "NORMAL",
+                        "unit": "NA",
+                        "referenceRange": {
+                            "min": null,
+                            "max": null
+                        }
+                    },
+                    {
+                        "testName": "NITRITE",
+                        "value": "ABSENT",
+                        "unit": null,
+                        "referenceRange": {
+                            "min": null,
+                            "max": null
+                        }
+                    },
+                    {
+                        "testName": "LEUCOCYTE ESTERASE",
+                        "value": "ABSENT",
+                        "unit": null,
+                        "referenceRange": {
+                            "min": null,
+                            "max": null
+                        }
+                    },
+                    {
+                        "testName": "PUS CELLS (WBCS)",
+                        "value": "2-4",
+                        "unit": "/hpf",
                         "referenceRange": {
                             "min": 0,
-                            "max": 37
+                            "max": 5
+                        }
+                    },
+                    {
+                        "testName": "RED BLOOD CELLS (RBCS)",
+                        "value": "ABSENT",
+                        "unit": "/hpf",
+                        "referenceRange": {
+                            "min": null,
+                            "max": null
+                        }
+                    },
+                    {
+                        "testName": "EPITHELIAL CELLS",
+                        "value": "0-2",
+                        "unit": "/hpf",
+                        "referenceRange": {
+                            "min": 0,
+                            "max": 5
+                        }
+                    },
+                    {
+                        "testName": "CASTS",
+                        "value": "ABSENT",
+                        "unit": "/hpf",
+                        "referenceRange": {
+                            "min": null,
+                            "max": null
+                        }
+                    },
+                    {
+                        "testName": "CRYSTALS",
+                        "value": "ABSENT",
+                        "unit": "/hpf",
+                        "referenceRange": {
+                            "min": null,
+                            "max": null
+                        }
+                    },
+                    {
+                        "testName": "BACTERIA, URINE",
+                        "value": "ABSENT",
+                        "unit": null,
+                        "referenceRange": {
+                            "min": null,
+                            "max": null
+                        }
+                    },
+                    {
+                        "testName": "YEAST CELLS",
+                        "value": "ABSENT",
+                        "unit": null,
+                        "referenceRange": {
+                            "min": null,
+                            "max": null
                         }
                     }
                 ]
             }
         ],
         "aiAssessment": {
-            "healthScore": 85,
+            "healthScore": 90   ,
             "overallRecommendations": [
-                "Monitor serum calcium levels regularly due to potential risk of hypocalcemia or hypercalcemia.",
-                "Continue to monitor kidney function via eGFR, albuminuria, and urine sediment analysis.",
-                "Follow up on iron profile with consideration of liver function tests if abnormalities persist."
+                "Address insulin resistance with lifestyle modifications including diet and exercise.",
+                "Monitor blood glucose levels regularly to prevent progression to diabetes.",
+                "Consider further evaluation for underlying causes of elevated insulin levels."
             ]
         }
     }

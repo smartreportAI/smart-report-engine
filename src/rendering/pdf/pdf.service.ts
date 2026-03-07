@@ -1,5 +1,6 @@
 import { browserPool } from './browser-pool';
 import type { Browser } from 'puppeteer';
+import { config } from '../../core/config/config.service';
 
 /* ---------------------------------------------------------------
    PDF Generation Options
@@ -54,7 +55,13 @@ const DEFAULT_MARGINS = {
     right: '0px',
 } as const;
 
-const DEFAULT_TIMEOUT_MS = 30_000;
+/**
+ * Default timeout for a single PDF pass.
+ * Can be overridden via PDF_TIMEOUT_MS in the environment so that
+ * cloud deployments (e.g. Render) can allow a slightly longer window
+ * without changing application logic.
+ */
+const DEFAULT_TIMEOUT_MS = config.pdfTimeoutMs ?? 30_000;
 
 /* ---------------------------------------------------------------
    Core PDF Generation

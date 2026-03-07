@@ -20,6 +20,7 @@ function loadConfig(): AppConfig {
     host: env.HOST,
     logLevel: env.LOG_LEVEL,
     corsOrigin: env.CORS_ORIGIN,
+    pdfTimeoutMs: env.PDF_TIMEOUT_MS,
   };
 }
 

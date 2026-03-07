@@ -207,23 +207,30 @@ export async function fhirRoutes(app: FastifyInstance): Promise<void> {
             };
 
             if (output === 'pdf') {
-                try {
-                    const pdfStartMs = Date.now();
-                    const pdfBuffer = await generateMultipassPdf(result, tenant);
-                    incrementCounter(METRIC.PDF_GENERATION_TOTAL, { source });
-                    observeDuration(METRIC.PDF_DURATION_MS, Date.now() - pdfStartMs, { source });
-                    storeCachedReport(fingerprint, cacheEntry, pdfBuffer);
-                    observeDuration(METRIC.REPORT_DURATION_MS, Date.now() - startMs, { source });
-                    return reply.code(200).send(successResponse({
-                        pdfBase64: pdfBuffer.toString('base64'),
-                        overallScore: result.overallScore,
-                        overallSeverity: result.overallSeverity,
-                        renderedPages: result.renderedPages,
-                        skippedPages: result.skippedPages,
-                    }));
-                } catch (err) {
-                    app.log.error({ err }, 'PDF generation failed (FHIR)');
-                    return reply.code(500).send(errorResponse('PDF_GENERATION_FAILED', 'Failed to generate PDF.'));
+                const maxAttempts = 2;
+
+                for (let attempt = 1; attempt <= maxAttempts; attempt++) {
+                    try {
+                        const pdfStartMs = Date.now();
+                        const pdfBuffer = await generateMultipassPdf(result, tenant);
+                        incrementCounter(METRIC.PDF_GENERATION_TOTAL, { source });
+                        observeDuration(METRIC.PDF_DURATION_MS, Date.now() - pdfStartMs, { source });
+                        storeCachedReport(fingerprint, cacheEntry, pdfBuffer);
+                        observeDuration(METRIC.REPORT_DURATION_MS, Date.now() - startMs, { source });
+                        return reply.code(200).send(successResponse({
+                            pdfBase64: pdfBuffer.toString('base64'),
+                            overallScore: result.overallScore,
+                            overallSeverity: result.overallSeverity,
+                            renderedPages: result.renderedPages,
+                            skippedPages: result.skippedPages,
+                        }));
+                    } catch (err) {
+                        app.log.error({ err, attempt }, 'PDF generation failed (FHIR)');
+                        if (attempt === maxAttempts) {
+                            incrementCounter(METRIC.ERROR_TOTAL, { type: 'pdf', source });
+                            return reply.code(500).send(errorResponse('PDF_GENERATION_FAILED', 'Failed to generate PDF.'));
+                        }
+                    }
                 }
             }
 

@@ -206,38 +206,61 @@ export async function reportRoutes(app: FastifyInstance): Promise<void> {
 
       /* ---- 7. Cache store + respond ---- */
       if (output === 'pdf') {
-        try {
-          const pdfStartMs = Date.now();
-          const pdfBuffer = await generateMultipassPdf(result, tenant);
-          const pdfDuration = Date.now() - pdfStartMs;
-          incrementCounter(METRIC.PDF_GENERATION_TOTAL, { source });
-          observeDuration(METRIC.PDF_DURATION_MS, pdfDuration, { source });
-          observeDuration(METRIC.REPORT_DURATION_MS, Date.now() - startMs, { source });
+        // Retry once on transient PDF failures (e.g. Puppeteer crash / timeout)
+        const maxAttempts = 2;
+        let lastError: unknown;
 
-          storeCachedReport(fingerprint, {
-            tenantId,
-            html: result.html,
-            coverHtml: result.coverHtml,
-            contentHtml: result.contentHtml,
-            backHtml: result.backHtml,
-            overallScore: result.overallScore,
-            overallSeverity: result.overallSeverity,
-            renderedPages: result.renderedPages,
-            skippedPages: result.skippedPages,
-          }, pdfBuffer);
+        for (let attempt = 1; attempt <= maxAttempts; attempt++) {
+          try {
+            const pdfStartMs = Date.now();
+            const pdfBuffer = await generateMultipassPdf(result, tenant);
+            const pdfDuration = Date.now() - pdfStartMs;
 
-          return reply.code(200).send(successResponse({
-            pdfBase64: pdfBuffer.toString('base64'),
-            overallScore: result.overallScore,
-            overallSeverity: result.overallSeverity,
-            renderedPages: result.renderedPages,
-            skippedPages: result.skippedPages,
-          }));
-        } catch (err) {
-          app.log.error({ err }, 'PDF generation failed');
-          return reply
-            .code(500)
-            .send(errorResponse('PDF_GENERATION_FAILED', 'Failed to generate PDF. Please try again.'));
+            incrementCounter(METRIC.PDF_GENERATION_TOTAL, { source });
+            observeDuration(METRIC.PDF_DURATION_MS, pdfDuration, { source });
+            observeDuration(METRIC.REPORT_DURATION_MS, Date.now() - startMs, { source });
+
+            storeCachedReport(
+              fingerprint,
+              {
+                tenantId,
+                html: result.html,
+                coverHtml: result.coverHtml,
+                contentHtml: result.contentHtml,
+                backHtml: result.backHtml,
+                overallScore: result.overallScore,
+                overallSeverity: result.overallSeverity,
+                renderedPages: result.renderedPages,
+                skippedPages: result.skippedPages,
+              },
+              pdfBuffer,
+            );
+
+            return reply.code(200).send(
+              successResponse({
+                pdfBase64: pdfBuffer.toString('base64'),
+                overallScore: result.overallScore,
+                overallSeverity: result.overallSeverity,
+                renderedPages: result.renderedPages,
+                skippedPages: result.skippedPages,
+              }),
+            );
+          } catch (err) {
+            lastError = err;
+            app.log.error({ err, attempt }, 'PDF generation failed');
+
+            if (attempt === maxAttempts) {
+              incrementCounter(METRIC.ERROR_TOTAL, { type: 'pdf', source });
+              return reply
+                .code(500)
+                .send(
+                  errorResponse(
+                    'PDF_GENERATION_FAILED',
+                    'Failed to generate PDF. Please try again.',
+                  ),
+                );
+            }
+          }
         }
       }
 

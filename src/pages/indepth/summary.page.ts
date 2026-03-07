@@ -4,34 +4,20 @@
  * One-page premium executive snapshot featuring:
  *   - Master Health Score Gauge
  *   - Health status breakdown (Healthy / Monitor / Attention)
- *   - Organ System Summary (Profile cards with scores)
+ *   - Report Summary (two-column accordion: every profile + all parameters with status)
  *   - Key Clinical Observations (Abnormal parameters list)
  */
 
 import type { ReportPage, PageRenderContext } from '../../core/page-registry/page.types';
 import type { NormalizedReport } from '../../domain/models/report.model';
-import type { ProfileResult } from '../../domain/models/profile.model';
+
 import { renderScoreGauge } from '../shared/index';
-
-/* ────────────────────────────────────────────────────────────────── */
-/*  Icons Mapping for Organ Systems                                   */
-/* ────────────────────────────────────────────────────────────────── */
-
-const ORGAN_ICONS: Record<string, string> = {
-  'Blood sugar': '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v10l4.5 4.5"/><circle cx="12" cy="12" r="10"/></svg>',
-  'Vitamin Analysis': '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>',
-  'Lipid Profile': '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3a9 9 0 0 0 0 18v-9L12 3Z"/><path d="M12 21a9 9 0 0 1 0-18v9l0 9Z"/></svg>',
-  'Thyroid Profile': '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 12V22"/><path d="M20 12V22"/><path d="M12 2V12"/><path d="M12 12L4 22"/><path d="M12 12L20 22"/></svg>',
-  'Liver Profile': '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 13s5-3 10-3 10 3 10 3v6s-5-3-10-3-10 3-10 3v-6Z"/></svg>',
-  'Kidney Profile': '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2a5 5 0 0 1 5 5v10a5 5 0 0 1-10 0V7a5 5 0 0 1 5-5Z"/></svg>',
-  'Cardiac Health': '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg>',
-};
-
-const DEFAULT_ICON = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>';
 
 /* ────────────────────────────────────────────────────────────────── */
 /*  Helper Renderers                                                  */
 /* ────────────────────────────────────────────────────────────────── */
+
+
 
 function getSeverityStyle(sev: string) {
   if (sev === 'healthy' || sev === 'normal') {
@@ -47,28 +33,49 @@ function getSeverityStyle(sev: string) {
 }
 
 function renderStatusGrid(report: NormalizedReport): string {
-  const counts = { healthy: 0, monitor: 0, attention: 0 };
+  let normalCount = 0;
+  let abnormalCount = 0;
+  let unknownCount = 0;
+
   report.profiles.forEach(p => {
-    if (p.severity === 'healthy') counts.healthy++;
-    else if (p.severity === 'monitor') counts.monitor++;
-    else counts.attention++;
+    p.parameters.forEach(param => {
+      const hasRange = param.range && (param.range.min !== undefined || param.range.max !== undefined);
+      if (!hasRange) {
+        unknownCount++;
+      } else if (param.status === 'normal') {
+        normalCount++;
+      } else {
+        abnormalCount++;
+      }
+    });
   });
 
-  const items = [
-    { label: 'Healthy', count: counts.healthy, sev: 'healthy' },
-    { label: 'Monitor', count: counts.monitor, sev: 'monitor' },
-    { label: 'Attention', count: counts.attention, sev: 'attention' },
-  ];
+  const cards = [];
 
-  const cards = items.map(item => {
-    const style = getSeverityStyle(item.sev);
-    return `
-            <div class="status-card" style="background-color:${style.bg}; border-color:${style.color}30">
-                <p class="status-card-value" style="color:${style.color}">${item.count}</p>
-                <p class="status-card-label" style="color:${style.color}">${item.label}</p>
-            </div>
-        `;
-  }).join('');
+  cards.push(`
+    <div class="status-card" style="background-color:#f0fdf4; border: 1px solid #bbf7d0; box-shadow: 0 1px 3px rgba(0,0,0,0.02)">
+        <p class="status-card-value" style="color:#16a34a; font-size: 28px; font-weight: 800; margin-bottom: 2px;">${normalCount}</p>
+        <p class="status-card-label" style="color:#16a34a; font-size: 10px; font-weight: 700; letter-spacing: 0.05em;">NORMAL</p>
+    </div>
+  `);
+
+  cards.push(`
+    <div class="status-card" style="background-color:#fef2f2; border: 1px solid #fecaca; box-shadow: 0 1px 3px rgba(0,0,0,0.02)">
+        <p class="status-card-value" style="color:#dc2626; font-size: 28px; font-weight: 800; margin-bottom: 2px;">${abnormalCount}</p>
+        <p class="status-card-label" style="color:#dc2626; font-size: 10px; font-weight: 700; letter-spacing: 0.05em;">ABNORMAL</p>
+    </div>
+  `);
+
+  if (unknownCount > 0) {
+    cards.push(`
+      <div class="status-card" style="background-color:#f8fafc; border: 1px solid #e2e8f0; box-shadow: 0 1px 3px rgba(0,0,0,0.02)">
+          <p class="status-card-value" style="color:#64748b; font-size: 28px; font-weight: 800; margin-bottom: 2px;">${unknownCount}</p>
+          <p class="status-card-label" style="color:#64748b; font-size: 10px; font-weight: 700; letter-spacing: 0.05em;">UNKNOWN</p>
+      </div>
+    `);
+  }
+
+  const cols = unknownCount > 0 ? 3 : 2;
 
   let scoreColor = '#10b981';
   let summaryText = 'indicating a stable health profile with most markers within range.';
@@ -81,53 +88,136 @@ function renderStatusGrid(report: NormalizedReport): string {
     summaryText = 'indicating several areas that require immediate attention and consultation.';
   }
 
-  // If we have an AI assessment, make it clear that the score is AI-generated
   const introText = report.aiAssessment
-    ? `Based on a comprehensive AI evaluation of all parameters, your Master Health Score is <strong style="color:${scoreColor}">${report.overallScore}/100</strong>, ${summaryText}`
+    ? `Based on a comprehensive AI evaluation of all <strong>${normalCount + abnormalCount + unknownCount} parameters</strong>, your Master Health Score is <strong style="color:${scoreColor}">${report.overallScore}/100</strong>, ${summaryText}`
     : `Your overall health score is <strong style="color:${scoreColor}">${report.overallScore}/100</strong>, ${summaryText}`;
 
   return `
-        <div class="health-score-breakdown">
-            <h2 class="section-heading-v2">Master Health Score</h2>
-            <div class="status-grid">${cards}</div>
-            <p class="score-summary-text">
+        <div class="health-score-breakdown" style="width: 100%;">
+            <div class="status-grid" style="grid-template-columns: repeat(${cols}, 1fr); margin-bottom: 20px;">
+                ${cards.join('')}
+            </div>
+            <p class="score-summary-text" style="font-size: 11.5px; line-height: 1.6; color: #4b5563; padding: 12px; background: #f9fafb; border-radius: 8px; border: 1px solid #f3f4f6;">
                 ${introText}
             </p>
         </div>
     `;
 }
 
-function renderOrganSystems(report: NormalizedReport): string {
-  const systemCards = report.profiles.map(p => {
-    const style = getSeverityStyle(p.severity);
-    const icon = ORGAN_ICONS[p.name] || DEFAULT_ICON;
+/* ── Status pill colors per parameter status ── */
+function getParamStatusStyle(status: string): { bg: string; color: string; label: string } {
+  switch (status) {
+    case 'normal': return { bg: '#dcfce7', color: '#166534', label: 'Normal' };
+    case 'low': return { bg: '#dbeafe', color: '#1e40af', label: 'Low' };
+    case 'high': return { bg: '#fef3c7', color: '#92400e', label: 'High' };
+    case 'critical': return { bg: '#fee2e2', color: '#991b1b', label: 'High' }; // Display critical as High
+    default: return { bg: '#f3f4f6', color: '#374151', label: 'Normal' };
+  }
+}
+
+/* ── Severity sidebar + badge colors ── */
+function getSeverityAccent(sev: string): { bar: string; badgeBg: string; badgeColor: string; label: string; headerBg: string } {
+  if (sev === 'healthy') return { bar: '#22c55e', badgeBg: '#dcfce7', badgeColor: '#166534', label: '✓ Normal', headerBg: '#f0fdf4' };
+  if (sev === 'low') return { bar: '#3b82f6', badgeBg: '#dbeafe', badgeColor: '#1e40af', label: '↓ Low', headerBg: '#eff6ff' };
+  if (sev === 'monitor') return { bar: '#f59e0b', badgeBg: '#fef3c7', badgeColor: '#92400e', label: '⚠ High', headerBg: '#fffbeb' };
+  return { bar: '#ef4444', badgeBg: '#fee2e2', badgeColor: '#991b1b', label: '✗ High', headerBg: '#fef2f2' } as any;
+}
+
+/* ── Dot SVG indicator ── */
+function paramDot(status: string): string {
+  const colors: Record<string, string> = { normal: '#22c55e', low: '#3b82f6', high: '#f59e0b', critical: '#ef4444' };
+  const c = colors[status] || '#94a3b8';
+  return `<svg width="6" height="6" viewBox="0 0 6 6"><circle cx="3" cy="3" r="3" fill="${c}"/></svg>`;
+}
+
+/* ── Main Report Summary renderer (Option B — two-column accordion) ── */
+function renderReportSummary(report: NormalizedReport): string {
+  let totalNormal = 0;
+  let totalAbnormal = 0;
+  let renderedProfilesCount = 0;
+
+  // Build each profile block
+  const profileBlocks = report.profiles.map(p => {
+    // Completely ignore parameters without proper reference ranges
+    const knownParams = p.parameters.filter(param => param.range && (param.range.min !== undefined || param.range.max !== undefined));
+    if (knownParams.length === 0) return '';
+
+    renderedProfilesCount++;
+
+    let profileAbnormalCount = 0;
+    knownParams.forEach(param => {
+      if (param.status === 'normal') totalNormal++;
+      else {
+        totalAbnormal++;
+        profileAbnormalCount++;
+      }
+    });
+
+    const accent = getSeverityAccent(p.severity);
+
+    // Parameter rows
+    const paramRows = knownParams.map(param => {
+      const ps = getParamStatusStyle(param.status);
+      const val = `${param.value}${param.unit ? ' <span class="rs-param-unit">' + param.unit + '</span>' : ''}`;
+      const isAbn = param.status !== 'normal';
+      return `
+        <div class="rs-param-row${isAbn ? ' rs-param-row--abn' : ''}">
+          <div class="rs-param-dot">${paramDot(param.status)}</div>
+          <span class="rs-param-name">${param.name}</span>
+          <span class="rs-param-value">${val}</span>
+          <span class="rs-param-pill" style="background:${ps.bg}; color:${ps.color}">${ps.label}</span>
+        </div>`;
+    }).join('');
+
+    // Abnormal chip in header (only when > 0)
+    const abnChip = profileAbnormalCount > 0
+      ? `<span class="rs-abn-chip">${profileAbnormalCount} abnormal</span>`
+      : `<span class="rs-ok-chip">All normal</span>`;
 
     return `
-            <div class="organ-card">
-                <div class="organ-card-top">
-                    <div class="organ-icon-box">${icon}</div>
-                    <span class="organ-status-badge" style="background-color:${style.bg}; color:${style.color}">
-                        ${p.severity}
-                    </span>
-                </div>
-                <div class="organ-card-name">${p.name}</div>
-                <div class="organ-score-row">
-                    <span class="organ-score-label">System Score</span>
-                    <span class="organ-score-value">${p.profileScore}/100</span>
-                </div>
+      <div class="rs-profile-block">
+        <div class="rs-sidebar" style="background:${accent.bar}"></div>
+        <div class="rs-block-body">
+          <div class="rs-block-header" style="background:${accent.headerBg ?? '#f8fafc'}">
+            <div class="rs-block-header-left">
+              <span class="rs-profile-name">${p.name}</span>
+              <span class="rs-severity-badge" style="background:${accent.badgeBg}; color:${accent.badgeColor}">${accent.label}</span>
             </div>
-        `;
+            <div class="rs-block-header-right">
+              ${abnChip}
+            </div>
+          </div>
+          <div class="rs-param-list">
+            ${paramRows}
+          </div>
+        </div>
+      </div>`;
   }).join('');
 
   return `
-        <div>
-            <div class="organ-system-header">
-                <h2 class="section-heading-v2">Organ System Summary</h2>
-                <span class="organ-system-meta">Score out of 100 • ${report.profiles.length} systems analyzed</span>
-            </div>
-            <div class="organ-system-grid">${systemCards}</div>
+    <div class="rs-section">
+      <!-- Section header -->
+      <div class="rs-section-header">
+        <div class="rs-section-title-group">
+          <h2 class="section-heading-v2" style="margin-bottom:0">Tests Summary</h2>
+          <span class="rs-section-sub">${renderedProfilesCount} profiles · ${totalNormal + totalAbnormal} parameters</span>
         </div>
-    `;
+        <div class="rs-totals">
+          <span class="rs-total-chip rs-total-chip--normal">
+            <svg width="8" height="8" viewBox="0 0 8 8"><circle cx="4" cy="4" r="4" fill="#22c55e"/></svg>
+            ${totalNormal} Normal
+          </span>
+          <span class="rs-total-chip rs-total-chip--abn">
+            <svg width="8" height="8" viewBox="0 0 8 8"><circle cx="4" cy="4" r="4" fill="#ef4444"/></svg>
+            ${totalAbnormal} Abnormal
+          </span>
+        </div>
+      </div>
+      <!-- Two-column profile grid -->
+      <div class="rs-profiles-grid">
+        ${profileBlocks}
+      </div>
+    </div>`;
 }
 
 function renderClinicalObservations(report: NormalizedReport): string {
@@ -209,19 +299,22 @@ export const inDepthSummaryPage: ReportPage = {
     return `
 <section class="indepth-summary-v2">
     <!-- MASTER HEALTH SCORE SECTION -->
-    <div class="health-score-section">
-        <div class="gauge-wrapper">
-            ${renderScoreGauge({ score: report.overallScore, size: 140, label: '' })}
+    <div class="health-score-section" style="display: flex; flex-direction: row; align-items: center; justify-content: space-between; gap: 32px; text-align: left;">
+        <div class="gauge-wrapper" style="flex-shrink: 0; padding: 10px; padding-top: 0px;">
+            ${renderScoreGauge({ score: report.overallScore, size: 170, label: '' })}
         </div>
-        ${renderStatusGrid(report)}
+        <div style="flex: 1; display: flex; flex-direction: column;">
+            <h2 class="section-heading-v2" style="font-size: 15px; margin-bottom: 10px; margin-top:0;">MASTER HEALTH SCORE</h2>
+            ${renderStatusGrid(report)}
+        </div>
     </div>
 
-    <div class="summary-divider" style="margin-top: 24px; margin-bottom: 24px;"></div>
+    <div class="summary-divider" style="margin-top: 12px; margin-bottom: 12px;"></div>
 
-    <!-- ORGAN SYSTEM SUMMARY -->
-    ${renderOrganSystems(report)}
+    <!-- REPORT SUMMARY (profiles + parameters with status) -->
+    ${renderReportSummary(report)}
 
-    <div class="summary-divider" style="margin-top: 24px; margin-bottom: 24px;"></div>
+    <div class="summary-divider" style="margin-top: 12px; margin-bottom: 12px;"></div>
 
     <!-- KEY CLINICAL OBSERVATIONS -->
     ${renderClinicalObservations(report)}
