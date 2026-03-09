@@ -46,6 +46,7 @@ function generatePageSections(
   report: NormalizedReport,
   strategy: ReportStrategy,
   branding: TenantConfig['branding'],
+  profileContinuation?: boolean,
 ): { sections: string[]; rendered: string[]; skipped: string[] } {
   const sections: string[] = [];
   const rendered: string[] = [];
@@ -59,10 +60,21 @@ function generatePageSections(
         skipped.push(pageName);
         continue;
       }
-      for (const profile of report.profiles) {
-        const ctx: PageRenderContext = { data: profile, strategy, branding };
-        sections.push(page.generate(ctx));
-        rendered.push(`${pageName}:${profile.id}`);
+
+      if (profileContinuation === true) {
+        // Merge all profiles into a single section — no forced page break between them
+        const combinedHtml = report.profiles
+          .map(profile => page.generate({ data: profile, strategy, branding }))
+          .join('\n');
+        sections.push(combinedHtml);
+        rendered.push(`${pageName}:all`);
+      } else {
+        // Default: one renderLayout wrapper per profile → page-break-after: always
+        for (const profile of report.profiles) {
+          const ctx: PageRenderContext = { data: profile, strategy, branding };
+          sections.push(page.generate(ctx));
+          rendered.push(`${pageName}:${profile.id}`);
+        }
       }
       continue;
     }
@@ -112,7 +124,8 @@ export function buildReport(
     tenantConfig.pageOrder,
     normalized,
     strategy,
-    tenantConfig.branding
+    tenantConfig.branding,
+    tenantConfig.profileContinuation,
   );
 
   const reportId = `RPT-${new Date().getFullYear()}-${normalized.patientId.slice(-4).toUpperCase()}`;

@@ -1048,16 +1048,16 @@ body {
 /* ── Banner ── */
 .htr-banner {
     position: relative;
-    padding: 20px 24px 14px;
-    border-radius: 0 0 12px 12px;
+    border-radius: 12px;
     overflow: hidden;
-    margin: -24px -20px 12px -20px;
+    margin: 0 0 14px 0;
+    border: 1.5px solid #C7D7F5;
 }
 
 .htr-banner-bg {
     position: absolute;
     inset: 0;
-    background: linear-gradient(135deg, #EBF5FF 0%, #E0EEFF 50%, #E8F4FF 100%);
+    background: linear-gradient(135deg, #EBF5FF 0%, #DDE8FF 50%, #E8F4FF 100%);
     z-index: 0;
 }
 
@@ -1073,6 +1073,7 @@ body {
     position: relative;
     z-index: 2;
     text-align: center;
+    padding: 14px 24px 12px;
 }
 
 .htr-banner-ornament {
@@ -1080,12 +1081,12 @@ body {
     align-items: center;
     justify-content: center;
     gap: 8px;
-    margin-bottom: 8px;
+    margin-bottom: 7px;
 }
 
 .htr-ornament-line {
     display: inline-block;
-    width: 22px;
+    width: 28px;
     height: 1.5px;
     background: linear-gradient(90deg, transparent, #2D4496);
     border-radius: 1px;
@@ -1096,27 +1097,28 @@ body {
 }
 
 .htr-ornament-diamond {
-    width: 6px;
-    height: 6px;
+    width: 7px;
+    height: 7px;
     background: #2D4496;
     transform: rotate(45deg);
     border-radius: 1px;
-    opacity: 0.5;
+    opacity: 0.6;
 }
 
 .htr-banner-title {
     font-family: Inter, Helvetica, sans-serif;
-    font-size: 19px;
-    font-weight: 700;
+    font-size: 18px;
+    font-weight: 800;
     color: #1A2B5E;
-    letter-spacing: 0.06em;
-    margin-bottom: 5px;
+    letter-spacing: 0.07em;
+    margin-bottom: 4px;
+    text-shadow: 0 1px 2px rgba(45, 68, 150, 0.08);
 }
 
 .htr-banner-subtitle {
     font-family: Inter, Helvetica, sans-serif;
-    font-size: 10.5px;
-    color: #6B7280;
+    font-size: 10px;
+    color: #5B6E9E;
     letter-spacing: 0.02em;
     line-height: 1.5;
 }

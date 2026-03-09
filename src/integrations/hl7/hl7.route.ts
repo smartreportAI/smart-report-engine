@@ -16,8 +16,8 @@ import {
 } from '../../cache/report-cache.service';
 import { incrementCounter, observeDuration, METRIC } from '../../metrics/metrics.service';
 import { successResponse, errorResponse } from '../../shared/utils/response.utils';
-import type { TenantConfig } from '../../modules/tenants/tenant.types';
 import type { ReportGenerationResult } from '../../modules/reports/report.types';
+import { CLIENT_REGISTRY } from '../../config/clients.config';
 
 // ---------------------------------------------------------------------------
 // Request body schema
@@ -30,38 +30,6 @@ const Hl7IngestBodySchema = z.object({
 });
 
 type Hl7IngestBody = z.infer<typeof Hl7IngestBodySchema>;
-
-// ---------------------------------------------------------------------------
-// Mock tenant store (mirrors report.route.ts — will be replaced by shared
-// TenantService in a future phase)
-// ---------------------------------------------------------------------------
-
-/** Demo tenant — single config for the prototype. */
-const MOCK_TENANTS: Record<string, TenantConfig> = {
-    demo: {
-        tenantId: 'demo',
-        reportType: 'inDepth',
-        pageOrder: [
-            'indepth-cover',
-            'indepth-how-to-read',
-            'indepth-summary',
-            'indepth-detail',
-            'indepth-back',
-        ],
-        branding: {
-            labName: 'Smart Health Labs',
-            logoUrl: 'https://cdn.example.com/demo/logo.png',
-            primaryColor: '#4F46E5',
-            secondaryColor: '#0EA5E9',
-            accentHealthy: '#16A34A',
-            accentMonitor: '#D97706',
-            accentAttention: '#DC2626',
-            footerText: 'Smart Health Labs — Intelligent Diagnostics',
-            contactEmail: 'reports@smarthealthlabs.com',
-            showPoweredBy: true,
-        },
-    },
-};
 
 // ---------------------------------------------------------------------------
 // Route
@@ -100,7 +68,7 @@ export async function hl7Routes(app: FastifyInstance): Promise<void> {
             const { tenantId, hl7Message, output } = parsed.data;
 
             /* ---- 2. Resolve tenant ---- */
-            const tenant = MOCK_TENANTS[tenantId];
+            const tenant = CLIENT_REGISTRY[tenantId];
 
             if (!tenant) {
                 return reply

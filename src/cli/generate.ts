@@ -1,7 +1,6 @@
 import { readFileSync, mkdirSync, writeFileSync } from 'node:fs';
 import { resolve, basename } from 'node:path';
 import { GenerateReportBodySchema } from '../modules/reports/report.types';
-import type { TenantConfig } from '../modules/tenants/tenant.types';
 import { normalizeReport } from '../domain/normalization/normalize-report';
 import { mapRawReportInput } from '../core/mapping/mapping.service';
 import { buildReport } from '../rendering/report-builder';
@@ -26,37 +25,7 @@ import {
 } from '../pages/indepth/index';
 import type { PageRenderContext } from '../core/page-registry/page.types';
 
-/* ---------------------------------------------------------------
-   Mock tenant store (mirrors report.route.ts)
-   --------------------------------------------------------------- */
-
-const INDEPTH_CONFIG = {
-    reportType: 'inDepth' as const,
-    pageOrder: [
-        'indepth-cover',
-        'indepth-how-to-read',
-        'indepth-summary',
-        'indepth-detail',
-        'indepth-back',
-    ],
-    branding: {
-        labName: 'Smart Health Labs',
-        logoUrl: 'https://cdn.example.com/demo/logo.png',
-        primaryColor: '#4F46E5',
-        secondaryColor: '#0EA5E9',
-        accentHealthy: '#16A34A',
-        accentMonitor: '#D97706',
-        accentAttention: '#DC2626',
-        footerText: 'Smart Health Labs — Intelligent Diagnostics',
-        contactEmail: 'reports@smarthealthlabs.com',
-        showPoweredBy: true,
-    },
-};
-
-const MOCK_TENANTS: Record<string, TenantConfig> = {
-    demo: { tenantId: 'demo', ...INDEPTH_CONFIG },
-    'tenant-beta': { tenantId: 'tenant-beta', ...INDEPTH_CONFIG },
-};
+import { CLIENT_REGISTRY } from '../config/clients.config';
 
 /* ---------------------------------------------------------------
    Page registry seeding (same as server.ts)
@@ -146,10 +115,10 @@ async function main(): Promise<void> {
     const { tenantId, reportData } = validated.data;
 
     // 3. Resolve tenant
-    const tenant = MOCK_TENANTS[tenantId];
+    const tenant = CLIENT_REGISTRY[tenantId];
     if (!tenant) {
         console.error(`✗ Tenant "${tenantId}" not found.`);
-        console.error(`  Available: ${Object.keys(MOCK_TENANTS).join(', ')}`);
+        console.error(`  Available: ${Object.keys(CLIENT_REGISTRY).join(', ')}`);
         process.exit(1);
     }
 

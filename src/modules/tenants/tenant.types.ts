@@ -91,6 +91,14 @@ export const TenantConfigSchema = z.object({
     * Defaults to false (lenient mode).
     */
    strictMapping: z.boolean().optional(),
+
+   /**
+    * If true, all profile detail pages are merged into a single page wrapper
+    * so they flow continuously without a forced page break between profiles.
+    * If false (default), each profile renders in its own page wrapper,
+    * producing a hard page break before every new profile.
+    */
+   profileContinuation: z.boolean().optional(),
 });
 
 export type TenantConfig = z.infer<typeof TenantConfigSchema>;

@@ -137,18 +137,18 @@ const LEGEND_ITEMS: LegendItem[] = [
     desc: 'Within the healthy reference range. No action needed.',
   },
   {
-    color: '#2563EB',
-    bgColor: '#EFF6FF',
-    borderColor: '#BFDBFE',
-    label: 'Low',
-    desc: 'Below the reference range. Consult your physician.',
+    color: '#D97706',
+    bgColor: '#FFFBEB',
+    borderColor: '#FCD34D',
+    label: 'Borderline',
+    desc: 'Slightly outside the reference range. Monitor closely.',
   },
   {
     color: '#DC2626',
     bgColor: '#FEF2F2',
     borderColor: '#FCA5A5',
-    label: 'High',
-    desc: 'Above the reference range. Consult your physician.',
+    label: 'High/Low',
+    desc: 'Above or below the reference range. Consult your physician.',
   },
 ];
 

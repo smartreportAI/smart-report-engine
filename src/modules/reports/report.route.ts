@@ -2,7 +2,6 @@ import type { FastifyInstance } from 'fastify';
 import { GenerateReportBodySchema } from './report.types';
 import type { GenerateReportBody, ReportGenerationResult } from './report.types';
 import { successResponse, errorResponse } from '../../shared/utils/response.utils';
-import type { TenantConfig } from '../tenants/tenant.types';
 import { normalizeReport } from '../../domain/normalization/normalize-report';
 import { mapRawReportInput } from '../../core/mapping/mapping.service';
 import { buildReport } from '../../rendering/report-builder';
@@ -29,66 +28,7 @@ import {
  * Kept in sync with tenant.route.ts so GET /tenants/:id and POST /reports/generate
  * accept the same tenant IDs (tenant-alpha, tenant-beta, demo).
  */
-const MOCK_TENANTS: Record<string, TenantConfig> = {
-  demo: {
-    tenantId: 'demo',
-    reportType: 'inDepth',
-    pageOrder: [
-      'indepth-cover',
-      'indepth-how-to-read',
-      'indepth-summary',
-      'indepth-detail',
-      'indepth-back',
-    ],
-    branding: {
-      labName: 'Smart Health Labs',
-      logoUrl: 'https://cdn.example.com/demo/logo.png',
-      primaryColor: '#4F46E5',
-      secondaryColor: '#0EA5E9',
-      accentHealthy: '#16A34A',
-      accentMonitor: '#D97706',
-      accentAttention: '#DC2626',
-      footerText: 'Smart Health Labs — Intelligent Diagnostics',
-      contactEmail: 'reports@smarthealthlabs.com',
-      showPoweredBy: true,
-    },
-  },
-  'tenant-alpha': {
-    tenantId: 'tenant-alpha',
-    reportType: 'essential',
-    pageOrder: ['cover', 'summary', 'bloodPanel', 'recommendations'],
-    branding: {
-      labName: 'Alpha Diagnostics',
-      logoUrl: 'https://cdn.example.com/alpha/logo.png',
-      primaryColor: '#1A73E8',
-      footerText: 'Alpha Diagnostics Pvt. Ltd.',
-      headerMargin: '40px',
-    },
-  },
-  'tenant-beta': {
-    tenantId: 'tenant-beta',
-    reportType: 'inDepth',
-    pageOrder: [
-      'indepth-cover',
-      'indepth-how-to-read',
-      'indepth-summary',
-      'indepth-detail',
-      'indepth-back',
-    ],
-    branding: {
-      labName: 'NexaHealth Analytics',
-      logoUrl: '',
-      primaryColor: '#2D4A9A',
-      secondaryColor: '#20BFDD',
-      accentHealthy: '#388E3C',
-      footerText: 'NexaHealth Analytics — Smart Health Insights',
-      headerHeight: '80px',
-      headerMargin: '20px',
-      contactEmail: 'reports@nexahealth.com',
-      showPoweredBy: true,
-    },
-  },
-};
+import { CLIENT_REGISTRY } from '../../config/clients.config';
 
 export async function reportRoutes(app: FastifyInstance): Promise<void> {
   app.post<{ Body: GenerateReportBody }>(
@@ -125,7 +65,7 @@ export async function reportRoutes(app: FastifyInstance): Promise<void> {
       const { tenantId, reportData, output } = parsed.data;
 
       /* ---- 2. Resolve tenant ---- */
-      const tenant = MOCK_TENANTS[tenantId];
+      const tenant = CLIENT_REGISTRY[tenantId];
 
       if (!tenant) {
         return reply
