@@ -1,35 +1,47 @@
 /**
- * Shared Components — Page Header
+ * Shared Components — Page Header (Version O: Cascade Steps)
  *
  * Used on every report page (cover, summary, detail, back).
- * Renders the branded top strip + logo + lab name row.
+ * Renders the branded header bar with primaryColor background
+ * and cascade-step decorative pattern in the top-right.
  *
- * The html-layout.ts shell already wraps pages, but these
- * components are for pages that need the header embedded
- * directly inside their own content section (e.g. cover page
- * which manages its own full-bleed layout).
+ * The html-layout.ts Puppeteer header uses inline CSS for the
+ * same design. This component is for pages that embed the header
+ * directly inside their own content (e.g. cover, back).
  */
 
 import type { TenantBrandingConfig } from '../../../modules/tenants/tenant.types';
 
-/**
- * Compact branded header for interior pages.
- * Shows the medical icon box, lab name, NABL badge, and report metadata.
- */
+const CASCADE_SVG = `<svg class="header-cascade-svg" viewBox="0 0 180 80" preserveAspectRatio="none">
+  <rect x="140" y="0" width="40" height="80" fill="rgba(255,255,255,0.08)"/>
+  <rect x="120" y="0" width="20" height="60" fill="rgba(255,255,255,0.06)"/>
+  <rect x="100" y="0" width="20" height="40" fill="rgba(255,255,255,0.04)"/>
+  <rect x="80" y="0" width="20" height="24" fill="rgba(255,255,255,0.025)"/>
+  <circle cx="140" cy="10" r="3" fill="rgba(255,255,255,0.45)"/>
+  <circle cx="140" cy="26" r="2.5" fill="rgba(255,255,255,0.35)"/>
+  <circle cx="140" cy="42" r="2" fill="rgba(255,255,255,0.25)"/>
+  <circle cx="120" cy="10" r="2.5" fill="rgba(255,255,255,0.3)"/>
+  <circle cx="120" cy="26" r="2" fill="rgba(255,255,255,0.2)"/>
+  <circle cx="100" cy="10" r="2" fill="rgba(255,255,255,0.2)"/>
+  <circle cx="160" cy="14" r="3.5" fill="rgba(255,255,255,0.55)"/>
+  <circle cx="160" cy="34" r="3" fill="rgba(255,255,255,0.4)"/>
+  <circle cx="160" cy="54" r="2.5" fill="rgba(255,255,255,0.3)"/>
+  <circle cx="160" cy="70" r="2" fill="rgba(255,255,255,0.2)"/>
+  <line x1="160" y1="14" x2="160" y2="70" stroke="rgba(255,255,255,0.08)" stroke-width="0.8"/>
+  <line x1="140" y1="10" x2="140" y2="42" stroke="rgba(255,255,255,0.06)" stroke-width="0.8"/>
+  <line x1="120" y1="10" x2="120" y2="26" stroke="rgba(255,255,255,0.05)" stroke-width="0.8"/>
+</svg>`;
+
 export function renderPageHeader(
   branding: TenantBrandingConfig,
-  options: { reportId?: string; pageNumber?: number; totalPages?: number } = {}
+  _options: { reportId?: string; pageNumber?: number; totalPages?: number } = {}
 ): string {
-  const { reportId = 'N/A', pageNumber, totalPages } = options;
-  const pageText = (pageNumber && totalPages)
-    ? `In-Depth Profile &middot; Page ${pageNumber} of ${totalPages}`
-    : '';
-
   return `
-<div class="page-header">
-  <div class="header-left">
+<div class="page-header" style="background:${branding.primaryColor}">
+  ${CASCADE_SVG}
+  <div class="header-content">
     <div class="header-icon-box">
-      <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
+      <svg width="16" height="16" viewBox="0 0 18 18" fill="none">
         <path d="M9 2v14M2 9h14" stroke="white" stroke-width="2.2" stroke-linecap="round"/>
         <circle cx="9" cy="9" r="6.5" stroke="white" stroke-width="1.2" opacity="0.45"/>
       </svg>
@@ -39,19 +51,9 @@ export function renderPageHeader(
       <div class="header-lab-name">${branding.labName}</div>
     </div>
   </div>
-
-  <div class="header-right">
-    <div class="header-meta">
-      <div class="header-meta-id">Report ID: ${reportId}</div>
-      ${pageText ? `<div class="header-meta-page">${pageText}</div>` : ''}
-    </div>
-  </div>
 </div>`;
 }
 
-/**
- * Full-bleed cover header — larger, centred, used only on the cover page.
- */
 export function renderCoverHeader(branding: TenantBrandingConfig): string {
   return `
 <div class="sh-cover-header" style="background:${branding.primaryColor}">

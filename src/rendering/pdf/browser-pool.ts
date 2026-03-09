@@ -28,7 +28,7 @@ export interface BrowserPoolConfig {
 }
 
 const DEFAULT_CONFIG: BrowserPoolConfig = {
-    maxBrowsers: 2,
+    maxBrowsers: 3,
     maxPagesPerBrowser: 5,
     idleTimeoutMs: 60_000,
 };
@@ -39,6 +39,13 @@ const LAUNCH_ARGS = [
     '--disable-dev-shm-usage',
     '--disable-gpu',
     '--font-render-hinting=none',
+    '--disable-extensions',
+    '--disable-background-networking',
+    '--disable-background-timer-throttling',
+    '--disable-backgrounding-occluded-windows',
+    '--disable-renderer-backgrounding',
+    '--disable-ipc-flooding-protection',
+    '--disable-component-update',
 ];
 
 export class BrowserPool {
@@ -166,6 +173,12 @@ export class BrowserPool {
     /** Number of callers waiting for a browser. */
     get waiting(): number {
         return this.waitQueue.length;
+    }
+
+    async warmup(): Promise<void> {
+        if (this.pool.length === 0 && !this.isShuttingDown) {
+            await this.launchBrowser();
+        }
     }
 
     // -----------------------------------------------------------------------

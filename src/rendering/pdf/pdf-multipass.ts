@@ -26,7 +26,6 @@ export async function generateMultipassPdf(
     input: MultipassHtmlInput,
     tenant: TenantConfig,
 ): Promise<Buffer> {
-    // If the input doesn't have split HTML (e.g., from an old cache), do a single pass
     if (!input.contentHtml) {
         return generatePdfFromHtml(input.html, {
             margin: getPdfMargins(tenant.branding, !!input.patient),
@@ -35,37 +34,36 @@ export async function generateMultipassPdf(
         });
     }
 
-    const pdfSegments: Buffer[] = [];
+    const fullBleedMargin = { top: '0px', bottom: '0px', left: '0px', right: '0px' };
 
-    // Pass 1: Cover (full-bleed, no margin, no header/footer)
-    if (input.coverHtml) {
-        const coverPdf = await generatePdfFromHtml(input.coverHtml, {
-            margin: { top: '0px', bottom: '0px', left: '0px', right: '0px' },
-        });
-        pdfSegments.push(coverPdf);
-    }
+    const coverPromise = input.coverHtml
+        ? generatePdfFromHtml(input.coverHtml, { margin: fullBleedMargin })
+        : null;
 
-    // Pass 2: Content pages (with branded headers/footers + margins)
-    const contentPdf = await generatePdfFromHtml(input.contentHtml, {
+    const contentPromise = generatePdfFromHtml(input.contentHtml, {
         margin: getPdfMargins(tenant.branding, !!input.patient),
         headerTemplate: buildHeaderTemplate(tenant.branding, input.patient),
         footerTemplate: buildFooterTemplate(tenant.branding),
     });
+
+    const backPromise = input.backHtml
+        ? generatePdfFromHtml(input.backHtml, { margin: fullBleedMargin })
+        : null;
+
+    const [coverPdf, contentPdf, backPdf] = await Promise.all([
+        coverPromise,
+        contentPromise,
+        backPromise,
+    ]);
+
+    const pdfSegments: Buffer[] = [];
+    if (coverPdf) pdfSegments.push(coverPdf);
     pdfSegments.push(contentPdf);
+    if (backPdf) pdfSegments.push(backPdf);
 
-    // Pass 3: Back page (full-bleed, no margin, no header/footer)
-    if (input.backHtml) {
-        const backPdf = await generatePdfFromHtml(input.backHtml, {
-            margin: { top: '0px', bottom: '0px', left: '0px', right: '0px' },
-        });
-        pdfSegments.push(backPdf);
-    }
-
-    // Single segment? Return it directly
     if (pdfSegments.length === 1) {
         return pdfSegments[0];
     }
 
-    // Merge multiple segments
     return mergePdfBuffers(pdfSegments);
 }

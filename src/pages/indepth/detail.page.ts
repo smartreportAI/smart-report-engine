@@ -37,36 +37,36 @@ import { renderScoreGauge, renderSmartSlider } from '../shared/index';
 function statusColor(status: ParameterStatus): string {
   switch (status) {
     case 'normal': return '#16A34A';
-    case 'low': return '#D97706';
-    case 'high': return '#D97706';
-    case 'critical': return '#DC2626';
+    case 'low': return '#c0392b';
+    case 'high': return '#c0392b';
+    case 'critical': return '#c0392b';
   }
 }
 
 function statusBgColor(status: ParameterStatus): string {
   switch (status) {
     case 'normal': return '#F0FDF4';
-    case 'low': return '#FFFBEB';
-    case 'high': return '#FFFBEB';
-    case 'critical': return '#FEF2F2';
+    case 'low': return '#fff8f8';
+    case 'high': return '#fff8f8';
+    case 'critical': return '#fff1f1';
   }
 }
 
 function statusBorderColor(status: ParameterStatus): string {
   switch (status) {
     case 'normal': return '#BBF7D0';
-    case 'low': return '#FCD34D';
-    case 'high': return '#FCD34D';
-    case 'critical': return '#FCA5A5';
+    case 'low': return '#fcd5d5';
+    case 'high': return '#fcd5d5';
+    case 'critical': return '#fca5a5';
   }
 }
 
 function statusAccentColor(status: ParameterStatus): string {
   switch (status) {
     case 'normal': return '#16A34A';
-    case 'low': return '#D97706';
-    case 'high': return '#D97706';
-    case 'critical': return '#DC2626';
+    case 'low': return '#f87171';
+    case 'high': return '#f87171';
+    case 'critical': return '#f87171';
   }
 }
 
@@ -81,20 +81,20 @@ function statusLabel(status: ParameterStatus): string {
 
 function severityColor(sev: string): string {
   if (sev === 'healthy') return '#16A34A';
-  if (sev === 'monitor') return '#D97706';
-  return '#DC2626';
+  if (sev === 'monitor') return '#c0392b';
+  return '#c0392b';
 }
 
 function severityBgColor(sev: string): string {
   if (sev === 'healthy') return '#F0FDF4';
-  if (sev === 'monitor') return '#FFFBEB';
-  return '#FEF2F2';
+  if (sev === 'monitor') return '#fff8f8';
+  return '#fff1f1';
 }
 
 function severityBorderColor(sev: string): string {
   if (sev === 'healthy') return '#86EFAC';
-  if (sev === 'monitor') return '#FCD34D';
-  return '#FCA5A5';
+  if (sev === 'monitor') return '#fcd5d5';
+  return '#fca5a5';
 }
 
 /* ─────────────────────────────────────────────────────────────────
@@ -139,7 +139,7 @@ function renderProfileHero(profile: ProfileResult): string {
 
   // Filter out any pills with 0 count except if everything is 0
   const pillData = [
-    { label: 'Abnormal', value: String(abnormal), bg: '#FEF2F2', color: '#DC2626' },
+    { label: 'Abnormal', value: String(abnormal), bg: '#fff8f8', color: '#c0392b' },
     { label: 'Normal', value: String(normal), bg: '#F0FDF4', color: '#16A34A' }
   ];
 
@@ -181,44 +181,7 @@ function renderProfileHero(profile: ProfileResult): string {
 </div>`;
 }
 
-/* ─────────────────────────────────────────────────────────────────
-   2. ANALYTICS STRIP — risk distribution bar
-   ───────────────────────────────────────────────────────────────── */
 
-function renderAnalyticsStrip(profile: ProfileResult): string {
-  const total = profile.parameters.length || 1;
-  const abnormal = profile.abnormalCount;
-  const normal = profile.normalCount;
-  // treat anything that isn't normal and isn't critical as "borderline"
-  const critical = profile.parameters.filter(p => p.status === 'critical').length;
-  const borderline = abnormal - critical;
-
-  const normalPct = Math.round((normal / total) * 100);
-  const borderlinePct = Math.round((borderline / total) * 100);
-  const abnormalPct = Math.round((critical / total) * 100);
-  // fill any rounding gap into normal
-  const adjustedNormal = 100 - borderlinePct - abnormalPct;
-
-  return `
-<div class="det-analytics-strip">
-  <div class="det-analytics-strip__bar-row">
-    <span class="det-analytics-strip__bar-title">Risk Distribution</span>
-    <div class="det-analytics-strip__legend">
-      <span class="det-legend-dot" style="background:#16A34A;"></span>
-      <span class="det-legend-text">Normal (${normalPct}%)</span>
-      <span class="det-legend-dot" style="background:#D97706;margin-left:10px;"></span>
-      <span class="det-legend-text">Borderline (${borderlinePct}%)</span>
-      <span class="det-legend-dot" style="background:#DC2626;margin-left:10px;"></span>
-      <span class="det-legend-text">Abnormal (${abnormalPct}%)</span>
-    </div>
-  </div>
-  <div class="det-analytics-strip__bar">
-    <div style="width:${adjustedNormal}%;background:#16A34A;border-radius:6px 0 0 6px;"></div>
-    <div style="width:${borderlinePct}%;background:#F59E0B;"></div>
-    <div style="width:${abnormalPct}%;background:#DC2626;border-radius:0 6px 6px 0;"></div>
-  </div>
-</div>`;
-}
 
 /* ─────────────────────────────────────────────────────────────────
    3. FLAGGED PARAMETER CARD
@@ -290,7 +253,7 @@ function renderFlaggedCard(param: ParameterResult, showSlider: boolean): string 
   }
 
   return `
-<div class="det-flagged-card" style="border-left-color:${accentColor};border-color:${borderColor};background:${bgColor};">
+<div class="det-flagged-card" style="border-color:${borderColor};background:${bgColor};">
   <!-- Card header -->
   <div class="det-flagged-card__header">
     <div class="det-flagged-card__header-left">
@@ -384,11 +347,9 @@ export const inDepthDetailPage: ReportPage = {
 
   ${renderProfileHero(profile)}
 
-  ${renderAnalyticsStrip(profile)}
-
   ${flagged.length > 0 ? `
   <div class="det-section-heading det-section-heading--flagged">
-    <div class="det-section-heading__bar" style="background:#DC2626;"></div>
+    <div class="det-section-heading__bar" style="background:#f87171;"></div>
     <span class="det-section-heading__text">Parameters Requiring Attention</span>
   </div>
   <div class="det-flagged-list">

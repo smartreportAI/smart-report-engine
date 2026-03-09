@@ -6,6 +6,8 @@ import { normalizeReport } from '../domain/normalization/normalize-report';
 import { mapRawReportInput } from '../core/mapping/mapping.service';
 import { buildReport } from '../rendering/report-builder';
 import { generateMultipassPdf } from '../rendering/pdf/pdf-multipass';
+import { shutdownPdfService } from '../rendering/pdf/pdf.service';
+import { browserPool } from '../rendering/pdf/browser-pool';
 import { createAuditRecord, recordAudit } from '../audit/audit.service';
 import {
     generateReportFingerprint,
@@ -95,7 +97,6 @@ function seedPages(): void {
 
 async function main(): Promise<void> {
     const args = process.argv.slice(2);
-
     // Parse flags
     const pdfFlag = args.includes('--pdf');
     const noCacheFlag = args.includes('--no-cache');
@@ -104,6 +105,8 @@ async function main(): Promise<void> {
 
     if (noCacheFlag) process.env.DISABLE_CACHE = 'true';
     if (noAuditFlag) process.env.DISABLE_AUDIT = 'true';
+
+    const warmupPromise = pdfFlag ? browserPool.warmup() : null;
 
     if (!inputPath) {
         console.error('Usage: npm run generate <input.json> [--pdf] [--no-cache] [--no-audit]');
@@ -221,10 +224,12 @@ async function main(): Promise<void> {
     if (pdfFlag) {
         console.log('⏳ Generating PDF (multi-pass)...');
 
+        if (warmupPromise) await warmupPromise;
         const pdfBuffer = await generateMultipassPdf(result, tenant);
 
         const outPath = resolve(outputDir, 'report.pdf');
         writeFileSync(outPath, pdfBuffer);
+        await shutdownPdfService();
 
         console.log('');
         console.log('✓ PDF generated successfully');

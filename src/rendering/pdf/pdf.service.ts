@@ -141,24 +141,22 @@ async function generateWithBrowser(
     const page = await browser.newPage();
 
     try {
-        // A4 viewport — matches the 210mm width in CSS
-        await page.setViewport({ width: 794, height: 1123, deviceScaleFactor: 2 });
+        await page.setViewport({ width: 794, height: 1123, deviceScaleFactor: 1 });
 
         if (debug) console.log('[pdf] Setting HTML content...');
 
-        // networkidle0: wait until no more than 0 network connections for 500ms
-        await page.setContent(html, { waitUntil: 'networkidle0', timeout: 60_000 });
+        await page.emulateMediaType('print');
+
+        await page.setContent(html, { waitUntil: 'domcontentloaded', timeout: 60_000 });
 
         if (debug) console.log('[pdf] Generating PDF...');
 
-        // When templates are provided, Puppeteer paints them on every
-        // physical page automatically — guaranteed bottom-of-page footer
-        // even when content overflows to additional physical pages.
         const useHeaderFooter = !!(headerTemplate || footerTemplate);
 
         const pdfBuffer = await page.pdf({
             format: 'A4',
             printBackground: true,
+            preferCSSPageSize: false,
             margin,
             displayHeaderFooter: useHeaderFooter,
             headerTemplate: headerTemplate ?? '<span></span>',

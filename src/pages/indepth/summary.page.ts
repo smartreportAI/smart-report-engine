@@ -29,7 +29,7 @@ function getSeverityStyle(sev: string) {
   if (sev === 'low') {
     return { color: '#3b82f6', bg: '#eff6ff', dot: '#3b82f6', label: 'Low' };
   }
-  return { color: '#ef4444', bg: '#fef2f2', dot: '#ef4444', label: 'Attention' };
+  return { color: '#f87171', bg: '#fff8f8', dot: '#f87171', label: 'Attention' };
 }
 
 function renderStatusGrid(report: NormalizedReport): string {
@@ -60,9 +60,9 @@ function renderStatusGrid(report: NormalizedReport): string {
   `);
 
   cards.push(`
-    <div class="status-card" style="background-color:#fef2f2; border: 1px solid #fecaca; box-shadow: 0 1px 3px rgba(0,0,0,0.02)">
-        <p class="status-card-value" style="color:#dc2626; font-size: 28px; font-weight: 800; margin-bottom: 2px;">${abnormalCount}</p>
-        <p class="status-card-label" style="color:#dc2626; font-size: 10px; font-weight: 700; letter-spacing: 0.05em;">ABNORMAL</p>
+    <div class="status-card" style="background-color:#fff8f8; border: 1px solid #fcd5d5; box-shadow: 0 1px 3px rgba(0,0,0,0.02)">
+        <p class="status-card-value" style="color:#c0392b; font-size: 28px; font-weight: 800; margin-bottom: 2px;">${abnormalCount}</p>
+        <p class="status-card-label" style="color:#c0392b; font-size: 10px; font-weight: 700; letter-spacing: 0.05em;">ABNORMAL</p>
     </div>
   `);
 
@@ -84,7 +84,7 @@ function renderStatusGrid(report: NormalizedReport): string {
     summaryText = 'indicating a generally stable profile with specific areas requiring monitoring.';
   }
   if (report.overallScore < 40) {
-    scoreColor = '#ef4444';
+    scoreColor = '#f87171';
     summaryText = 'indicating several areas that require immediate attention and consultation.';
   }
 
@@ -108,9 +108,9 @@ function renderStatusGrid(report: NormalizedReport): string {
 function getParamStatusStyle(status: string): { bg: string; color: string; label: string } {
   switch (status) {
     case 'normal': return { bg: '#dcfce7', color: '#166534', label: 'Normal' };
-    case 'low': return { bg: '#dbeafe', color: '#1e40af', label: 'Low' };
-    case 'high': return { bg: '#fef3c7', color: '#92400e', label: 'High' };
-    case 'critical': return { bg: '#fee2e2', color: '#991b1b', label: 'High' }; // Display critical as High
+    case 'low': return { bg: '#fff1f1', color: '#c0392b', label: 'Low' };
+    case 'high': return { bg: '#fff1f1', color: '#c0392b', label: 'High' };
+    case 'critical': return { bg: '#fff1f1', color: '#c0392b', label: 'High' };
     default: return { bg: '#f3f4f6', color: '#374151', label: 'Normal' };
   }
 }
@@ -118,14 +118,14 @@ function getParamStatusStyle(status: string): { bg: string; color: string; label
 /* ── Severity sidebar + badge colors ── */
 function getSeverityAccent(sev: string): { bar: string; badgeBg: string; badgeColor: string; label: string; headerBg: string } {
   if (sev === 'healthy') return { bar: '#22c55e', badgeBg: '#dcfce7', badgeColor: '#166534', label: '✓ Normal', headerBg: '#f0fdf4' };
-  if (sev === 'low') return { bar: '#3b82f6', badgeBg: '#dbeafe', badgeColor: '#1e40af', label: '↓ Low', headerBg: '#eff6ff' };
-  if (sev === 'monitor') return { bar: '#f59e0b', badgeBg: '#fef3c7', badgeColor: '#92400e', label: '⚠ High', headerBg: '#fffbeb' };
-  return { bar: '#ef4444', badgeBg: '#fee2e2', badgeColor: '#991b1b', label: '✗ High', headerBg: '#fef2f2' } as any;
+  if (sev === 'low') return { bar: '#f87171', badgeBg: '#fff1f1', badgeColor: '#c0392b', label: '↓ Low', headerBg: '#fff8f8' };
+  if (sev === 'monitor') return { bar: '#f87171', badgeBg: '#fff1f1', badgeColor: '#c0392b', label: '⚠ High', headerBg: '#fff8f8' };
+  return { bar: '#f87171', badgeBg: '#fff1f1', badgeColor: '#c0392b', label: '✗ High', headerBg: '#fff8f8' } as any;
 }
 
 /* ── Dot SVG indicator ── */
 function paramDot(status: string): string {
-  const colors: Record<string, string> = { normal: '#22c55e', low: '#3b82f6', high: '#f59e0b', critical: '#ef4444' };
+  const colors: Record<string, string> = { normal: '#22c55e', low: '#f87171', high: '#f87171', critical: '#f87171' };
   const c = colors[status] || '#94a3b8';
   return `<svg width="6" height="6" viewBox="0 0 6 6"><circle cx="3" cy="3" r="3" fill="${c}"/></svg>`;
 }
@@ -142,6 +142,10 @@ function renderReportSummary(report: NormalizedReport): string {
     const knownParams = p.parameters.filter(param => param.range && (param.range.min !== undefined || param.range.max !== undefined));
     if (knownParams.length === 0) return '';
 
+    // Only show profiles that have at least one abnormal parameter
+    const hasAbnormal = knownParams.some(param => param.status !== 'normal');
+    if (!hasAbnormal) return '';
+
     renderedProfilesCount++;
 
     let profileAbnormalCount = 0;
@@ -155,24 +159,33 @@ function renderReportSummary(report: NormalizedReport): string {
 
     const accent = getSeverityAccent(p.severity);
 
-    // Parameter rows
-    const paramRows = knownParams.map(param => {
+    // Parameter rows — only abnormal parameters
+    const abnormalParams = knownParams.filter(param => param.status !== 'normal');
+    const paramRows = abnormalParams.map(param => {
       const ps = getParamStatusStyle(param.status);
       const val = `${param.value}${param.unit ? ' <span class="rs-param-unit">' + param.unit + '</span>' : ''}`;
-      const isAbn = param.status !== 'normal';
+      const rangeText = param.range
+        ? (() => {
+            const lo = param.range.min !== undefined && param.range.min !== null ? param.range.min : null;
+            const hi = param.range.max !== undefined && param.range.max !== null ? param.range.max : null;
+            if (lo !== null && hi !== null) return `Ref: ${lo}–${hi}${param.unit ? ' ' + param.unit : ''}`;
+            if (lo !== null) return `Ref: ≥${lo}${param.unit ? ' ' + param.unit : ''}`;
+            if (hi !== null) return `Ref: ≤${hi}${param.unit ? ' ' + param.unit : ''}`;
+            return '';
+          })()
+        : '';
       return `
-        <div class="rs-param-row${isAbn ? ' rs-param-row--abn' : ''}">
+        <div class="rs-param-row rs-param-row--abn">
           <div class="rs-param-dot">${paramDot(param.status)}</div>
           <span class="rs-param-name">${param.name}</span>
           <span class="rs-param-value">${val}</span>
+          ${rangeText ? `<span class="rs-param-ref">${rangeText}</span>` : ''}
           <span class="rs-param-pill" style="background:${ps.bg}; color:${ps.color}">${ps.label}</span>
         </div>`;
     }).join('');
 
-    // Abnormal chip in header (only when > 0)
-    const abnChip = profileAbnormalCount > 0
-      ? `<span class="rs-abn-chip">${profileAbnormalCount} abnormal</span>`
-      : `<span class="rs-ok-chip">All normal</span>`;
+    // Abnormal chip
+    const abnChip = `<span class="rs-abn-chip">${profileAbnormalCount} flagged</span>`;
 
     return `
       <div class="rs-profile-block">
@@ -194,23 +207,55 @@ function renderReportSummary(report: NormalizedReport): string {
       </div>`;
   }).join('');
 
+  const totalParams = totalNormal + totalAbnormal;
+  const pct = totalParams > 0 ? Math.round((totalAbnormal / totalParams) * 100) : 0;
+
+  if (renderedProfilesCount === 0) {
+    return `
+    <div class="rs-section">
+      <div style="display:flex; align-items:center; gap:10px; margin-bottom:10px;">
+        <div style="width:28px;height:28px;border-radius:8px;background:#f0fdf4;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M7 1l1.5 3 3.5.5-2.5 2.5.5 3.5L7 9l-3 1.5.5-3.5L2 4.5l3.5-.5z" fill="#22c55e"/></svg>
+        </div>
+        <div>
+          <h2 class="section-heading-v2" style="margin-bottom:0">Abnormal Findings</h2>
+          <span class="rs-section-sub">No flags detected — all parameters within range</span>
+        </div>
+      </div>
+      <div style="padding:16px 20px; text-align:center; color:#16a34a; background:#f0fdf4; border-radius:8px; border:1px solid #bbf7d0; font-size:12px; font-weight:600;">
+        ✓ All analyzed parameters are within normal reference ranges.
+      </div>
+    </div>`;
+  }
+
   return `
     <div class="rs-section">
       <!-- Section header -->
-      <div class="rs-section-header">
-        <div class="rs-section-title-group">
-          <h2 class="section-heading-v2" style="margin-bottom:0">Tests Summary</h2>
-          <span class="rs-section-sub">${renderedProfilesCount} profiles · ${totalNormal + totalAbnormal} parameters</span>
+      <div class="rs-section-header" style="margin-bottom:10px;">
+        <div style="display:flex;align-items:center;gap:10px;">
+          <div style="width:28px;height:28px;border-radius:8px;background:#fff1f1;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+            <svg width="13" height="13" viewBox="0 0 13 13" fill="none"><path d="M6.5 1.5L11.5 10.5H1.5L6.5 1.5Z" stroke="#f87171" stroke-width="1.5" stroke-linejoin="round"/><line x1="6.5" y1="5" x2="6.5" y2="8" stroke="#f87171" stroke-width="1.4" stroke-linecap="round"/><circle cx="6.5" cy="9.5" r="0.7" fill="#f87171"/></svg>
+          </div>
+          <div>
+            <h2 class="section-heading-v2" style="margin-bottom:1px;">Abnormal Findings</h2>
+            <span class="rs-section-sub">${renderedProfilesCount} profile${renderedProfilesCount !== 1 ? 's' : ''} flagged &nbsp;·&nbsp; ${totalAbnormal} out-of-range parameter${totalAbnormal !== 1 ? 's' : ''}</span>
+          </div>
         </div>
-        <div class="rs-totals">
-          <span class="rs-total-chip rs-total-chip--normal">
-            <svg width="8" height="8" viewBox="0 0 8 8"><circle cx="4" cy="4" r="4" fill="#22c55e"/></svg>
-            ${totalNormal} Normal
-          </span>
-          <span class="rs-total-chip rs-total-chip--abn">
-            <svg width="8" height="8" viewBox="0 0 8 8"><circle cx="4" cy="4" r="4" fill="#ef4444"/></svg>
-            ${totalAbnormal} Abnormal
-          </span>
+        <div style="display:flex;align-items:center;gap:8px;">
+          <div style="text-align:right;">
+              <div style="font-size:10px;font-weight:700;color:#f87171;">${pct}%</div>
+            <div style="font-size:8px;color:#94a3b8;font-weight:500;letter-spacing:0.04em;">OUT OF RANGE</div>
+          </div>
+          <div style="width:36px;height:36px;position:relative;flex-shrink:0;">
+            <svg width="36" height="36" viewBox="0 0 36 36">
+              <circle cx="18" cy="18" r="14" fill="none" stroke="#f3f4f6" stroke-width="4"/>
+              <circle cx="18" cy="18" r="14" fill="none" stroke="#f87171" stroke-width="4"
+                stroke-dasharray="${Math.round(pct * 0.879)} 87.9"
+                stroke-dashoffset="22"
+                stroke-linecap="round"
+                transform="rotate(-90 18 18)"/>
+            </svg>
+          </div>
         </div>
       </div>
       <!-- Two-column profile grid -->
@@ -253,7 +298,7 @@ function renderClinicalObservations(report: NormalizedReport): string {
             <div class="clinical-observations-header">
                 <h2 class="section-heading-v2">Key Clinical Observations</h2>
                 <div class="clinical-legend">
-                    <div class="legend-item"><div class="legend-dot" style="background-color:#ef4444"></div><span class="legend-label">High</span></div>
+                    <div class="legend-item"><div class="legend-dot" style="background-color:#f87171"></div><span class="legend-label">High</span></div>
                     <div class="legend-item"><div class="legend-dot" style="background-color:#f59e0b"></div><span class="legend-label">Medium</span></div>
                     <div class="legend-item"><div class="legend-dot" style="background-color:#3b82f6"></div><span class="legend-label">Low</span></div>
                     <div class="legend-item"><div class="legend-dot" style="background-color:#10b981"></div><span class="legend-label">Normal</span></div>
@@ -309,12 +354,12 @@ export const inDepthSummaryPage: ReportPage = {
         </div>
     </div>
 
-    <div class="summary-divider" style="margin-top: 12px; margin-bottom: 12px;"></div>
+    <div class="summary-divider" style="margin-top: 6px; margin-bottom: 6px;"></div>
 
     <!-- REPORT SUMMARY (profiles + parameters with status) -->
     ${renderReportSummary(report)}
 
-    <div class="summary-divider" style="margin-top: 12px; margin-bottom: 12px;"></div>
+    <div class="summary-divider" style="margin-top: 6px; margin-bottom: 6px;"></div>
 
     <!-- KEY CLINICAL OBSERVATIONS -->
     ${renderClinicalObservations(report)}

@@ -244,6 +244,7 @@ export function generateBrandCSSVariables(
 export function buildHeaderTemplate(branding: TenantBrandingConfig, patient?: PatientStripInfo): string {
   const height = branding.headerHeight ?? '80px';
   const labNameEscaped = escapeHtml(branding.labName);
+  const brandColor = branding.primaryColor;
 
   let patientHtml = '';
   if (patient) {
@@ -254,25 +255,25 @@ export function buildHeaderTemplate(branding: TenantBrandingConfig, patient?: Pa
     }));
 
     patientHtml = `
-    <div style="background-color:#f8fafc; border-bottom:1px solid #e2e8f0; padding:8px 32px; margin-top:3px; margin-bottom:12px; display:grid; grid-template-columns:repeat(5,1fr); gap:16px;">
+    <div style="background:rgba(0,0,0,0.015); border-bottom:1px solid rgba(0,0,0,0.06); padding:8px 32px; margin-top:0; display:grid; grid-template-columns:repeat(5,1fr); gap:16px; height:54px; align-items:center; box-sizing:border-box;">
        <div>
-         <div style="font-size:8.5px; font-weight:600; letter-spacing:0.08em; text-transform:uppercase; color:#94a3b8; margin-bottom:2px;">Patient Name</div>
+         <div style="font-size:8.5px; font-weight:700; letter-spacing:0.1em; text-transform:uppercase; color:#94a3b8; margin-bottom:2px;">Patient Name</div>
          <div style="font-size:11px; font-weight:600; color:#1e293b;">${escapeHtml(patient.patientName || 'Confidential Patient')}</div>
        </div>
        <div>
-         <div style="font-size:8.5px; font-weight:600; letter-spacing:0.08em; text-transform:uppercase; color:#94a3b8; margin-bottom:2px;">Patient ID</div>
+         <div style="font-size:8.5px; font-weight:700; letter-spacing:0.1em; text-transform:uppercase; color:#94a3b8; margin-bottom:2px;">Patient ID</div>
          <div style="font-size:11px; font-weight:600; color:#1e293b;">${escapeHtml(patient.patientId)}</div>
        </div>
        <div>
-         <div style="font-size:8.5px; font-weight:600; letter-spacing:0.08em; text-transform:uppercase; color:#94a3b8; margin-bottom:2px;">Age / Gender</div>
+         <div style="font-size:8.5px; font-weight:700; letter-spacing:0.1em; text-transform:uppercase; color:#94a3b8; margin-bottom:2px;">Age / Gender</div>
          <div style="font-size:11px; font-weight:600; color:#1e293b;">${ageGender}</div>
        </div>
        <div>
-         <div style="font-size:8.5px; font-weight:600; letter-spacing:0.08em; text-transform:uppercase; color:#94a3b8; margin-bottom:2px;">Lab ID</div>
+         <div style="font-size:8.5px; font-weight:700; letter-spacing:0.1em; text-transform:uppercase; color:#94a3b8; margin-bottom:2px;">Lab ID</div>
          <div style="font-size:11px; font-weight:600; color:#1e293b;">${escapeHtml(patient.labId || patient.patientId)}</div>
        </div>
        <div>
-         <div style="font-size:8.5px; font-weight:600; letter-spacing:0.08em; text-transform:uppercase; color:#94a3b8; margin-bottom:2px;">Report Date</div>
+         <div style="font-size:8.5px; font-weight:700; letter-spacing:0.1em; text-transform:uppercase; color:#94a3b8; margin-bottom:2px;">Report Date</div>
          <div style="font-size:11px; font-weight:600; color:#1e293b;">${date}</div>
        </div>
     </div>`;
@@ -280,6 +281,11 @@ export function buildHeaderTemplate(branding: TenantBrandingConfig, patient?: Pa
 
   return `
 <style>
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
   html, body {
     margin: 0 !important;
     padding: 0 !important;
@@ -287,45 +293,72 @@ export function buildHeaderTemplate(branding: TenantBrandingConfig, patient?: Pa
     font-family: 'Inter', system-ui, sans-serif;
   }
   .ph-wrapper {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
     width: 100%;
     margin: 0; padding: 0;
     box-sizing: border-box;
   }
   .ph-bar {
     width: 100%; height: ${height};
-    display: flex; align-items: center; justify-content: space-between;
-    padding: 0 32px; border-bottom: 1px solid #E5E7EB; background: white;
+    position: relative;
+    display: flex; align-items: center;
+    padding: 0 32px;
+    background: ${brandColor};
     box-sizing: border-box;
+    overflow: hidden;
   }
-  .ph-left { display: flex; align-items: center; gap: 12px; }
+  .ph-cascade-pattern {
+    position: absolute; top: 0; right: 0;
+    width: 180px; height: 100%;
+    z-index: 0; pointer-events: none;
+  }
+  .ph-content {
+    display: flex; align-items: center; gap: 14px;
+    z-index: 2; position: relative;
+  }
   .ph-icon {
-    width: 36px; height: 36px; border-radius: 12px;
-    background: linear-gradient(135deg, #2D4A9A 0%, #20BFDD 100%);
-    display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+    width: 38px; height: 38px; border-radius: 50%;
+    border: 2px solid rgba(255,255,255,0.4);
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
   }
   .ph-lab-info { display: flex; flex-direction: column; }
   .ph-tagline {
-    font-size: 9px; letter-spacing: 0.12em; text-transform: uppercase;
-    color: #9CA3AF; margin-bottom: 1px;
+    font-size: 9px; letter-spacing: 0.18em; text-transform: uppercase;
+    color: rgba(255,255,255,0.55); font-weight: 700;
   }
-  .ph-name { font-size: 14px; font-weight: 700; color: #2D4A9A; }
-  
-  .ph-right { display: flex; align-items: center; gap: 24px; }
-  .ph-nabl {
-    display: flex; align-items: center; gap: 6px; padding: 6px 12px;
-    border-radius: 8px; background-color: #EBF5FF; border: 1px solid #BFDBFE;
+  .ph-name {
+    font-size: 15px; font-weight: 800; color: white;
+    letter-spacing: -0.01em; margin-top: 1px;
   }
-  .ph-nabl span { font-size: 9px; font-weight: 600; color: #2D4A9A; }
-  
-  .ph-meta { text-align: right; display: flex; flex-direction: column; gap: 1px; }
-  .ph-meta-id { font-size: 10px; color: #9CA3AF; }
-  .ph-meta-page { font-size: 10px; color: #6B7280; }
 </style>
 <div class="ph-wrapper">
   <div class="ph-bar">
-    <div class="ph-left">
+    <svg class="ph-cascade-pattern" viewBox="0 0 180 80" preserveAspectRatio="none">
+      <rect x="140" y="0" width="40" height="80" fill="rgba(255,255,255,0.08)"/>
+      <rect x="120" y="0" width="20" height="60" fill="rgba(255,255,255,0.06)"/>
+      <rect x="100" y="0" width="20" height="40" fill="rgba(255,255,255,0.04)"/>
+      <rect x="80" y="0" width="20" height="24" fill="rgba(255,255,255,0.025)"/>
+      <circle cx="140" cy="10" r="3" fill="rgba(255,255,255,0.45)"/>
+      <circle cx="140" cy="26" r="2.5" fill="rgba(255,255,255,0.35)"/>
+      <circle cx="140" cy="42" r="2" fill="rgba(255,255,255,0.25)"/>
+      <circle cx="120" cy="10" r="2.5" fill="rgba(255,255,255,0.3)"/>
+      <circle cx="120" cy="26" r="2" fill="rgba(255,255,255,0.2)"/>
+      <circle cx="100" cy="10" r="2" fill="rgba(255,255,255,0.2)"/>
+      <circle cx="160" cy="14" r="3.5" fill="rgba(255,255,255,0.55)"/>
+      <circle cx="160" cy="34" r="3" fill="rgba(255,255,255,0.4)"/>
+      <circle cx="160" cy="54" r="2.5" fill="rgba(255,255,255,0.3)"/>
+      <circle cx="160" cy="70" r="2" fill="rgba(255,255,255,0.2)"/>
+      <line x1="160" y1="14" x2="160" y2="70" stroke="rgba(255,255,255,0.08)" stroke-width="0.8"/>
+      <line x1="140" y1="10" x2="140" y2="42" stroke="rgba(255,255,255,0.06)" stroke-width="0.8"/>
+      <line x1="120" y1="10" x2="120" y2="26" stroke="rgba(255,255,255,0.05)" stroke-width="0.8"/>
+    </svg>
+    <div class="ph-content">
       <div class="ph-icon">
-         <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
+         <svg width="16" height="16" viewBox="0 0 18 18" fill="none">
            <path d="M9 2v14M2 9h14" stroke="white" stroke-width="2.2" stroke-linecap="round"/>
            <circle cx="9" cy="9" r="6.5" stroke="white" stroke-width="1.2" opacity="0.45"/>
          </svg>
@@ -333,13 +366,6 @@ export function buildHeaderTemplate(branding: TenantBrandingConfig, patient?: Pa
       <div class="ph-lab-info">
         <div class="ph-tagline">DIAGNOSTIC LABORATORY</div>
         <div class="ph-name">${labNameEscaped}</div>
-      </div>
-    </div>
-
-    <div class="ph-right">
-      <div class="ph-meta">
-        <div class="ph-meta-id">Report ID: ${escapeHtml(patient?.reportId || 'N/A')}</div>
-        <div class="ph-meta-page">In-Depth Profile &middot; Page <span class="pageNumber"></span> of <span class="totalPages"></span></div>
       </div>
     </div>
   </div>
@@ -350,23 +376,39 @@ export function buildHeaderTemplate(branding: TenantBrandingConfig, patient?: Pa
 export function buildFooterTemplate(branding: TenantBrandingConfig): string {
   const height = branding.footerHeight ?? '36px';
   const label = branding.footerText ?? branding.labName;
+  const brandColor = branding.primaryColor;
 
   return `
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body { margin: 0 !important; padding: 0 !important; -webkit-print-color-adjust: exact !important; }
+</style>
 <div style="
+  position:absolute;
+  bottom:0;
+  left:0;
+  right:0;
   width:100%;
   height:${height};
   display:flex;
-  justify-content:space-between;
   align-items:center;
-  padding:0 20px;
-  border-top:1px solid #e2e8f0;
+  justify-content:space-between;
+  padding:0 32px;
+  background:${brandColor};
   font-family:'Inter','Segoe UI',system-ui,sans-serif;
-  font-size:10px;
-  color:#94a3b8;
-  box-sizing:border-box;
+  font-size:9px;
+  color:rgba(255,255,255,0.75);
+  overflow:hidden;
 ">
-  <span>${label}</span>
-  <span>Page <span class="pageNumber"></span> of <span class="totalPages"></span></span>
+  <svg style="position:absolute;top:0;right:0;width:60px;height:100%;z-index:0;pointer-events:none;" viewBox="0 0 60 36" preserveAspectRatio="none">
+    <rect x="40" y="0" width="20" height="36" fill="rgba(255,255,255,0.06)"/>
+    <rect x="25" y="0" width="15" height="24" fill="rgba(255,255,255,0.04)"/>
+    <circle cx="48" cy="10" r="2" fill="rgba(255,255,255,0.3)"/>
+    <circle cx="48" cy="24" r="1.5" fill="rgba(255,255,255,0.2)"/>
+    <circle cx="33" cy="10" r="1.5" fill="rgba(255,255,255,0.15)"/>
+  </svg>
+  <span style="z-index:1;font-weight:600;">${label}</span>
+  <span style="z-index:1;">Page <span class="pageNumber"></span> of <span class="totalPages"></span></span>
 </div>`;
 }
 
