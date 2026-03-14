@@ -1,521 +1,549 @@
-# Patient Mobile Viewer — Testing & Customization Guide
+# Patient Mobile Viewer — Complete Guide
 
 ## What Is This?
 
 When a patient receives a printed lab report, the **cover page and back page both contain a QR code**.
-Scanning that QR code opens a **mobile-friendly web page** in their browser — no app install, no login required.
 
-The page shows their lab results in plain language: overall health score, which parameters are flagged, and any recommendations.
+- **Scan it** with a phone camera → opens the mobile viewer in the browser
+- **Click it** in a PDF viewer (Chrome, Adobe, etc.) → opens the same URL directly
+
+No app install. No login. Just a link that works on any phone browser.
+
+The page shows their results in plain language: overall health score, flagged parameters, and AI recommendations.
 
 ---
 
 ## How It Works (Flow)
 
 ```
-1. Lab generates report
-   POST /reports/generate  (with VIEWER_BASE_URL set)
-        ↓
-2. Engine creates a secure token
-   viewer/tokens/<64-char-hex>.json  ←  expiry, patientId, tenantId
-   viewer/data/<64-char-hex>.json    ←  patient-safe payload (score, profiles, branding)
-        ↓
-3. Real QR code generated from URL:
-   https://{VIEWER_BASE_URL}/view/<token>
-        ↓
-4. QR is injected into the PDF (cover page + back page)
-        ↓
-5. Patient scans QR → browser opens → GET /view/<token>
-        ↓
-6. Server looks up token → renders mobile HTML → sent back in one response
+Tenant config:  webViewer: true
+Environment:    VIEWER_BASE_URL=https://your-domain.com
+                         ↓
+Report generated (CLI or API)
+                         ↓
+Secure 64-char token created
+  viewer/tokens/<token>.json   ← expiry, patientId, tenantId
+  viewer/data/<token>.json     ← patient-safe payload (score, profiles, branding)
+                         ↓
+Real QR code generated: https://your-domain.com/view/<token>
+QR injected into cover page + back page of PDF
+QR is also a clickable <a href> link in the PDF
+                         ↓
+CLI output shows:
+  🔗 Patient Viewer
+    URL:  https://your-domain.com/view/<token>
+                         ↓
+Patient scans QR or clicks link
+  GET /view/<token>  → renders mobile HTML page
+  GET /api/viewer/<token>  → returns JSON payload
 ```
+
+Both conditions must be true to get a real QR code:
+
+| `webViewer` in tenant config | `VIEWER_BASE_URL` env var | Result |
+|---|---|---|
+| `false` | not set | Decorative placeholder QR |
+| `false` | set | Decorative placeholder QR |
+| `true` | not set | Decorative placeholder QR |
+| `true` | set | **Real scannable + clickable QR** |
 
 ---
 
-## Part 1 — How to Test It Yourself
+## Part 1 — Enabling the Viewer (Per-Tenant Config)
 
-### Step 1: Enable the viewer feature
+The viewer is controlled **per tenant** in `src/config/clients.config.ts`.
 
-The viewer is **off by default**. Set the `VIEWER_BASE_URL` environment variable to turn it on:
+### Current Status
 
-```bash
-# For local testing, use localhost
-VIEWER_BASE_URL=http://localhost:3000 npm run dev
-```
+| Tenant | `webViewer` | Notes |
+|--------|-------------|-------|
+| `demo` | `true` | Sai Health Labs — viewer enabled |
+| `tenant-beta` | `true` | NexaHealth Analytics — viewer enabled |
+| `tenant-alpha` | `false` | Essential tier — no cover/back pages, disabled |
 
-The server will start and print:
-```
-Smart Report Engine running on http://0.0.0.0:3000
-```
+### To Enable for a Tenant
 
----
+Open `src/config/clients.config.ts` and add `webViewer: true`:
 
-### Step 2: Generate a report
-
-In a **second terminal**, send a request to the API:
-
-```bash
-curl -s -X POST http://localhost:3000/reports/generate \
-  -H "Content-Type: application/json" \
-  -d @examples/sample-report.json \
-  | python3 -m json.tool | head -5
-```
-
-You should see `"success": true`.
-
----
-
-### Step 3: Find your token
-
-```bash
-ls viewer/tokens/
-```
-
-You will see a file like:
-```
-a3f7b9c1d4e5f6a7b8c9d0e1f2a3b4c5d6e7f8a9b0c1d2e3f4a5b6c7d8e9f0a1.json
-```
-
-That 64-character name **is your token**. Copy it.
-
-```bash
-# Read the token metadata
-cat viewer/tokens/<your-token>.json
-```
-
-Output:
-```json
-{
-  "token": "a3f7b9c1...",
-  "tenantId": "demo",
-  "patientId": "PAT-2026-SAMPLE",
-  "reportDisplayId": "RPT-2026-MPLE",
-  "reportDate": "14 March 2026",
-  "createdAt": "2026-03-14T08:31:11.617Z",
-  "expiresAt": "2026-06-12T08:31:11.617Z"
-}
-```
-
----
-
-### Step 4: Open the viewer in your browser
-
-Open this URL in your browser (or on your phone if both are on the same network):
-
-```
-http://localhost:3000/view/<your-token>
-```
-
-You will see the **animated mobile viewer page** with:
-- Branded splash screen (fades after ~2 seconds)
-- Animated health score gauge
-- Profile cards (tap to expand)
-- Range bars for each parameter
-- AI recommendations (if the report has them)
-
----
-
-### Step 5: Test the JSON API
-
-For developers — get the raw patient payload as JSON:
-
-```bash
-curl http://localhost:3000/api/viewer/<your-token> | python3 -m json.tool
-```
-
----
-
-### Step 6: Test error pages
-
-**Expired token** — manually edit the token file:
-```bash
-# Set expiresAt to the past
-python3 -c "
-import json
-with open('viewer/tokens/<your-token>.json') as f: d = json.load(f)
-d['expiresAt'] = '2020-01-01T00:00:00.000Z'
-with open('viewer/tokens/<your-token>.json', 'w') as f: json.dump(d, f)
-print('Done')
-"
-
-# Now visit it — should show the expired page
-curl http://localhost:3000/view/<your-token> | grep -o '<title>.*</title>'
-# Output: <title>Report Link Expired</title>
-```
-
-**Invalid token:**
-```bash
-curl http://localhost:3000/view/notarealtoken | grep -o '<title>.*</title>'
-# Output: <title>Invalid Report Link</title>
-```
-
----
-
-### Step 7: Test with a real phone (on same Wi-Fi)
-
-1. Find your machine's local IP:
-   ```bash
-   ipconfig | grep IPv4   # Windows
-   ```
-2. Start the server with that IP as the viewer base:
-   ```bash
-   VIEWER_BASE_URL=http://192.168.1.x:3000 npm run dev
-   ```
-3. Generate a report (Step 2 above)
-4. Get the token (Step 3)
-5. On a phone browser, open: `http://192.168.1.x:3000/view/<token>`
-
-Or generate a PDF (`--pdf` flag) and open `output/report.pdf` — the QR codes inside are real and scannable.
-
----
-
-### Step 8: Verify token auto-cleanup on startup
-
-Tokens expire after 90 days. On server restart, expired tokens are deleted automatically:
-
-```bash
-# Create an already-expired token by manipulating expiresAt, then restart the server
-# After restart, check viewer/tokens/ — it should be empty
-ls viewer/tokens/
-```
-
----
-
-## Part 2 — Customizing the Mobile Frontend
-
-The entire mobile viewer is a **single TypeScript file** that returns an HTML string:
-
-```
-src/viewer/templates/viewer.page.ts
-```
-
-There is no build step, no React/Vue/Svelte, no bundler — just a function that returns a string of HTML. You edit the file and changes are live on next server restart (or instantly with `npm run dev` hot reload).
-
----
-
-### File Structure
-
-```
-src/viewer/templates/
-├── viewer.page.ts        ← MAIN FILE: entire mobile UI lives here
-└── viewer-error.page.ts  ← Error pages (expired + invalid link)
-```
-
----
-
-### Sections in viewer.page.ts
-
-The `renderViewerPage(payload)` function builds the page in these sections:
-
-| Section | What it renders | Key CSS class |
-|---------|----------------|---------------|
-| **Splash screen** | Brand-colored full-screen intro with logo, rings, progress bar | `.splash` |
-| **Header** | Sticky top bar with lab logo + name | `.header` |
-| **Hero** | Score gauge, severity message, stat pills (normal/flagged/critical) | `.hero` |
-| **Profiles** | Expandable accordion cards for each test profile | `.profile-card` |
-| **Parameters** | Each parameter row with value, range bar, status pill | `.param-row` |
-| **Recommendations** | AI suggestion cards with disclaimer | `.rec-card` |
-| **Footer** | Lab contact, disclaimer, branding | `.footer` |
-
----
-
-### How to Change Colors
-
-Colors come from **CSS variables** set at the top of the `<style>` block. They are built from the tenant's `primaryColor`:
-
-```typescript
-// In viewer.page.ts — these variables drive the entire theme
---primary:     ${primary}
---primary-10:  ${primary}1a   (10% opacity version for backgrounds)
---healthy:     #10b981        (green — normal results)
---monitor:     #f59e0b        (amber — needs attention)
---attention:   #ef4444        (red — critical)
-```
-
-To change the **overall severity color scheme**, edit these three lines in the CSS variables block.
-
-To change the **tenant's primary color** (the brand color for the header, buttons, gauge), update the tenant config:
-```typescript
-// src/config/clients.config.ts
-branding: {
-  primaryColor: '#2D4A9A',   // ← change this
-  ...
-}
-```
-
----
-
-### How to Change the Splash Screen
-
-Find the `splash` section in `viewer.page.ts`:
-
-```html
-<!-- SPLASH SCREEN — rendered as HTML string in viewer.page.ts -->
-<div class="splash" id="splash">
-  <div class="splash-rings">
-    <div class="ring ring-1"></div>
-    <div class="ring ring-2"></div>
-    <div class="ring ring-3"></div>
-  </div>
-  <div class="splash-logo">
-    <!-- Logo image or initials badge here -->
-  </div>
-  <div class="splash-lab">${branding.labName}</div>
-  <div class="splash-progress-bar">
-    <div class="splash-progress-fill"></div>
-  </div>
-</div>
-```
-
-**To change animation duration** — find this CSS:
-```css
-.splash-progress-fill {
-  animation: progress 1.6s ease forwards;  /* ← change 1.6s */
-}
-```
-And the JS timeout:
-```javascript
-setTimeout(() => { splash.classList.add('hidden'); }, 1900); // ← change 1900ms
-```
-
-**To add a tagline** — add text inside `.splash-lab`:
-```html
-<div class="splash-lab">${branding.labName}</div>
-<div class="splash-tagline">Your health, clearly explained</div>
-```
-
----
-
-### How to Change the Score Gauge
-
-The gauge is a **270° SVG arc**. Key values:
-
-```typescript
-const GAUGE_RADIUS = 54;
-const GAUGE_CIRCUMFERENCE = 2 * Math.PI * GAUGE_RADIUS; // 339.3
-const filled = (score / 100) * (GAUGE_CIRCUMFERENCE * 0.75); // 75% of circle = 270°
-```
-
-**To change gauge size** — update `GAUGE_RADIUS` and the SVG `width`/`height`/`viewBox`.
-
-**To change gauge colors** — find:
-```css
-.gauge-fill {
-  stroke: var(--primary);   /* ← the filled arc color */
-}
-.gauge-bg {
-  stroke: #e5e7eb;           /* ← the empty arc color */
-}
-```
-
-**To change the score animation speed** — find:
-```javascript
-const duration = 1200; // ms ← change this
-```
-
----
-
-### How to Change the Severity Message Text
-
-Find the `getSeverityConfig()` function in `viewer.page.ts`:
-
-```typescript
-function getSeverityConfig(severity: string, score: number) {
-  if (severity === 'stable')   return { message: 'Your results look healthy', ... };
-  if (severity === 'monitor')  return { message: 'Some areas need attention', ... };
-  if (severity === 'critical') return { message: 'Please consult your doctor', ... };
-}
-```
-
-Edit the `message` strings to change what patients see below their score.
-
----
-
-### How to Change Profile Cards
-
-Each profile displays as an **accordion card**. The expand/collapse logic is pure CSS + 3 lines of JS.
-
-**Card header** — shows profile name + summary:
-```html
-<div class="profile-header" onclick="toggleProfile(${idx})">
-  <span class="profile-name">${profile.name}</span>
-  <span class="profile-badge">${badgeHtml}</span>
-</div>
-```
-
-**To auto-expand all cards** (instead of just flagged ones), find:
-```typescript
-const isOpen = profile.severity !== 'stable'; // ← change to: const isOpen = true;
-```
-
-**To change the parameter row layout**, edit the `renderParamRow()` function — it returns the HTML for each test result row.
-
----
-
-### How to Change the Range Bar
-
-The range bar is a visual slider showing where the patient's value falls relative to the reference range.
-
-Find `renderRangeBar()` in `viewer.page.ts`:
-
-```typescript
-function renderRangeBar(value: number, min?: number, max?: number, status?: string): string {
-  const PAD = 0.35; // 35% padding on each side of the reference range
-  // ...
-}
-```
-
-**The green zone** (normal range highlight) is positioned using CSS `left` and `width` percentages.
-**The dot** (patient's value) is positioned using `left` percentage.
-
-To change the **green zone color**:
-```css
-.range-normal-zone {
-  background: #bbf7d0;  /* ← change this */
-}
-```
-
-To change the **dot colors** by status:
-```css
-.range-dot[data-status="high"]     { background: #ef4444; }
-.range-dot[data-status="low"]      { background: #3b82f6; }
-.range-dot[data-status="critical"] { background: #7c3aed; }
-.range-dot[data-status="normal"]   { background: #10b981; }
-```
-
----
-
-### How to Change the Footer / Disclaimer
-
-Find the footer section near the bottom of `renderViewerPage()`:
-
-```typescript
-<div class="footer">
-  <div class="disclaimer">
-    This report is a summary of laboratory findings...
-    <!-- Edit this text -->
-  </div>
-  <div class="footer-brand">
-    Powered by <strong>Smart Health Engine</strong>
-  </div>
-</div>
-```
-
----
-
-### How to Add a New Section
-
-1. Write a render function that returns an HTML string:
-   ```typescript
-   function renderMySection(payload: ViewerPayload): string {
-     return `
-       <section class="my-section">
-         <h2>My New Section</h2>
-         ...
-       </section>
-     `;
-   }
-   ```
-
-2. Add the CSS inside the `<style>` block at the top of `renderViewerPage()`.
-
-3. Call it in the main template string:
-   ```typescript
-   ${renderHero(payload)}
-   ${renderProfiles(payload)}
-   ${renderMySection(payload)}   // ← add here
-   ${renderRecommendations(payload)}
-   ```
-
----
-
-## Part 3 — Configuration Reference
-
-### Per-Tenant Config (`src/config/clients.config.ts`)
-
-| Flag | Default | Description |
-|------|---------|-------------|
-| `webViewer` | `false` | **Master switch per tenant.** When `true`, a patient-facing mobile viewer is generated for each report. A real scannable QR code is embedded in the PDF cover and back pages. Requires `VIEWER_BASE_URL` env var to be set. |
-
-Example — enable viewer for a tenant:
 ```typescript
 const MY_CLIENT_CONFIG: TenantConfig = {
   tenantId:   'my-client',
   reportType: 'inDepth',
   pageOrder:  [...INDEPTH_PAGE_ORDER],
   ...DEFAULT_FLAGS,
-  webViewer: true,     // ← enable patient mobile viewer
-  branding: { ... },
+  webViewer: true,      // ← add this line
+  branding: {
+    ...DEFAULT_BRANDING,
+    labName:      'My Lab Name',
+    primaryColor: '#1A73E8',
+    // ...
+  },
 };
 ```
 
-### Environment Variables
+Then register it in `CLIENT_REGISTRY` at the bottom of the same file. No other file needs to change.
 
-| Variable | Default | Description |
-|----------|---------|-------------|
-| `VIEWER_BASE_URL` | *(not set)* | Base URL embedded in QR codes. **Must be set** together with `webViewer: true` to enable real QR codes. When unset, QR codes are decorative even if `webViewer` is true. |
-| `VIEWER_TOKEN_TTL_DAYS` | `90` | How many days a viewer token is valid before it expires. |
+### To Disable for a Tenant
 
-### Both conditions must be true for real QR codes:
+Either set `webViewer: false` or remove the line entirely (defaults to `false`).
 
-| `webViewer` | `VIEWER_BASE_URL` | Result |
-|-------------|-------------------|--------|
-| `false` | not set | Decorative QR placeholder |
-| `false` | set | Decorative QR placeholder |
-| `true` | not set | Decorative QR placeholder + info message |
-| `true` | set | **Real scannable QR code + viewer link** |
+---
 
-**Example `.env` for production:**
+## Part 2 — Environment Setup
+
+### Local Development
+
+```bash
+# Start the server with viewer enabled
+VIEWER_BASE_URL=http://localhost:3000 npm run dev
+```
+
+### Test on a Real Phone (Same Wi-Fi)
+
+```bash
+# Find your machine's local IP first
+ipconfig | grep IPv4    # Windows
+# e.g. 192.168.1.34
+
+# Start with your LAN IP
+VIEWER_BASE_URL=http://192.168.1.34:3000 npm run dev
+```
+
+Then scan the QR code in the PDF with your phone — it will open on your phone's browser.
+
+### Production
+
 ```env
-VIEWER_BASE_URL=https://reports.saihealthlabs.com
+VIEWER_BASE_URL=https://reports.yourdomain.com
 VIEWER_TOKEN_TTL_DAYS=90
 ```
 
-**Example for local development (phone on same Wi-Fi):**
-```env
-VIEWER_BASE_URL=http://192.168.1.100:3000
-VIEWER_TOKEN_TTL_DAYS=7
+The `VIEWER_BASE_URL` must be publicly reachable — it's the domain your patients will hit when they scan the QR.
+
+---
+
+## Part 3 — How to Test It Yourself
+
+### Method A — Using `npm test` (quickest)
+
+`npm test` automatically sets `VIEWER_BASE_URL=http://localhost:3000` and generates a PDF.
+
+```bash
+npm test
+```
+
+Output will include:
+
+```
+✓ PDF generated successfully
+  File:     D:\...\output\report.pdf
+  Size:     2166.9 KB
+  Score:    90/100
+  ...
+
+🔗 Patient Viewer
+  URL:  http://localhost:3000/view/cd327c70cdb91f1456af331...
+```
+
+1. Start the server: `npm run dev`
+2. Open that URL in your browser
+3. Or open `output/report.pdf` and **click** the QR code on the cover or back page
+
+---
+
+### Method B — Using the API
+
+**Step 1** — Start the server with `VIEWER_BASE_URL`:
+```bash
+VIEWER_BASE_URL=http://localhost:3000 npm run dev
+```
+
+**Step 2** — Generate a report:
+```bash
+curl -s -X POST http://localhost:3000/reports/generate \
+  -H "Content-Type: application/json" \
+  -d @examples/indepth-report.json | python3 -m json.tool | head -10
+```
+
+**Step 3** — Find the token:
+```bash
+ls viewer/tokens/
+# a3f7b9c1d4e5...64chars....json
+```
+
+**Step 4** — Open the viewer:
+```
+http://localhost:3000/view/<your-token>
+```
+
+**Step 5** — Get raw JSON data:
+```bash
+curl http://localhost:3000/api/viewer/<your-token> | python3 -m json.tool
 ```
 
 ---
 
-## Part 4 — Token Storage
+### Testing Error Pages
 
-Tokens are stored as plain JSON files on the server filesystem:
-
+**Expired token:**
+```bash
+# Manually expire a token
+python3 -c "
+import json
+token = open('viewer/tokens/').readline()   # get filename
+with open(f'viewer/tokens/{token}') as f: d = json.load(f)
+d['expiresAt'] = '2020-01-01T00:00:00.000Z'
+with open(f'viewer/tokens/{token}', 'w') as f: json.dump(d, f)
+"
+# Visit the link — shows amber 'Report Link Expired' page
 ```
-viewer/
-  tokens/
-    <64-char-hex>.json    ← metadata: expiry, patientId, tenantId
-  data/
-    <64-char-hex>.json    ← full patient payload (profiles, scores, branding)
-```
 
-- **Lazy cleanup**: when an expired token is visited, both files are deleted immediately.
-- **Startup cleanup**: when the server starts, all expired tokens are deleted automatically.
-- **Manual revoke**: delete the token file to instantly invalidate that QR code.
-  ```bash
-  rm viewer/tokens/<token>.json viewer/data/<token>.json
-  ```
+**Invalid token:**
+```bash
+curl http://localhost:3000/view/notarealtoken
+# Shows red 'Invalid Report Link' page
+```
 
 ---
 
-## Part 5 — Error Pages (viewer-error.page.ts)
+### Manually Revoking a QR Code
 
-Two error pages exist in `src/viewer/templates/viewer-error.page.ts`:
+Delete both files to immediately invalidate the link:
+```bash
+rm viewer/tokens/<token>.json viewer/data/<token>.json
+```
 
-| Condition | Function | What patient sees |
-|-----------|----------|-------------------|
-| Token is 64-char hex but expired/deleted | `renderExpiredPage(labName?)` | Amber icon, "Report Link Expired", contact lab message |
-| Token is not a valid hex string | `renderInvalidPage()` | Red icon, "Invalid Report Link" |
+Any attempt to open that URL will now show the expired page.
 
-To customize the expired page message, edit `renderExpiredPage()`:
+---
+
+## Part 4 — The PDF QR Code (Clickable + Scannable)
+
+The QR code in the PDF does two things:
+
+| Action | Works when |
+|--------|-----------|
+| **Scan with phone camera** | `webViewer: true` + `VIEWER_BASE_URL` set |
+| **Click in PDF viewer** | Same — QR is wrapped in an `<a href>` link |
+
+When `webViewer` is `false` or `VIEWER_BASE_URL` is not set, the QR is a **decorative branded placeholder** — it looks like a QR code but is not scannable and not clickable.
+
+The QR appears on two pages:
+- **Cover page** — top-right of the patient card, labelled `SCAN TO VIEW`
+- **Back page** — bottom-right of the footer area, labelled `Scan to view your results`
+
+---
+
+## Part 5 — Editing the Mobile Viewer HTML
+
+The entire mobile viewer UI lives in **one file**:
+
+```
+src/viewer/templates/viewer.page.ts
+```
+
+It is a TypeScript function that returns a plain HTML string. No React, no Vue, no bundler. Just edit the file and restart the server — changes appear immediately with `npm run dev` hot reload.
+
+### File Map
+
+```
+src/viewer/
+├── viewer.types.ts          ← data types (ViewerPayload, ViewerProfile, etc.)
+├── viewer.service.ts        ← builds ViewerPayload from NormalizedReport
+├── token.service.ts         ← create/lookup/cleanup tokens (files)
+├── qr.service.ts            ← generates QR SVG from URL
+├── viewer.route.ts          ← HTTP routes: GET /view/:token, GET /api/viewer/:token
+└── templates/
+    ├── viewer.page.ts       ← MAIN FILE: entire mobile UI
+    └── viewer-error.page.ts ← expired + invalid link error pages
+```
+
+---
+
+### Page Sections (viewer.page.ts)
+
+The `renderViewerPage(payload)` function builds the page top-to-bottom:
+
+| Section | What the patient sees | Key function / CSS class |
+|---------|----------------------|--------------------------|
+| **Splash** | Full-screen brand color, logo, pulsing rings, progress bar. Fades in ~2 sec | `#splash` |
+| **Header** | Sticky top bar with lab name and logo | `.header` |
+| **Hero** | Animated score gauge (270° arc), severity message, stat pills | `.hero`, `.gauge-wrap` |
+| **Profiles** | Accordion cards — one per test (e.g. CBC, Lipid Panel) | `.profile-card` |
+| **Parameters** | Each test result row: value, range bar, status badge | `.param-row`, `renderParamRow()` |
+| **Recommendations** | AI suggestion cards with disclaimer (only if present) | `.rec-card` |
+| **Footer** | Lab name, disclaimer text, "Powered by" | `.footer` |
+
+---
+
+### How to Change the Brand Color
+
+The viewer automatically uses the tenant's `primaryColor` from `clients.config.ts`. To change it:
+
+```typescript
+// src/config/clients.config.ts
+branding: {
+  primaryColor: '#f97407',   // ← change this hex value
+}
+```
+
+That one change updates the header, gauge, splash screen, buttons, and badges — everything uses CSS variables derived from this color.
+
+---
+
+### How to Change the Splash Screen
+
+Find the splash HTML block inside `renderViewerPage()` in `viewer.page.ts`.
+
+**Change how long it shows:**
+```css
+/* Inside the <style> block in viewer.page.ts */
+.splash-progress-fill {
+  animation: progress 1.6s ease forwards;  /* ← change 1.6s */
+}
+```
+```javascript
+// Inside the <script> block at the bottom
+setTimeout(() => { splash.classList.add('hidden'); }, 1900); // ← match the CSS (+ ~300ms)
+```
+
+**Add a tagline under the lab name:**
+```html
+<div class="splash-lab">${branding.labName}</div>
+<div class="splash-tagline">Your health, clearly explained</div>  <!-- ← add this -->
+```
+Then add CSS for `.splash-tagline` inside the `<style>` block.
+
+**Change the ring colors:**
+```css
+.ring {
+  border-color: rgba(255, 255, 255, 0.15);  /* ← change opacity or color */
+}
+```
+
+---
+
+### How to Change the Score Gauge
+
+The gauge is a 270° SVG arc drawn with `stroke-dasharray`.
+
+**Change gauge size:**
+```typescript
+// In viewer.page.ts — find these constants
+const GAUGE_RADIUS = 54;           // ← makes gauge bigger/smaller
+const GAUGE_SIZE   = 140;          // ← SVG viewBox size
+```
+Also update the SVG `width`, `height`, and `viewBox` attributes to match.
+
+**Change gauge arc color:**
+```css
+.gauge-fill {
+  stroke: var(--primary);  /* ← uses tenant primary color — change to any hex */
+}
+.gauge-bg {
+  stroke: #e5e7eb;          /* ← the unfilled part of the arc */
+}
+```
+
+**Change score counter animation speed:**
+```javascript
+const duration = 1200; // ms  ← find this in the <script> block
+```
+
+**Change severity message text** (what shows below the score):
+```typescript
+// Find getSeverityConfig() in viewer.page.ts
+function getSeverityConfig(severity: string, score: number) {
+  if (severity === 'stable')   return { label: 'Healthy',   message: 'Your results look great' };
+  if (severity === 'monitor')  return { label: 'Monitor',   message: 'Some areas need attention' };
+  if (severity === 'critical') return { label: 'Critical',  message: 'Please consult your doctor' };
+  //                                              ↑ label on badge        ↑ text below score — edit these
+}
+```
+
+---
+
+### How to Change Profile Cards
+
+**Auto-expand all cards** (default: only flagged profiles are open):
+```typescript
+// Find this line in renderProfiles() in viewer.page.ts
+const isOpen = profile.severity !== 'stable';
+// Change to:
+const isOpen = true;  // ← all expanded
+// Or:
+const isOpen = false; // ← all collapsed
+```
+
+**Change what each parameter row shows:**
+Edit the `renderParamRow()` function. It receives a `ViewerParameter` object:
+```typescript
+interface ViewerParameter {
+  name:         string;   // e.g. "Haemoglobin"
+  value:        number;
+  unit:         string;   // e.g. "g/dL"
+  referenceMin: number | undefined;
+  referenceMax: number | undefined;
+  status:       string;   // "normal" | "high" | "low" | "critical"
+  displayName:  string | undefined;
+}
+```
+
+---
+
+### How to Change the Range Bar
+
+The range bar visually shows where the patient's value falls within the reference range.
+
+**Change the green "normal zone" color:**
+```css
+.range-normal-zone {
+  background: #bbf7d0;   /* ← change this */
+}
+```
+
+**Change the dot color by status:**
+```css
+.range-dot[data-status="normal"]   { background: #10b981; }  /* green */
+.range-dot[data-status="high"]     { background: #ef4444; }  /* red */
+.range-dot[data-status="low"]      { background: #3b82f6; }  /* blue */
+.range-dot[data-status="critical"] { background: #7c3aed; }  /* purple */
+```
+
+**Change the padding around the reference range** (how much extra space shows on each side):
+```typescript
+function renderRangeBar(...) {
+  const PAD = 0.35;  // 35% padding each side ← change this (0.0 = no padding, 0.5 = 50% padding)
+}
+```
+
+---
+
+### How to Change the Footer / Disclaimer Text
+
+Find the footer section near the bottom of `renderViewerPage()`:
+
+```typescript
+// Inside the HTML template string in renderViewerPage()
+<p class="disclaimer-text">
+  This report is a summary of laboratory findings and is generated by Smart Health Engine.
+  <!-- ↑ Edit this text directly -->
+</p>
+```
+
+---
+
+### How to Add a New Section
+
+1. Write a render function in `viewer.page.ts`:
+```typescript
+function renderMyNewSection(payload: ViewerPayload): string {
+  return `
+    <section class="my-section app-section">
+      <h2 class="section-title">My New Section</h2>
+      <p>${payload.patientName ?? 'Patient'}, here is some extra info...</p>
+    </section>
+  `;
+}
+```
+
+2. Add CSS for it inside the `<style>` block at the top of `renderViewerPage()`.
+
+3. Call it in the main template string — place it between whichever sections make sense:
+```typescript
+// Inside the return `...` template literal
+${renderHero(payload)}
+${renderProfiles(payload)}
+${renderMyNewSection(payload)}      // ← add here
+${renderRecommendations(payload)}
+${renderFooter(payload)}
+```
+
+---
+
+## Part 6 — Editing the Error Pages
+
+Error pages live in `src/viewer/templates/viewer-error.page.ts`.
+
+| Situation | Page shown | Styling |
+|-----------|-----------|---------|
+| Token looks like a valid hex but is expired or deleted | "Report Link Expired" | Amber icon |
+| Token is not a valid hex string (garbled URL) | "Invalid Report Link" | Red icon |
+
+**To change the expired page message:**
 ```typescript
 export function renderExpiredPage(labName?: string): string {
   const contact = labName ?? 'your laboratory';
   return `
     ...
-    <p>This report link has expired. Please contact ${contact} ...</p>
+    <h1>Report Link Expired</h1>          <!-- ← change heading -->
+    <p>This report link is no longer active.
+       Please contact ${contact} to get a new copy.</p>   <!-- ← change message -->
     ...
   `;
 }
+```
+
+**To change the invalid page message:**
+```typescript
+export function renderInvalidPage(): string {
+  return `
+    ...
+    <h1>Invalid Report Link</h1>           <!-- ← change heading -->
+    <p>This link does not appear to be valid...</p>   <!-- ← change message -->
+    ...
+  `;
+}
+```
+
+---
+
+## Part 7 — Token Storage & Lifetime
+
+```
+viewer/
+  tokens/
+    <64-char-hex>.json   ← metadata: token, tenantId, patientId, createdAt, expiresAt
+  data/
+    <64-char-hex>.json   ← full patient payload (profiles, scores, branding)
+```
+
+- Tokens live for **90 days** by default (`VIEWER_TOKEN_TTL_DAYS` env var to change)
+- This is **independent** of the 7-day report cache — patient can scan on Day 60 and it still works
+- **Lazy delete**: accessing an expired token deletes both files immediately
+- **Startup cleanup**: server startup scans and deletes all expired tokens automatically
+- **Manual revoke**: `rm viewer/tokens/<token>.json viewer/data/<token>.json`
+
+---
+
+## Part 8 — Environment Variable Reference
+
+| Variable | Default | Description |
+|----------|---------|-------------|
+| `VIEWER_BASE_URL` | *(not set)* | Public base URL for QR codes. Both `webViewer: true` AND this must be set for real QR codes. Example: `https://reports.yourdomain.com` |
+| `VIEWER_TOKEN_TTL_DAYS` | `90` | Days before a viewer token expires. |
+
+---
+
+## Quick Reference
+
+```bash
+# Run test — generates PDF + shows viewer URL
+npm test
+
+# Start server with viewer enabled (local)
+VIEWER_BASE_URL=http://localhost:3000 npm run dev
+
+# Start server with viewer enabled (phone on same Wi-Fi)
+VIEWER_BASE_URL=http://192.168.1.34:3000 npm run dev
+
+# Generate a report with viewer link via CLI
+VIEWER_BASE_URL=http://localhost:3000 npm run generate examples/indepth-report.json -- --pdf --no-cache --no-audit
+
+# Viewer routes
+GET /view/<token>         → mobile HTML page
+GET /api/viewer/<token>   → raw JSON payload
+
+# Revoke a token immediately
+rm viewer/tokens/<token>.json viewer/data/<token>.json
 ```
