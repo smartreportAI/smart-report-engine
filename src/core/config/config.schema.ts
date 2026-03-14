@@ -19,7 +19,26 @@ export const configSchema = z.object({
    * Example: "https://reports.saihealthlabs.com"
    * If not set, QR codes remain as decorative placeholders (backward-compatible).
    */
-  VIEWER_BASE_URL: z.string().url().optional(),
+  /**
+   * Accepts the URL as-is if valid; silently drops it (→ undefined) if it is
+   * missing the scheme or otherwise malformed.  This prevents a mis-configured
+   * env var from crashing the whole server — the viewer feature just won't
+   * generate QR codes until the value is corrected.
+   */
+  VIEWER_BASE_URL: z
+    .string()
+    .transform((val) => {
+      try {
+        new URL(val);          // throws if invalid
+        return val;
+      } catch {
+        console.warn(
+          `[config] VIEWER_BASE_URL "${val}" is not a valid URL — viewer/QR disabled.`,
+        );
+        return undefined;
+      }
+    })
+    .optional(),
   /** Viewer token TTL in days. Default: 90. */
   VIEWER_TOKEN_TTL_DAYS: z.coerce.number().int().positive().default(90),
 });
