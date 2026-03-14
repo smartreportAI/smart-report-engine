@@ -24,7 +24,7 @@ ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true \
 
 # ── 4. Install Node dependencies (cached layer) ──────────────────────────
 COPY package*.json ./
-RUN npm ci --omit=dev
+RUN npm ci
 
 # ── 5. Copy source & build ───────────────────────────────────────────────
 COPY . .
