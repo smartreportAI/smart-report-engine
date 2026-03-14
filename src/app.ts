@@ -8,8 +8,9 @@ import { reportRoutes } from './modules/reports/report.route';
 import { fhirRoutes } from './integrations/fhir/fhir.route';
 import { hl7Routes } from './integrations/hl7/hl7.route';
 import { errorResponse } from './shared/utils/response.utils';
-import { rateLimiter } from './core/rate-limit/rate-limit.service';
+import { rateLimiter, RATE_LIMIT_MAX_REQUESTS } from './core/rate-limit/rate-limit.service';
 import { metricsRoutes } from './metrics/metrics.route';
+import { viewerRoutes } from './viewer/viewer.route';
 import { randomUUID } from 'node:crypto';
 
 /* ---------------------------------------------------------------
@@ -51,8 +52,6 @@ export function buildApp() {
     : [
         'http://localhost:3000',
         'http://127.0.0.1:3000',
-        'https://company-website-dr65l6wn6-sais-projects-c150b1ba.vercel.app',
-        'https://company-website-7qmjnqle8-sais-projects-c150b1ba.vercel.app'
       ];
   app.register(cors, {
     origin: allowedOrigins.length > 0 ? allowedOrigins : true,
@@ -89,7 +88,7 @@ export function buildApp() {
     const result = rateLimiter.check(tenantId);
 
     // Always set rate-limit headers
-    reply.header('X-RateLimit-Limit', '20');
+    reply.header('X-RateLimit-Limit', String(RATE_LIMIT_MAX_REQUESTS));
     reply.header('X-RateLimit-Remaining', String(result.remaining));
     reply.header('X-RateLimit-Reset', String(Math.ceil(result.resetsAt / 1000)));
 
@@ -131,6 +130,7 @@ export function buildApp() {
   app.register(fhirRoutes);
   app.register(hl7Routes);
   app.register(metricsRoutes);
+  app.register(viewerRoutes);
 
   return app;
 }

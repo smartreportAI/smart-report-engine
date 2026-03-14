@@ -9,17 +9,9 @@
 import type { ReportPage, PageRenderContext } from '../../core/page-registry/page.types';
 import type { NormalizedReport } from '../../domain/models/report.model';
 import type { TenantBrandingConfig } from '../../modules/tenants/tenant.types';
+import { hexToRgb } from '../shared/index';
 
 /* ------------------------------------------------------------------ */
-
-function hexToRgb(hex: string): string {
-  const cleanHex = hex.replace('#', '');
-  if (cleanHex.length !== 6) return '0 0 0';
-  const r = parseInt(cleanHex.substring(0, 2), 16);
-  const g = parseInt(cleanHex.substring(2, 4), 16);
-  const b = parseInt(cleanHex.substring(4, 6), 16);
-  return `${r} ${g} ${b}`;
-}
 
 export const inDepthCoverPage: ReportPage = {
   name: 'indepth-cover',
@@ -27,6 +19,8 @@ export const inDepthCoverPage: ReportPage = {
   generate(ctx: PageRenderContext): string {
     const report = ctx.data as NormalizedReport;
     const branding = ctx.branding;
+    const viewerQrSvg = ctx.viewerQrSvg;
+    const viewerUrl = ctx.viewerUrl;
 
     // Use distinct cover color if configured, otherwise primary
     const brandColor = branding.coverColor ?? branding.primaryColor;
@@ -428,57 +422,28 @@ export const inDepthCoverPage: ReportPage = {
             <div class="cv-pid">Patient ID: <span>${report.patientId}</span></div>
           </div>
           <div class="cv-qr-col">
-            <div class="cv-qr-box">
-               <svg width="58" height="58" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+   ${viewerUrl ? `<a href="${viewerUrl}" target="_blank" style="text-decoration:none;color:inherit;display:flex;flex-direction:column;align-items:center;gap:4px;">` : ''}
+            <div class="cv-qr-box" style="width:66px;height:66px;display:flex;align-items:center;justify-content:center;overflow:hidden;">
+               ${viewerQrSvg
+                 ? viewerQrSvg.replace(/<svg /, '<svg width="58" height="58" ')
+                 : `<svg width="58" height="58" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
                   <rect x="2" y="2" width="20" height="20" rx="3" stroke="#0f172a" stroke-width="2.5" fill="none"/>
                   <rect x="7" y="7" width="10" height="10" rx="1.5" fill="#0f172a"/>
                   <rect x="42" y="2" width="20" height="20" rx="3" stroke="#0f172a" stroke-width="2.5" fill="none"/>
                   <rect x="47" y="7" width="10" height="10" rx="1.5" fill="#0f172a"/>
                   <rect x="2" y="42" width="20" height="20" rx="3" stroke="#0f172a" stroke-width="2.5" fill="none"/>
                   <rect x="7" y="47" width="10" height="10" rx="1.5" fill="#0f172a"/>
-                  <rect x="26" y="2" width="4" height="4" fill="#0f172a"/>
-                  <rect x="32" y="2" width="4" height="4" fill="#0f172a"/>
-                  <rect x="38" y="2" width="4" height="4" fill="#0f172a"/>
-                  <rect x="26" y="8" width="4" height="4" fill="#0f172a"/>
-                  <rect x="34" y="8" width="4" height="4" fill="#0f172a"/>
-                  <rect x="26" y="14" width="4" height="4" fill="#0f172a"/>
-                  <rect x="32" y="14" width="4" height="4" fill="#0f172a"/>
-                  <rect x="38" y="14" width="4" height="4" fill="#0f172a"/>
-                  <rect x="2" y="26" width="4" height="4" fill="#0f172a"/>
-                  <rect x="10" y="26" width="4" height="4" fill="#0f172a"/>
-                  <rect x="18" y="26" width="4" height="4" fill="#0f172a"/>
-                  <rect x="2" y="32" width="4" height="4" fill="#0f172a"/>
-                  <rect x="18" y="32" width="4" height="4" fill="#0f172a"/>
-                  <rect x="2" y="38" width="4" height="4" fill="#0f172a"/>
-                  <rect x="10" y="38" width="4" height="4" fill="#0f172a"/>
                   <rect x="26" y="26" width="4" height="4" fill="#0f172a"/>
                   <rect x="34" y="26" width="4" height="4" fill="#0f172a"/>
-                  <rect x="42" y="26" width="4" height="4" fill="#0f172a"/>
-                  <rect x="54" y="26" width="4" height="4" fill="#0f172a"/>
-                  <rect x="62" y="26" width="4" height="4" fill="#0f172a"/>
-                  <rect x="26" y="34" width="4" height="4" fill="#0f172a"/>
                   <rect x="42" y="34" width="4" height="4" fill="#0f172a"/>
-                  <rect x="50" y="34" width="4" height="4" fill="#0f172a"/>
-                  <rect x="62" y="34" width="4" height="4" fill="#0f172a"/>
-                  <rect x="30" y="38" width="4" height="4" fill="#0f172a"/>
-                  <rect x="38" y="38" width="4" height="4" fill="#0f172a"/>
-                  <rect x="46" y="38" width="4" height="4" fill="#0f172a"/>
-                  <rect x="26" y="42" width="4" height="4" fill="#0f172a"/>
-                  <rect x="34" y="42" width="4" height="4" fill="#0f172a"/>
                   <rect x="50" y="42" width="4" height="4" fill="#0f172a"/>
-                  <rect x="58" y="42" width="4" height="4" fill="#0f172a"/>
-                  <rect x="26" y="50" width="4" height="4" fill="#0f172a"/>
+                  <rect x="30" y="38" width="4" height="4" fill="#0f172a"/>
                   <rect x="42" y="50" width="4" height="4" fill="#0f172a"/>
-                  <rect x="54" y="50" width="4" height="4" fill="#0f172a"/>
-                  <rect x="62" y="50" width="4" height="4" fill="#0f172a"/>
-                  <rect x="30" y="54" width="4" height="4" fill="#0f172a"/>
-                  <rect x="38" y="54" width="4" height="4" fill="#0f172a"/>
-                  <rect x="46" y="54" width="4" height="4" fill="#0f172a"/>
-                  <rect x="58" y="58" width="4" height="4" fill="#0f172a"/>
-                  <rect x="62" y="58" width="4" height="4" fill="#0f172a"/>
-               </svg>
+                </svg>`
+               }
             </div>
-            <div class="cv-qr-label">SCAN TO VERIFY</div>
+            <div class="cv-qr-label">${viewerQrSvg ? 'SCAN TO VIEW' : 'SCAN TO VERIFY'}</div>
+   ${viewerUrl ? '</a>' : ''}
           </div>
         </div>
 

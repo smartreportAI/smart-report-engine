@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Smart Health Labs — Health Report</title>
+<title>NexaHealth Analytics — Health Report</title>
 <style>
 /* ============================================================
    SMART HEALTH REPORT — DESIGN SYSTEM
@@ -1055,16 +1055,16 @@ body {
 /* ── Banner ── */
 .htr-banner {
     position: relative;
-    padding: 20px 24px 14px;
-    border-radius: 0 0 12px 12px;
+    border-radius: 12px;
     overflow: hidden;
-    margin: -24px -20px 12px -20px;
+    margin: 0 0 14px 0;
+    border: 1.5px solid #C7D7F5;
 }
 
 .htr-banner-bg {
     position: absolute;
     inset: 0;
-    background: linear-gradient(135deg, #EBF5FF 0%, #E0EEFF 50%, #E8F4FF 100%);
+    background: linear-gradient(135deg, #EBF5FF 0%, #DDE8FF 50%, #E8F4FF 100%);
     z-index: 0;
 }
 
@@ -1080,6 +1080,7 @@ body {
     position: relative;
     z-index: 2;
     text-align: center;
+    padding: 14px 24px 12px;
 }
 
 .htr-banner-ornament {
@@ -1087,12 +1088,12 @@ body {
     align-items: center;
     justify-content: center;
     gap: 8px;
-    margin-bottom: 8px;
+    margin-bottom: 7px;
 }
 
 .htr-ornament-line {
     display: inline-block;
-    width: 22px;
+    width: 28px;
     height: 1.5px;
     background: linear-gradient(90deg, transparent, #2D4496);
     border-radius: 1px;
@@ -1103,27 +1104,28 @@ body {
 }
 
 .htr-ornament-diamond {
-    width: 6px;
-    height: 6px;
+    width: 7px;
+    height: 7px;
     background: #2D4496;
     transform: rotate(45deg);
     border-radius: 1px;
-    opacity: 0.5;
+    opacity: 0.6;
 }
 
 .htr-banner-title {
     font-family: Inter, Helvetica, sans-serif;
-    font-size: 19px;
-    font-weight: 700;
+    font-size: 18px;
+    font-weight: 800;
     color: #1A2B5E;
-    letter-spacing: 0.06em;
-    margin-bottom: 5px;
+    letter-spacing: 0.07em;
+    margin-bottom: 4px;
+    text-shadow: 0 1px 2px rgba(45, 68, 150, 0.08);
 }
 
 .htr-banner-subtitle {
     font-family: Inter, Helvetica, sans-serif;
-    font-size: 10.5px;
-    color: #6B7280;
+    font-size: 10px;
+    color: #5B6E9E;
     letter-spacing: 0.02em;
     line-height: 1.5;
 }
@@ -3060,15 +3062,17 @@ body {
 
 /* --- Tenant Brand Overrides --- */
 :root {
-  --color-primary: #4F46E5;
-  --color-secondary: #0EA5E9;
-  --color-healthy: #16A34A;
+  --color-primary: #2D4A9A;
+  --color-secondary: #20BFDD;
+  --color-healthy: #388E3C;
   --color-monitor: #D97706;
   --color-attention: #DC2626;
+  --header-height: 80px;
+  --header-margin: 20px;
 }
 
-.bg-stable    { background: #4F46E5; }
-.text-primary { color: #4F46E5; }
+.bg-stable    { background: #2D4A9A; }
+.text-primary { color: #2D4A9A; }
 </style>
 </head>
 <body>
@@ -3078,8 +3082,8 @@ body {
   Cover Page CSS Variables & Reset
 */
 .cover-wrapper {
-  --brand:     #4F46E5;
-  --brand-rgb: 79 70 229;
+  --brand:     #2D4A9A;
+  --brand-rgb: 45 74 154;
   
   /* Full-bleed cover — no renderLayout wrapper means no header/footer */
   position: relative;
@@ -3399,9 +3403,9 @@ body {
     <!-- ═══ HEADER ═══ -->
     <div class="cv-header">
       <div class="cv-header-left">
-        <img src="https://cdn.example.com/demo/logo.png" height="62" style="object-fit:contain;border-radius:6px" />
+        <img src="" height="62" style="object-fit:contain;border-radius:6px" />
         <div class="cv-lab-info">
-          <div class="cv-lab-name">Smart Health Labs</div>
+          <div class="cv-lab-name">NexaHealth Analytics</div>
           <div class="cv-lab-tagline">Diagnostics &amp; Health Sciences</div>
           <div class="cv-lab-underline"></div>
         </div>
@@ -3459,61 +3463,15 @@ body {
         <div class="cv-card-top">
           <div>
             <div class="cv-pname-label">FULL NAME</div>
-            <div class="cv-pname">Demo User</div>
-            <div class="cv-pid">Patient ID: <span>QKB.0000046637</span></div>
+            <div class="cv-pname">Confidential Patient</div>
+            <div class="cv-pid">Patient ID: <span>PAT-2026-SAMPLE</span></div>
           </div>
           <div class="cv-qr-col">
-            <div class="cv-qr-box">
-               <svg width="58" height="58" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <rect x="2" y="2" width="20" height="20" rx="3" stroke="#0f172a" stroke-width="2.5" fill="none"/>
-                  <rect x="7" y="7" width="10" height="10" rx="1.5" fill="#0f172a"/>
-                  <rect x="42" y="2" width="20" height="20" rx="3" stroke="#0f172a" stroke-width="2.5" fill="none"/>
-                  <rect x="47" y="7" width="10" height="10" rx="1.5" fill="#0f172a"/>
-                  <rect x="2" y="42" width="20" height="20" rx="3" stroke="#0f172a" stroke-width="2.5" fill="none"/>
-                  <rect x="7" y="47" width="10" height="10" rx="1.5" fill="#0f172a"/>
-                  <rect x="26" y="2" width="4" height="4" fill="#0f172a"/>
-                  <rect x="32" y="2" width="4" height="4" fill="#0f172a"/>
-                  <rect x="38" y="2" width="4" height="4" fill="#0f172a"/>
-                  <rect x="26" y="8" width="4" height="4" fill="#0f172a"/>
-                  <rect x="34" y="8" width="4" height="4" fill="#0f172a"/>
-                  <rect x="26" y="14" width="4" height="4" fill="#0f172a"/>
-                  <rect x="32" y="14" width="4" height="4" fill="#0f172a"/>
-                  <rect x="38" y="14" width="4" height="4" fill="#0f172a"/>
-                  <rect x="2" y="26" width="4" height="4" fill="#0f172a"/>
-                  <rect x="10" y="26" width="4" height="4" fill="#0f172a"/>
-                  <rect x="18" y="26" width="4" height="4" fill="#0f172a"/>
-                  <rect x="2" y="32" width="4" height="4" fill="#0f172a"/>
-                  <rect x="18" y="32" width="4" height="4" fill="#0f172a"/>
-                  <rect x="2" y="38" width="4" height="4" fill="#0f172a"/>
-                  <rect x="10" y="38" width="4" height="4" fill="#0f172a"/>
-                  <rect x="26" y="26" width="4" height="4" fill="#0f172a"/>
-                  <rect x="34" y="26" width="4" height="4" fill="#0f172a"/>
-                  <rect x="42" y="26" width="4" height="4" fill="#0f172a"/>
-                  <rect x="54" y="26" width="4" height="4" fill="#0f172a"/>
-                  <rect x="62" y="26" width="4" height="4" fill="#0f172a"/>
-                  <rect x="26" y="34" width="4" height="4" fill="#0f172a"/>
-                  <rect x="42" y="34" width="4" height="4" fill="#0f172a"/>
-                  <rect x="50" y="34" width="4" height="4" fill="#0f172a"/>
-                  <rect x="62" y="34" width="4" height="4" fill="#0f172a"/>
-                  <rect x="30" y="38" width="4" height="4" fill="#0f172a"/>
-                  <rect x="38" y="38" width="4" height="4" fill="#0f172a"/>
-                  <rect x="46" y="38" width="4" height="4" fill="#0f172a"/>
-                  <rect x="26" y="42" width="4" height="4" fill="#0f172a"/>
-                  <rect x="34" y="42" width="4" height="4" fill="#0f172a"/>
-                  <rect x="50" y="42" width="4" height="4" fill="#0f172a"/>
-                  <rect x="58" y="42" width="4" height="4" fill="#0f172a"/>
-                  <rect x="26" y="50" width="4" height="4" fill="#0f172a"/>
-                  <rect x="42" y="50" width="4" height="4" fill="#0f172a"/>
-                  <rect x="54" y="50" width="4" height="4" fill="#0f172a"/>
-                  <rect x="62" y="50" width="4" height="4" fill="#0f172a"/>
-                  <rect x="30" y="54" width="4" height="4" fill="#0f172a"/>
-                  <rect x="38" y="54" width="4" height="4" fill="#0f172a"/>
-                  <rect x="46" y="54" width="4" height="4" fill="#0f172a"/>
-                  <rect x="58" y="58" width="4" height="4" fill="#0f172a"/>
-                  <rect x="62" y="58" width="4" height="4" fill="#0f172a"/>
-               </svg>
+            <div class="cv-qr-box" style="width:66px;height:66px;display:flex;align-items:center;justify-content:center;overflow:hidden;">
+               <svg width="58" height="58" xmlns="http://www.w3.org/2000/svg" width="90" height="90" viewBox="0 0 41 41" shape-rendering="crispEdges"><path fill="#ffffff" d="M0 0h41v41H0z"/><path stroke="#2D4A9A" d="M0 0.5h7m2 0h3m2 0h1m2 0h1m3 0h1m1 0h1m1 0h1m1 0h1m1 0h1m4 0h7M0 1.5h1m5 0h1m3 0h1m1 0h6m1 0h3m1 0h4m1 0h1m1 0h3m1 0h1m5 0h1M0 2.5h1m1 0h3m1 0h1m1 0h1m4 0h6m2 0h2m2 0h1m1 0h1m1 0h1m4 0h1m1 0h3m1 0h1M0 3.5h1m1 0h3m1 0h1m1 0h1m2 0h1m7 0h3m1 0h2m1 0h1m3 0h2m2 0h1m1 0h3m1 0h1M0 4.5h1m1 0h3m1 0h1m1 0h1m1 0h1m1 0h1m4 0h2m2 0h3m1 0h1m2 0h2m1 0h2m1 0h1m1 0h3m1 0h1M0 5.5h1m5 0h1m1 0h1m1 0h2m1 0h2m1 0h1m1 0h4m1 0h4m1 0h2m4 0h1m5 0h1M0 6.5h7m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h7M8 7.5h1m3 0h5m4 0h1m4 0h2m3 0h1M0 8.5h1m1 0h5m2 0h1m2 0h1m3 0h2m5 0h1m1 0h2m2 0h1m4 0h5M0 9.5h4m3 0h4m3 0h1m3 0h7m1 0h1m1 0h1m1 0h3m2 0h1m2 0h2M1 10.5h4m1 0h4m1 0h2m5 0h1m2 0h2m4 0h1m2 0h1m5 0h1m2 0h2M2 11.5h1m1 0h2m1 0h4m2 0h2m1 0h2m1 0h2m2 0h2m1 0h2m4 0h1m2 0h3M1 12.5h1m4 0h1m2 0h1m3 0h2m1 0h1m1 0h1m1 0h3m1 0h2m2 0h8m1 0h2m1 0h1M2 13.5h1m4 0h1m2 0h3m4 0h1m3 0h2m2 0h3m1 0h1m3 0h1m2 0h1m2 0h1M0 14.5h3m3 0h1m1 0h1m1 0h2m1 0h2m3 0h1m1 0h2m1 0h2m1 0h3m1 0h6m2 0h3M2 15.5h1m1 0h2m5 0h3m1 0h1m1 0h1m4 0h2m1 0h1m1 0h1m1 0h1m3 0h4M1 16.5h1m1 0h5m6 0h2m2 0h1m1 0h2m1 0h2m1 0h3m1 0h1m1 0h2m1 0h1m1 0h3M0 17.5h1m4 0h1m1 0h1m1 0h3m1 0h1m4 0h1m1 0h1m3 0h1m1 0h2m2 0h1m1 0h3m1 0h5M0 18.5h1m2 0h1m2 0h3m3 0h3m1 0h1m1 0h2m2 0h2m4 0h1m1 0h2m1 0h2m1 0h1M2 19.5h1m4 0h1m1 0h4m2 0h1m10 0h2m1 0h2m1 0h2m2 0h3m1 0h1M0 20.5h5m1 0h1m2 0h2m2 0h1m1 0h1m2 0h1m1 0h3m1 0h1m2 0h2m3 0h1m2 0h2m1 0h1m1 0h1M0 21.5h2m2 0h1m3 0h1m1 0h1m1 0h3m5 0h2m2 0h1m1 0h2m2 0h2m1 0h2m2 0h4M0 22.5h2m2 0h5m2 0h1m1 0h1m1 0h2m2 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h2m2 0h4M2 23.5h2m3 0h5m2 0h2m5 0h1m4 0h2m3 0h2m4 0h4M0 24.5h1m1 0h2m1 0h3m1 0h1m2 0h2m3 0h1m1 0h2m2 0h1m1 0h3m1 0h1m3 0h2m1 0h1m1 0h1M0 25.5h1m1 0h1m1 0h2m5 0h1m2 0h1m2 0h1m1 0h2m1 0h3m1 0h1m1 0h1m1 0h3m2 0h1m1 0h1m1 0h1M1 26.5h1m4 0h1m2 0h4m1 0h2m2 0h1m1 0h2m2 0h1m1 0h2m1 0h2m1 0h1m3 0h1m2 0h2M0 27.5h1m1 0h1m2 0h1m1 0h2m1 0h4m2 0h5m2 0h2m2 0h2m2 0h2m3 0h2M0 28.5h3m1 0h3m4 0h2m2 0h1m3 0h1m1 0h3m5 0h1m1 0h5m1 0h2M0 29.5h1m1 0h1m1 0h2m4 0h2m1 0h2m1 0h3m1 0h1m3 0h7m5 0h1M0 30.5h1m3 0h3m1 0h1m2 0h6m2 0h1m1 0h1m4 0h1m4 0h2m1 0h4m2 0h1M0 31.5h1m3 0h1m3 0h2m2 0h1m3 0h5m1 0h1m1 0h2m2 0h2m4 0h3m2 0h1M0 32.5h1m1 0h5m2 0h1m1 0h1m2 0h1m4 0h1m1 0h1m4 0h1m3 0h1m1 0h7m1 0h1M8 33.5h3m1 0h2m1 0h1m1 0h1m2 0h2m2 0h9m3 0h1m2 0h2M0 34.5h7m2 0h2m2 0h2m1 0h2m1 0h1m1 0h1m1 0h1m1 0h2m5 0h1m1 0h1m1 0h1m2 0h1M0 35.5h1m5 0h1m1 0h1m2 0h1m2 0h1m1 0h3m2 0h2m1 0h2m1 0h2m1 0h1m1 0h1m3 0h3m1 0h1M0 36.5h1m1 0h3m1 0h1m1 0h2m1 0h4m1 0h1m2 0h1m1 0h1m1 0h1m2 0h1m1 0h1m1 0h8M0 37.5h1m1 0h3m1 0h1m1 0h1m1 0h1m2 0h1m1 0h2m1 0h1m1 0h5m2 0h1m2 0h2m1 0h1m1 0h1m1 0h1m1 0h2M0 38.5h1m1 0h3m1 0h1m1 0h2m1 0h1m1 0h1m1 0h5m1 0h1m1 0h2m1 0h2m2 0h1m2 0h4m2 0h1M0 39.5h1m5 0h1m3 0h2m1 0h3m1 0h2m1 0h2m2 0h1m7 0h2m2 0h4M0 40.5h7m1 0h2m1 0h2m1 0h1m2 0h3m5 0h1m1 0h1m1 0h1m1 0h1m2 0h4"/></svg>
+
             </div>
-            <div class="cv-qr-label">SCAN TO VERIFY</div>
+            <div class="cv-qr-label">SCAN TO VIEW</div>
           </div>
         </div>
 
@@ -3522,7 +3480,7 @@ body {
         <div class="cv-details-grid">
           <div class="cv-detail-col">
             <div class="cv-d-label">AGE</div>
-            <div class="cv-d-value">40 Yrs</div>
+            <div class="cv-d-value">42 Yrs</div>
           </div>
           <div class="cv-detail-col">
             <div class="cv-d-label">GENDER</div>
@@ -3530,7 +3488,7 @@ body {
           </div>
           <div class="cv-detail-col">
             <div class="cv-d-label">REPORT DATE</div>
-            <div class="cv-d-value">Mar 09, 2026</div>
+            <div class="cv-d-value">Mar 14, 2026</div>
           </div>
         </div>
       </div>
@@ -3540,7 +3498,7 @@ body {
 
   <!-- Bottom Accent Strip -->
   <div class="cv-bottom-strip">
-    <span class="cv-strip-text">Smart Health Labs &middot; Smart Health Report &middot; Mar 09, 2026 &middot; Confidential</span>
+    <span class="cv-strip-text">NexaHealth Analytics &middot; Smart Health Report &middot; Mar 14, 2026 &middot; Confidential</span>
   </div>
 
 </div><!-- /wrapper -->
@@ -3681,20 +3639,20 @@ body {
         <p class="htr-legend-desc">Within the healthy reference range. No action needed.</p>
       </div>
 
-      <div class="htr-legend-card" style="background:#EFF6FF;border-color:#BFDBFE">
+      <div class="htr-legend-card" style="background:#FFFBEB;border-color:#FCD34D">
         <div class="htr-legend-label-row">
-          <div class="htr-legend-dot" style="background:#2563EB"></div>
-          <p class="htr-legend-label" style="color:#2563EB">Low</p>
+          <div class="htr-legend-dot" style="background:#D97706"></div>
+          <p class="htr-legend-label" style="color:#D97706">Borderline</p>
         </div>
-        <p class="htr-legend-desc">Below the reference range. Consult your physician.</p>
+        <p class="htr-legend-desc">Slightly outside the reference range. Monitor closely.</p>
       </div>
 
       <div class="htr-legend-card" style="background:#FEF2F2;border-color:#FCA5A5">
         <div class="htr-legend-label-row">
           <div class="htr-legend-dot" style="background:#DC2626"></div>
-          <p class="htr-legend-label" style="color:#DC2626">High</p>
+          <p class="htr-legend-label" style="color:#DC2626">High/Low</p>
         </div>
-        <p class="htr-legend-desc">Above the reference range. Consult your physician.</p>
+        <p class="htr-legend-desc">Above or below the reference range. Consult your physician.</p>
       </div>
   </div>
 </div>
@@ -3762,8 +3720,8 @@ body {
   </main>
 
   <footer class="page-footer">
-    <span class="footer-brand">Smart Health Labs — Intelligent Diagnostics</span>
-    <span class="footer-page">Page 2 of 16</span>
+    <span class="footer-brand">NexaHealth Analytics — Smart Health Insights</span>
+    <span class="footer-page">Page 1 of 7</span>
   </footer>
 </div>
 
@@ -3799,7 +3757,7 @@ body {
     <text x="167.8" y="144" fill="#9ca3af" font-size="14" font-weight="500" text-anchor="middle">100</text>
 
     <!-- The Needle Group -->
-    <g transform="translate(85, 118.99999999999999) rotate(72)">
+    <g transform="translate(85, 118.99999999999999) rotate(73.80000000000001)">
         <!-- Needle Arm -->
         <line x1="0" y1="0" x2="0" y2="-68.67999999999999" stroke="#334155" stroke-width="4.25" stroke-linecap="round"/>
         <!-- Pivot base (hollow donut) -->
@@ -3807,7 +3765,7 @@ body {
         <!-- Tip circle sitting on the arc -->
         <circle cx="0" cy="-74.8" r="11.9" fill="var(--color-healthy)" stroke="#ffffff" stroke-width="2.04" filter="url(#shadowTip)"/>
         <!-- SVG Face inside the tip circle! Note: counter-rotate it so it stays upright! -->
-        <g transform="translate(0, -74.8) rotate(-72) scale(0.9916666666666667)">
+        <g transform="translate(0, -74.8) rotate(-73.80000000000001) scale(0.9916666666666667)">
              
           <circle cx="-3.5" cy="-2.5" r="1.5" fill="rgba(0,0,0,0.6)"/>
           <circle cx="3.5" cy="-2.5" r="1.5" fill="rgba(0,0,0,0.6)"/>
@@ -3818,7 +3776,7 @@ body {
   </svg>
   
   <div style="margin-top: -2px;">
-      <div class="speedometer__value" style="color:#374151; font-size:37.4px; font-weight:800; line-height: 1;">90</div>
+      <div class="speedometer__value" style="color:#374151; font-size:37.4px; font-weight:800; line-height: 1;">91</div>
       
   </div>
 </div>
@@ -3827,10 +3785,10 @@ body {
             <h2 class="section-heading-v2" style="font-size: 15px; margin-bottom: 10px; margin-top:0;">MASTER HEALTH SCORE</h2>
             
         <div class="health-score-breakdown" style="width: 100%;">
-            <div class="status-grid" style="grid-template-columns: repeat(3, 1fr); margin-bottom: 20px;">
+            <div class="status-grid" style="grid-template-columns: repeat(2, 1fr); margin-bottom: 20px;">
                 
     <div class="status-card" style="background-color:#f0fdf4; border: 1px solid #bbf7d0; box-shadow: 0 1px 3px rgba(0,0,0,0.02)">
-        <p class="status-card-value" style="color:#16a34a; font-size: 28px; font-weight: 800; margin-bottom: 2px;">47</p>
+        <p class="status-card-value" style="color:#16a34a; font-size: 28px; font-weight: 800; margin-bottom: 2px;">9</p>
         <p class="status-card-label" style="color:#16a34a; font-size: 10px; font-weight: 700; letter-spacing: 0.05em;">NORMAL</p>
     </div>
   
@@ -3839,14 +3797,9 @@ body {
         <p class="status-card-label" style="color:#c0392b; font-size: 10px; font-weight: 700; letter-spacing: 0.05em;">ABNORMAL</p>
     </div>
   
-      <div class="status-card" style="background-color:#f8fafc; border: 1px solid #e2e8f0; box-shadow: 0 1px 3px rgba(0,0,0,0.02)">
-          <p class="status-card-value" style="color:#64748b; font-size: 28px; font-weight: 800; margin-bottom: 2px;">17</p>
-          <p class="status-card-label" style="color:#64748b; font-size: 10px; font-weight: 700; letter-spacing: 0.05em;">UNKNOWN</p>
-      </div>
-    
             </div>
             <p class="score-summary-text" style="font-size: 11.5px; line-height: 1.6; color: #4b5563; padding: 12px; background: #f9fafb; border-radius: 8px; border: 1px solid #f3f4f6;">
-                Based on a comprehensive AI evaluation of all <strong>74 parameters</strong>, your Master Health Score is <strong style="color:#10b981">90/100</strong>, indicating a stable health profile with most markers within range.
+                Your overall health score is <strong style="color:#10b981">91/100</strong>, indicating a stable health profile with most markers within range.
             </p>
         </div>
     
@@ -3866,19 +3819,19 @@ body {
           </div>
           <div>
             <h2 class="section-heading-v2" style="margin-bottom:1px;">Abnormal Findings</h2>
-            <span class="rs-section-sub">6 profiles flagged &nbsp;·&nbsp; 10 out-of-range parameters</span>
+            <span class="rs-section-sub">4 profiles flagged &nbsp;·&nbsp; 10 out-of-range parameters</span>
           </div>
         </div>
         <div style="display:flex;align-items:center;gap:8px;">
           <div style="text-align:right;">
-              <div style="font-size:10px;font-weight:700;color:#f87171;">34%</div>
+              <div style="font-size:10px;font-weight:700;color:#f87171;">53%</div>
             <div style="font-size:8px;color:#94a3b8;font-weight:500;letter-spacing:0.04em;">OUT OF RANGE</div>
           </div>
           <div style="width:36px;height:36px;position:relative;flex-shrink:0;">
             <svg width="36" height="36" viewBox="0 0 36 36">
               <circle cx="18" cy="18" r="14" fill="none" stroke="#f3f4f6" stroke-width="4"/>
               <circle cx="18" cy="18" r="14" fill="none" stroke="#f87171" stroke-width="4"
-                stroke-dasharray="30 87.9"
+                stroke-dasharray="47 87.9"
                 stroke-dashoffset="22"
                 stroke-linecap="round"
                 transform="rotate(-90 18 18)"/>
@@ -3894,111 +3847,8 @@ body {
         <div class="rs-block-body">
           <div class="rs-block-header" style="background:#fff8f8">
             <div class="rs-block-header-left">
-              <span class="rs-profile-name">INSULIN (FASTING)</span>
-              <span class="rs-severity-badge" style="background:#fff1f1; color:#c0392b">✗ High</span>
-            </div>
-            <div class="rs-block-header-right">
-              <span class="rs-abn-chip">1 flagged</span>
-            </div>
-          </div>
-          <div class="rs-param-list">
-            
-        <div class="rs-param-row rs-param-row--abn">
-          <div class="rs-param-dot"><svg width="6" height="6" viewBox="0 0 6 6"><circle cx="3" cy="3" r="3" fill="#f87171"/></svg></div>
-          <span class="rs-param-name">Insulin, Fasting</span>
-          <span class="rs-param-value">70.7 <span class="rs-param-unit">mU/L</span></span>
-          <span class="rs-param-ref">Ref: 3–25 mU/L</span>
-          <span class="rs-param-pill" style="background:#fff1f1; color:#c0392b">High</span>
-        </div>
-          </div>
-        </div>
-      </div>
-      <div class="rs-profile-block">
-        <div class="rs-sidebar" style="background:#f87171"></div>
-        <div class="rs-block-body">
-          <div class="rs-block-header" style="background:#fff8f8">
-            <div class="rs-block-header-left">
-              <span class="rs-profile-name">25 HYDROXY VITAMIN D</span>
-              <span class="rs-severity-badge" style="background:#fff1f1; color:#c0392b">✗ High</span>
-            </div>
-            <div class="rs-block-header-right">
-              <span class="rs-abn-chip">1 flagged</span>
-            </div>
-          </div>
-          <div class="rs-param-list">
-            
-        <div class="rs-param-row rs-param-row--abn">
-          <div class="rs-param-dot"><svg width="6" height="6" viewBox="0 0 6 6"><circle cx="3" cy="3" r="3" fill="#f87171"/></svg></div>
-          <span class="rs-param-name">Vitamin D, 25 Hydroxy (OH)</span>
-          <span class="rs-param-value">6.59 <span class="rs-param-unit">ng/mL</span></span>
-          <span class="rs-param-ref">Ref: 30–100 ng/mL</span>
-          <span class="rs-param-pill" style="background:#fff1f1; color:#c0392b">High</span>
-        </div>
-          </div>
-        </div>
-      </div>
-      <div class="rs-profile-block">
-        <div class="rs-sidebar" style="background:#f87171"></div>
-        <div class="rs-block-body">
-          <div class="rs-block-header" style="background:#fff8f8">
-            <div class="rs-block-header-left">
-              <span class="rs-profile-name">General Panel</span>
-              <span class="rs-severity-badge" style="background:#fff1f1; color:#c0392b">✗ High</span>
-            </div>
-            <div class="rs-block-header-right">
-              <span class="rs-abn-chip">1 flagged</span>
-            </div>
-          </div>
-          <div class="rs-param-list">
-            
-        <div class="rs-param-row rs-param-row--abn">
-          <div class="rs-param-dot"><svg width="6" height="6" viewBox="0 0 6 6"><circle cx="3" cy="3" r="3" fill="#f87171"/></svg></div>
-          <span class="rs-param-name">HbA1c (Glycated Haemoglobin)</span>
-          <span class="rs-param-value">6.5 <span class="rs-param-unit">%</span></span>
-          <span class="rs-param-ref">Ref: 4.2–5.7 %</span>
-          <span class="rs-param-pill" style="background:#fff1f1; color:#c0392b">High</span>
-        </div>
-          </div>
-        </div>
-      </div>
-      <div class="rs-profile-block">
-        <div class="rs-sidebar" style="background:#f87171"></div>
-        <div class="rs-block-body">
-          <div class="rs-block-header" style="background:#fff8f8">
-            <div class="rs-block-header-left">
-              <span class="rs-profile-name">HOMA-IR (INSULIN RESISTANCE INDEX)</span>
-              <span class="rs-severity-badge" style="background:#fff1f1; color:#c0392b">✗ High</span>
-            </div>
-            <div class="rs-block-header-right">
-              <span class="rs-abn-chip">2 flagged</span>
-            </div>
-          </div>
-          <div class="rs-param-list">
-            
-        <div class="rs-param-row rs-param-row--abn">
-          <div class="rs-param-dot"><svg width="6" height="6" viewBox="0 0 6 6"><circle cx="3" cy="3" r="3" fill="#f87171"/></svg></div>
-          <span class="rs-param-name">Insulin, Fasting</span>
-          <span class="rs-param-value">70.7 <span class="rs-param-unit">mU/L</span></span>
-          <span class="rs-param-ref">Ref: 3–25 mU/L</span>
-          <span class="rs-param-pill" style="background:#fff1f1; color:#c0392b">High</span>
-        </div>
-        <div class="rs-param-row rs-param-row--abn">
-          <div class="rs-param-dot"><svg width="6" height="6" viewBox="0 0 6 6"><circle cx="3" cy="3" r="3" fill="#f87171"/></svg></div>
-          <span class="rs-param-name">Homa IR Index</span>
-          <span class="rs-param-value">15.89 <span class="rs-param-unit">Index</span></span>
-          <span class="rs-param-ref">Ref: ≤1.9 Index</span>
-          <span class="rs-param-pill" style="background:#fff1f1; color:#c0392b">High</span>
-        </div>
-          </div>
-        </div>
-      </div>
-      <div class="rs-profile-block">
-        <div class="rs-sidebar" style="background:#f87171"></div>
-        <div class="rs-block-body">
-          <div class="rs-block-header" style="background:#fff8f8">
-            <div class="rs-block-header-left">
-              <span class="rs-profile-name">COMPLETE BLOOD COUNT</span>
-              <span class="rs-severity-badge" style="background:#fff1f1; color:#c0392b">⚠ High</span>
+              <span class="rs-profile-name">Complete Blood Count</span>
+              <span class="rs-severity-badge" style="background:#fff1f1; color:#c0392b">✗ Attention</span>
             </div>
             <div class="rs-block-header-right">
               <span class="rs-abn-chip">4 flagged</span>
@@ -4008,30 +3858,30 @@ body {
             
         <div class="rs-param-row rs-param-row--abn">
           <div class="rs-param-dot"><svg width="6" height="6" viewBox="0 0 6 6"><circle cx="3" cy="3" r="3" fill="#f87171"/></svg></div>
-          <span class="rs-param-name">Red Blood Cell Count (RBC)</span>
-          <span class="rs-param-value">5.7 <span class="rs-param-unit">10^6/μL</span></span>
-          <span class="rs-param-ref">Ref: 4–5.5 10^6/μL</span>
-          <span class="rs-param-pill" style="background:#fff1f1; color:#c0392b">High</span>
-        </div>
-        <div class="rs-param-row rs-param-row--abn">
-          <div class="rs-param-dot"><svg width="6" height="6" viewBox="0 0 6 6"><circle cx="3" cy="3" r="3" fill="#f87171"/></svg></div>
-          <span class="rs-param-name">Mean Corpuscular Volume (MCV)</span>
-          <span class="rs-param-value">79.9 <span class="rs-param-unit">fL</span></span>
-          <span class="rs-param-ref">Ref: 80–100 fL</span>
+          <span class="rs-param-name">Hemoglobin</span>
+          <span class="rs-param-value">11.2 <span class="rs-param-unit">g/dL</span></span>
+          <span class="rs-param-ref">Ref: 13.5–17.5 g/dL</span>
           <span class="rs-param-pill" style="background:#fff1f1; color:#c0392b">Low</span>
         </div>
         <div class="rs-param-row rs-param-row--abn">
           <div class="rs-param-dot"><svg width="6" height="6" viewBox="0 0 6 6"><circle cx="3" cy="3" r="3" fill="#f87171"/></svg></div>
-          <span class="rs-param-name">Mean Corpuscular Hb (MCH)</span>
-          <span class="rs-param-value">24.9 <span class="rs-param-unit">pg</span></span>
-          <span class="rs-param-ref">Ref: 27–32 pg</span>
+          <span class="rs-param-name">Platelet Count</span>
+          <span class="rs-param-value">145000 <span class="rs-param-unit">/µL</span></span>
+          <span class="rs-param-ref">Ref: 150000–400000 /µL</span>
           <span class="rs-param-pill" style="background:#fff1f1; color:#c0392b">Low</span>
         </div>
         <div class="rs-param-row rs-param-row--abn">
           <div class="rs-param-dot"><svg width="6" height="6" viewBox="0 0 6 6"><circle cx="3" cy="3" r="3" fill="#f87171"/></svg></div>
-          <span class="rs-param-name">Mean Corp Hb Con (MCHC)</span>
-          <span class="rs-param-value">31.1 <span class="rs-param-unit">%</span></span>
-          <span class="rs-param-ref">Ref: 32–36 %</span>
+          <span class="rs-param-name">RBC Count</span>
+          <span class="rs-param-value">4.1 <span class="rs-param-unit">million/µL</span></span>
+          <span class="rs-param-ref">Ref: 4.5–5.9 million/µL</span>
+          <span class="rs-param-pill" style="background:#fff1f1; color:#c0392b">Low</span>
+        </div>
+        <div class="rs-param-row rs-param-row--abn">
+          <div class="rs-param-dot"><svg width="6" height="6" viewBox="0 0 6 6"><circle cx="3" cy="3" r="3" fill="#f87171"/></svg></div>
+          <span class="rs-param-name">Hematocrit</span>
+          <span class="rs-param-value">36 <span class="rs-param-unit">%</span></span>
+          <span class="rs-param-ref">Ref: 41–53 %</span>
           <span class="rs-param-pill" style="background:#fff1f1; color:#c0392b">Low</span>
         </div>
           </div>
@@ -4042,8 +3892,46 @@ body {
         <div class="rs-block-body">
           <div class="rs-block-header" style="background:#fff8f8">
             <div class="rs-block-header-left">
-              <span class="rs-profile-name">ERYTHROCYTE SEDIMENTATION RATE</span>
-              <span class="rs-severity-badge" style="background:#fff1f1; color:#c0392b">✗ High</span>
+              <span class="rs-profile-name">Lipid Panel</span>
+              <span class="rs-severity-badge" style="background:#fff1f1; color:#c0392b">✗ Attention</span>
+            </div>
+            <div class="rs-block-header-right">
+              <span class="rs-abn-chip">3 flagged</span>
+            </div>
+          </div>
+          <div class="rs-param-list">
+            
+        <div class="rs-param-row rs-param-row--abn">
+          <div class="rs-param-dot"><svg width="6" height="6" viewBox="0 0 6 6"><circle cx="3" cy="3" r="3" fill="#f87171"/></svg></div>
+          <span class="rs-param-name">Total Cholesterol</span>
+          <span class="rs-param-value">210 <span class="rs-param-unit">mg/dL</span></span>
+          <span class="rs-param-ref">Ref: 0–200 mg/dL</span>
+          <span class="rs-param-pill" style="background:#fff1f1; color:#c0392b">High</span>
+        </div>
+        <div class="rs-param-row rs-param-row--abn">
+          <div class="rs-param-dot"><svg width="6" height="6" viewBox="0 0 6 6"><circle cx="3" cy="3" r="3" fill="#f87171"/></svg></div>
+          <span class="rs-param-name">LDL Cholesterol</span>
+          <span class="rs-param-value">138 <span class="rs-param-unit">mg/dL</span></span>
+          <span class="rs-param-ref">Ref: 0–100 mg/dL</span>
+          <span class="rs-param-pill" style="background:#fff1f1; color:#c0392b">High</span>
+        </div>
+        <div class="rs-param-row rs-param-row--abn">
+          <div class="rs-param-dot"><svg width="6" height="6" viewBox="0 0 6 6"><circle cx="3" cy="3" r="3" fill="#f87171"/></svg></div>
+          <span class="rs-param-name">Triglycerides</span>
+          <span class="rs-param-value">165 <span class="rs-param-unit">mg/dL</span></span>
+          <span class="rs-param-ref">Ref: 0–150 mg/dL</span>
+          <span class="rs-param-pill" style="background:#fff1f1; color:#c0392b">High</span>
+        </div>
+          </div>
+        </div>
+      </div>
+      <div class="rs-profile-block">
+        <div class="rs-sidebar" style="background:#f59e0b"></div>
+        <div class="rs-block-body">
+          <div class="rs-block-header" style="background:#fffbeb">
+            <div class="rs-block-header-left">
+              <span class="rs-profile-name">Thyroid Panel</span>
+              <span class="rs-severity-badge" style="background:#fffbeb; color:#d97706">⚠ Monitor</span>
             </div>
             <div class="rs-block-header-right">
               <span class="rs-abn-chip">1 flagged</span>
@@ -4053,9 +3941,40 @@ body {
             
         <div class="rs-param-row rs-param-row--abn">
           <div class="rs-param-dot"><svg width="6" height="6" viewBox="0 0 6 6"><circle cx="3" cy="3" r="3" fill="#f87171"/></svg></div>
-          <span class="rs-param-name">ERYTHROCYTE SEDIMENTATION RATE (ESR)</span>
-          <span class="rs-param-value">18 <span class="rs-param-unit">mm/hr</span></span>
-          <span class="rs-param-ref">Ref: 1–15 mm/hr</span>
+          <span class="rs-param-name">TSH</span>
+          <span class="rs-param-value">4.8 <span class="rs-param-unit">mIU/L</span></span>
+          <span class="rs-param-ref">Ref: 0.4–4 mIU/L</span>
+          <span class="rs-param-pill" style="background:#fff1f1; color:#c0392b">High</span>
+        </div>
+          </div>
+        </div>
+      </div>
+      <div class="rs-profile-block">
+        <div class="rs-sidebar" style="background:#f87171"></div>
+        <div class="rs-block-body">
+          <div class="rs-block-header" style="background:#fff8f8">
+            <div class="rs-block-header-left">
+              <span class="rs-profile-name">Liver Function Test</span>
+              <span class="rs-severity-badge" style="background:#fff1f1; color:#c0392b">✗ Attention</span>
+            </div>
+            <div class="rs-block-header-right">
+              <span class="rs-abn-chip">2 flagged</span>
+            </div>
+          </div>
+          <div class="rs-param-list">
+            
+        <div class="rs-param-row rs-param-row--abn">
+          <div class="rs-param-dot"><svg width="6" height="6" viewBox="0 0 6 6"><circle cx="3" cy="3" r="3" fill="#f87171"/></svg></div>
+          <span class="rs-param-name">SGOT (AST)</span>
+          <span class="rs-param-value">52 <span class="rs-param-unit">U/L</span></span>
+          <span class="rs-param-ref">Ref: 5–40 U/L</span>
+          <span class="rs-param-pill" style="background:#fff1f1; color:#c0392b">High</span>
+        </div>
+        <div class="rs-param-row rs-param-row--abn">
+          <div class="rs-param-dot"><svg width="6" height="6" viewBox="0 0 6 6"><circle cx="3" cy="3" r="3" fill="#f87171"/></svg></div>
+          <span class="rs-param-name">SGPT (ALT)</span>
+          <span class="rs-param-value">68 <span class="rs-param-unit">U/L</span></span>
+          <span class="rs-param-ref">Ref: 7–56 U/L</span>
           <span class="rs-param-pill" style="background:#fff1f1; color:#c0392b">High</span>
         </div>
           </div>
@@ -4079,44 +3998,44 @@ body {
                 </div>
             </div>
             <div class="clinical-list">
-            <div class="observation-row" style="background-color:#fff8f8">
-                <div class="observation-dot" style="background-color:#f87171"></div>
-                <p class="observation-text"><strong>Insulin, Fasting</strong> is CRITICAL (70.7 mU/L). Found in <em>INSULIN (FASTING)</em> profile.</p>
-            </div>
-        
-            <div class="observation-row" style="background-color:#fff8f8">
-                <div class="observation-dot" style="background-color:#f87171"></div>
-                <p class="observation-text"><strong>Vitamin D, 25 Hydroxy (OH)</strong> is CRITICAL (6.59 ng/mL). Found in <em>25 HYDROXY VITAMIN D</em> profile.</p>
-            </div>
-        
-            <div class="observation-row" style="background-color:#fffbeb">
-                <div class="observation-dot" style="background-color:#f59e0b"></div>
-                <p class="observation-text"><strong>HbA1c (Glycated Haemoglobin)</strong> is HIGH (6.5 %). Found in <em>General Panel</em> profile.</p>
-            </div>
-        
-            <div class="observation-row" style="background-color:#fff8f8">
-                <div class="observation-dot" style="background-color:#f87171"></div>
-                <p class="observation-text"><strong>Insulin, Fasting</strong> is CRITICAL (70.7 mU/L). Found in <em>HOMA-IR (INSULIN RESISTANCE INDEX)</em> profile.</p>
-            </div>
-        
-            <div class="observation-row" style="background-color:#fff8f8">
-                <div class="observation-dot" style="background-color:#f87171"></div>
-                <p class="observation-text"><strong>Homa IR Index</strong> is CRITICAL (15.89 Index). Found in <em>HOMA-IR (INSULIN RESISTANCE INDEX)</em> profile.</p>
-            </div>
-        
-            <div class="observation-row" style="background-color:#fffbeb">
-                <div class="observation-dot" style="background-color:#f59e0b"></div>
-                <p class="observation-text"><strong>Red Blood Cell Count (RBC)</strong> is HIGH (5.7 10^6/μL). Found in <em>COMPLETE BLOOD COUNT</em> profile.</p>
+            <div class="observation-row" style="background-color:#eff6ff">
+                <div class="observation-dot" style="background-color:#3b82f6"></div>
+                <p class="observation-text"><strong>Hemoglobin</strong> is LOW (11.2 g/dL). Found in <em>Complete Blood Count</em> profile.</p>
             </div>
         
             <div class="observation-row" style="background-color:#eff6ff">
                 <div class="observation-dot" style="background-color:#3b82f6"></div>
-                <p class="observation-text"><strong>Mean Corpuscular Volume (MCV)</strong> is LOW (79.9 fL). Found in <em>COMPLETE BLOOD COUNT</em> profile.</p>
+                <p class="observation-text"><strong>Platelet Count</strong> is LOW (145000 /µL). Found in <em>Complete Blood Count</em> profile.</p>
             </div>
         
             <div class="observation-row" style="background-color:#eff6ff">
                 <div class="observation-dot" style="background-color:#3b82f6"></div>
-                <p class="observation-text"><strong>Mean Corpuscular Hb (MCH)</strong> is LOW (24.9 pg). Found in <em>COMPLETE BLOOD COUNT</em> profile.</p>
+                <p class="observation-text"><strong>RBC Count</strong> is LOW (4.1 million/µL). Found in <em>Complete Blood Count</em> profile.</p>
+            </div>
+        
+            <div class="observation-row" style="background-color:#eff6ff">
+                <div class="observation-dot" style="background-color:#3b82f6"></div>
+                <p class="observation-text"><strong>Hematocrit</strong> is LOW (36 %). Found in <em>Complete Blood Count</em> profile.</p>
+            </div>
+        
+            <div class="observation-row" style="background-color:#fff8f8">
+                <div class="observation-dot" style="background-color:#f59e0b"></div>
+                <p class="observation-text"><strong>Total Cholesterol</strong> is HIGH (210 mg/dL). Found in <em>Lipid Panel</em> profile.</p>
+            </div>
+        
+            <div class="observation-row" style="background-color:#fff8f8">
+                <div class="observation-dot" style="background-color:#f59e0b"></div>
+                <p class="observation-text"><strong>LDL Cholesterol</strong> is HIGH (138 mg/dL). Found in <em>Lipid Panel</em> profile.</p>
+            </div>
+        
+            <div class="observation-row" style="background-color:#fff8f8">
+                <div class="observation-dot" style="background-color:#f59e0b"></div>
+                <p class="observation-text"><strong>Triglycerides</strong> is HIGH (165 mg/dL). Found in <em>Lipid Panel</em> profile.</p>
+            </div>
+        
+            <div class="observation-row" style="background-color:#fff8f8">
+                <div class="observation-dot" style="background-color:#f59e0b"></div>
+                <p class="observation-text"><strong>TSH</strong> is HIGH (4.8 mIU/L). Found in <em>Thyroid Panel</em> profile.</p>
             </div>
         </div>
         </div>
@@ -4124,34 +4043,12 @@ body {
 
     <!-- AI CLINICAL RECOMMENDATIONS (if present) -->
     
-    <div class="clinical-observations-section">
-      <div class="clinical-observations-header">
-        <h2 class="section-heading-v2">Top Clinical Recommendations</h2>
-      </div>
-      <div class="clinical-list">
-            <div class="observation-row" style="background-color:#eff6ff">
-                <div class="observation-dot" style="background-color:#3b82f6"></div>
-                <p class="observation-text">Address insulin resistance with lifestyle modifications including diet and exercise.</p>
-            </div>
-    
-            <div class="observation-row" style="background-color:#eff6ff">
-                <div class="observation-dot" style="background-color:#3b82f6"></div>
-                <p class="observation-text">Monitor blood glucose levels regularly to prevent progression to diabetes.</p>
-            </div>
-    
-            <div class="observation-row" style="background-color:#eff6ff">
-                <div class="observation-dot" style="background-color:#3b82f6"></div>
-                <p class="observation-text">Consider further evaluation for underlying causes of elevated insulin levels.</p>
-            </div>
-    </div>
-    </div>
-  
 </section>
   </main>
 
   <footer class="page-footer">
-    <span class="footer-brand">Smart Health Labs — Intelligent Diagnostics</span>
-    <span class="footer-page">Page 3 of 16</span>
+    <span class="footer-brand">NexaHealth Analytics — Smart Health Insights</span>
+    <span class="footer-page">Page 2 of 7</span>
   </footer>
 </div>
 
@@ -4171,88 +4068,7 @@ body {
       
       <!-- Left: Title & Badge -->
       <div style="display: flex; flex-direction: column; align-items: flex-start; gap: 8px; flex: 1; min-width: 0;">
-        <h2 class="det-hero__name" style="font-size: 24px; word-wrap: break-word; overflow-wrap: break-word; margin: 0; line-height: 1.2;">PLASMA GLUCOSE - FASTING</h2>
-        <span class="det-hero__sev-badge"
-              style="color:#16A34A;background:#F0FDF4;border:1px solid #86EFAC;">
-          HEALTHY
-        </span>
-      </div>
-
-      <!-- Right: Stat pills -->
-      <div class="det-hero__pills" style="margin-bottom: 0; flex-shrink: 0;">
-        
-<div class="det-hero-pill" style="background:#fff8f8; min-width: 80px;">
-  <div class="det-hero-pill__value" style="color:#c0392b;">0</div>
-  <div class="det-hero-pill__label">Abnormal</div>
-</div>
-<div class="det-hero-pill" style="background:#F0FDF4; min-width: 80px;">
-  <div class="det-hero-pill__value" style="color:#16A34A;">1</div>
-  <div class="det-hero-pill__label">Normal</div>
-</div>
-      </div>
-
-    </div>
-  </div>
-</div>
-
-  
-  <div class="det-all-normal-banner">
-    <span>✅ All parameters are within reference range</span>
-  </div>
-
-  
-<div class="det-normal-section">
-  <div class="det-section-heading">
-    <div class="det-section-heading__bar" style="background:#16A34A;"></div>
-    <span class="det-section-heading__text">Normal Parameters</span>
-  </div>
-  <div class="det-normal-grid">
-    
-<div class="det-normal-row">
-  <div class="det-normal-row__icon">
-    <svg width="12" height="12" viewBox="0 0 14 14" fill="none">
-      <path d="M2.5 7L5.5 10L11.5 4" stroke="white" stroke-width="2.2"
-            stroke-linecap="round" stroke-linejoin="round"/>
-    </svg>
-  </div>
-  <div class="det-normal-row__body">
-    <div class="det-normal-row__name">Plasma Glucose Fasting</div>
-    <div class="det-normal-row__val-row">
-      <span class="det-normal-row__value">91</span>
-      <span class="det-normal-row__unit">mg/dL</span>
-    </div>
-    <div class="det-normal-row__ref">Ref: < 100</div>
-  </div>
-</div>
-  </div>
-</div>
-
-</section>
-  </main>
-
-  <footer class="page-footer">
-    <span class="footer-brand">Smart Health Labs — Intelligent Diagnostics</span>
-    <span class="footer-page">Page 4 of 16</span>
-  </footer>
-</div>
-
-<div class="report-page">
-  <main class="page-content">
-    
-<section class="indepth-detail">
-
-  
-<div class="det-hero">
-  <!-- Decorative blobs -->
-  <div class="det-hero__blob det-hero__blob--tr"></div>
-  <div class="det-hero__blob det-hero__blob--bl"></div>
-
-  <div class="det-hero__inner">
-    <div class="det-hero__info" style="display: flex; justify-content: space-between; align-items: center; gap: 20px; width: 100%;">
-      
-      <!-- Left: Title & Badge -->
-      <div style="display: flex; flex-direction: column; align-items: flex-start; gap: 8px; flex: 1; min-width: 0;">
-        <h2 class="det-hero__name" style="font-size: 24px; word-wrap: break-word; overflow-wrap: break-word; margin: 0; line-height: 1.2;">INSULIN (FASTING)</h2>
+        <h2 class="det-hero__name" style="font-size: 24px; word-wrap: break-word; overflow-wrap: break-word; margin: 0; line-height: 1.2;">Complete Blood Count</h2>
         <span class="det-hero__sev-badge"
               style="color:#c0392b;background:#fff1f1;border:1px solid #fca5a5;">
           ATTENTION
@@ -4263,11 +4079,11 @@ body {
       <div class="det-hero__pills" style="margin-bottom: 0; flex-shrink: 0;">
         
 <div class="det-hero-pill" style="background:#fff8f8; min-width: 80px;">
-  <div class="det-hero-pill__value" style="color:#c0392b;">1</div>
+  <div class="det-hero-pill__value" style="color:#c0392b;">4</div>
   <div class="det-hero-pill__label">Abnormal</div>
 </div>
 <div class="det-hero-pill" style="background:#F0FDF4; min-width: 80px;">
-  <div class="det-hero-pill__value" style="color:#16A34A;">0</div>
+  <div class="det-hero-pill__value" style="color:#16A34A;">3</div>
   <div class="det-hero-pill__label">Normal</div>
 </div>
       </div>
@@ -4283,32 +4099,32 @@ body {
   </div>
   <div class="det-flagged-list">
     
-<div class="det-flagged-card" style="border-color:#fca5a5;background:#fff1f1;">
+<div class="det-flagged-card" style="border-color:#fcd5d5;background:#fff8f8;">
   <!-- Card header -->
   <div class="det-flagged-card__header">
     <div class="det-flagged-card__header-left">
-      <span class="det-flagged-pill" style="color:#c0392b;background:#fff1f1;border:1px solid #fca5a5;">
-        ‼ CRITICAL
+      <span class="det-flagged-pill" style="color:#c0392b;background:#fff8f8;border:1px solid #fcd5d5;">
+        ▼ LOW
       </span>
-      <span class="det-flagged-ref">Ref: 3 – 25 mU/L</span>
+      <span class="det-flagged-ref">Ref: 13.5 – 17.5 g/dL</span>
     </div>
-    <div class="det-flagged-card__value-box" style="background:#fff1f1;">
-      <div class="det-flagged-card__value" style="color:#c0392b;">70.7</div>
-      <div class="det-flagged-card__unit" style="color:#c0392b;">mU/L</div>
+    <div class="det-flagged-card__value-box" style="background:#fff8f8;">
+      <div class="det-flagged-card__value" style="color:#c0392b;">11.2</div>
+      <div class="det-flagged-card__unit" style="color:#c0392b;">g/dL</div>
     </div>
   </div>
 
   <!-- Test name -->
-  <h3 class="det-flagged-card__name">Insulin, Fasting</h3>
+  <h3 class="det-flagged-card__name">Hemoglobin</h3>
 
   <!-- Smart Slider -->
   
 <div class="hsl-slider">
   <div class="hsl-slider__area">
-    <div class="hsl-bpos" style="left:92%;">
+    <div class="hsl-bpos" style="left:16.29466666666666%;">
       <div class="hsl-bubble" style="background:#f87171; box-shadow: 0 2px 8px #f8717155;">
-        <span class="hsl-bubble__val">70.7</span>
-        <span class="hsl-bubble__unit">mU/L</span>
+        <span class="hsl-bubble__val">11.2</span>
+        <span class="hsl-bubble__unit">g/dL</span>
       </div>
       <div class="hsl-bubble__tip" style="border-top-color:#f87171;"></div>
     </div>
@@ -4321,620 +4137,46 @@ body {
   <div class="hsl-labels">
     <div class="hsl-label">
       <span class="hsl-label__text" style="color:#f87171;">&#8595; Low</span>
-      <span class="hsl-label__range">< 3</span>
+      <span class="hsl-label__range">< 13.5</span>
     </div>
     <div class="hsl-label">
       <span class="hsl-label__text" style="color:#16A34A;">&#10003; Normal</span>
-      <span class="hsl-label__range">3 – 25</span>
+      <span class="hsl-label__range">13.5 – 17.5</span>
     </div>
     <div class="hsl-label">
       <span class="hsl-label__text" style="color:#f87171;">&#8593; High</span>
-      <span class="hsl-label__range">> 25</span>
+      <span class="hsl-label__range">> 17.5</span>
     </div>
   </div>
 </div>
 </div>
-  </div>
 
-  
-
-</section>
-  </main>
-
-  <footer class="page-footer">
-    <span class="footer-brand">Smart Health Labs — Intelligent Diagnostics</span>
-    <span class="footer-page">Page 5 of 16</span>
-  </footer>
-</div>
-
-<div class="report-page">
-  <main class="page-content">
-    
-<section class="indepth-detail">
-
-  
-<div class="det-hero">
-  <!-- Decorative blobs -->
-  <div class="det-hero__blob det-hero__blob--tr"></div>
-  <div class="det-hero__blob det-hero__blob--bl"></div>
-
-  <div class="det-hero__inner">
-    <div class="det-hero__info" style="display: flex; justify-content: space-between; align-items: center; gap: 20px; width: 100%;">
-      
-      <!-- Left: Title & Badge -->
-      <div style="display: flex; flex-direction: column; align-items: flex-start; gap: 8px; flex: 1; min-width: 0;">
-        <h2 class="det-hero__name" style="font-size: 24px; word-wrap: break-word; overflow-wrap: break-word; margin: 0; line-height: 1.2;">LIPID PROFILE</h2>
-        <span class="det-hero__sev-badge"
-              style="color:#16A34A;background:#F0FDF4;border:1px solid #86EFAC;">
-          HEALTHY
-        </span>
-      </div>
-
-      <!-- Right: Stat pills -->
-      <div class="det-hero__pills" style="margin-bottom: 0; flex-shrink: 0;">
-        
-<div class="det-hero-pill" style="background:#fff8f8; min-width: 80px;">
-  <div class="det-hero-pill__value" style="color:#c0392b;">0</div>
-  <div class="det-hero-pill__label">Abnormal</div>
-</div>
-<div class="det-hero-pill" style="background:#F0FDF4; min-width: 80px;">
-  <div class="det-hero-pill__value" style="color:#16A34A;">8</div>
-  <div class="det-hero-pill__label">Normal</div>
-</div>
-      </div>
-
-    </div>
-  </div>
-</div>
-
-  
-  <div class="det-all-normal-banner">
-    <span>✅ All parameters are within reference range</span>
-  </div>
-
-  
-<div class="det-normal-section">
-  <div class="det-section-heading">
-    <div class="det-section-heading__bar" style="background:#16A34A;"></div>
-    <span class="det-section-heading__text">Normal Parameters</span>
-  </div>
-  <div class="det-normal-grid">
-    
-<div class="det-normal-row">
-  <div class="det-normal-row__icon">
-    <svg width="12" height="12" viewBox="0 0 14 14" fill="none">
-      <path d="M2.5 7L5.5 10L11.5 4" stroke="white" stroke-width="2.2"
-            stroke-linecap="round" stroke-linejoin="round"/>
-    </svg>
-  </div>
-  <div class="det-normal-row__body">
-    <div class="det-normal-row__name">Total Cholesterol</div>
-    <div class="det-normal-row__val-row">
-      <span class="det-normal-row__value">172</span>
-      <span class="det-normal-row__unit">mg/dL</span>
-    </div>
-    <div class="det-normal-row__ref">Ref: < 200</div>
-  </div>
-</div>
-<div class="det-normal-row">
-  <div class="det-normal-row__icon">
-    <svg width="12" height="12" viewBox="0 0 14 14" fill="none">
-      <path d="M2.5 7L5.5 10L11.5 4" stroke="white" stroke-width="2.2"
-            stroke-linecap="round" stroke-linejoin="round"/>
-    </svg>
-  </div>
-  <div class="det-normal-row__body">
-    <div class="det-normal-row__name">Triglycerides</div>
-    <div class="det-normal-row__val-row">
-      <span class="det-normal-row__value">109</span>
-      <span class="det-normal-row__unit">mg/dL</span>
-    </div>
-    <div class="det-normal-row__ref">Ref: < 150</div>
-  </div>
-</div>
-<div class="det-normal-row">
-  <div class="det-normal-row__icon">
-    <svg width="12" height="12" viewBox="0 0 14 14" fill="none">
-      <path d="M2.5 7L5.5 10L11.5 4" stroke="white" stroke-width="2.2"
-            stroke-linecap="round" stroke-linejoin="round"/>
-    </svg>
-  </div>
-  <div class="det-normal-row__body">
-    <div class="det-normal-row__name">HDL Cholesterol</div>
-    <div class="det-normal-row__val-row">
-      <span class="det-normal-row__value">52.1</span>
-      <span class="det-normal-row__unit">mg/dL</span>
-    </div>
-    <div class="det-normal-row__ref">Ref: > 40</div>
-  </div>
-</div>
-<div class="det-normal-row">
-  <div class="det-normal-row__icon">
-    <svg width="12" height="12" viewBox="0 0 14 14" fill="none">
-      <path d="M2.5 7L5.5 10L11.5 4" stroke="white" stroke-width="2.2"
-            stroke-linecap="round" stroke-linejoin="round"/>
-    </svg>
-  </div>
-  <div class="det-normal-row__body">
-    <div class="det-normal-row__name">LDL Cholesterol</div>
-    <div class="det-normal-row__val-row">
-      <span class="det-normal-row__value">98</span>
-      <span class="det-normal-row__unit">mg/dL</span>
-    </div>
-    <div class="det-normal-row__ref">Ref: < 100</div>
-  </div>
-</div>
-<div class="det-normal-row">
-  <div class="det-normal-row__icon">
-    <svg width="12" height="12" viewBox="0 0 14 14" fill="none">
-      <path d="M2.5 7L5.5 10L11.5 4" stroke="white" stroke-width="2.2"
-            stroke-linecap="round" stroke-linejoin="round"/>
-    </svg>
-  </div>
-  <div class="det-normal-row__body">
-    <div class="det-normal-row__name">VLDL Cholesterol</div>
-    <div class="det-normal-row__val-row">
-      <span class="det-normal-row__value">21.8</span>
-      <span class="det-normal-row__unit">mg/dL</span>
-    </div>
-    <div class="det-normal-row__ref">Ref: < 30</div>
-  </div>
-</div>
-<div class="det-normal-row">
-  <div class="det-normal-row__icon">
-    <svg width="12" height="12" viewBox="0 0 14 14" fill="none">
-      <path d="M2.5 7L5.5 10L11.5 4" stroke="white" stroke-width="2.2"
-            stroke-linecap="round" stroke-linejoin="round"/>
-    </svg>
-  </div>
-  <div class="det-normal-row__body">
-    <div class="det-normal-row__name">Total CHOL / HDL Ratio</div>
-    <div class="det-normal-row__val-row">
-      <span class="det-normal-row__value">3.3</span>
-      <span class="det-normal-row__unit">Ratio</span>
-    </div>
-    <div class="det-normal-row__ref">Ref: 3.3 – 4.4</div>
-  </div>
-</div>
-<div class="det-normal-row">
-  <div class="det-normal-row__icon">
-    <svg width="12" height="12" viewBox="0 0 14 14" fill="none">
-      <path d="M2.5 7L5.5 10L11.5 4" stroke="white" stroke-width="2.2"
-            stroke-linecap="round" stroke-linejoin="round"/>
-    </svg>
-  </div>
-  <div class="det-normal-row__body">
-    <div class="det-normal-row__name">LDL / HDL Cholesterol Ratio</div>
-    <div class="det-normal-row__val-row">
-      <span class="det-normal-row__value">1.88</span>
-      <span class="det-normal-row__unit">Ratio</span>
-    </div>
-    <div class="det-normal-row__ref">Ref: 0 – 3.5</div>
-  </div>
-</div>
-<div class="det-normal-row">
-  <div class="det-normal-row__icon">
-    <svg width="12" height="12" viewBox="0 0 14 14" fill="none">
-      <path d="M2.5 7L5.5 10L11.5 4" stroke="white" stroke-width="2.2"
-            stroke-linecap="round" stroke-linejoin="round"/>
-    </svg>
-  </div>
-  <div class="det-normal-row__body">
-    <div class="det-normal-row__name">Non-HDL Cholesterol</div>
-    <div class="det-normal-row__val-row">
-      <span class="det-normal-row__value">119.9</span>
-      <span class="det-normal-row__unit">mg/dL</span>
-    </div>
-    <div class="det-normal-row__ref">Ref: < 130</div>
-  </div>
-</div>
-  </div>
-</div>
-
-</section>
-  </main>
-
-  <footer class="page-footer">
-    <span class="footer-brand">Smart Health Labs — Intelligent Diagnostics</span>
-    <span class="footer-page">Page 6 of 16</span>
-  </footer>
-</div>
-
-<div class="report-page">
-  <main class="page-content">
-    
-<section class="indepth-detail">
-
-  
-<div class="det-hero">
-  <!-- Decorative blobs -->
-  <div class="det-hero__blob det-hero__blob--tr"></div>
-  <div class="det-hero__blob det-hero__blob--bl"></div>
-
-  <div class="det-hero__inner">
-    <div class="det-hero__info" style="display: flex; justify-content: space-between; align-items: center; gap: 20px; width: 100%;">
-      
-      <!-- Left: Title & Badge -->
-      <div style="display: flex; flex-direction: column; align-items: flex-start; gap: 8px; flex: 1; min-width: 0;">
-        <h2 class="det-hero__name" style="font-size: 24px; word-wrap: break-word; overflow-wrap: break-word; margin: 0; line-height: 1.2;">LIVER FUNCTION TEST</h2>
-        <span class="det-hero__sev-badge"
-              style="color:#16A34A;background:#F0FDF4;border:1px solid #86EFAC;">
-          HEALTHY
-        </span>
-      </div>
-
-      <!-- Right: Stat pills -->
-      <div class="det-hero__pills" style="margin-bottom: 0; flex-shrink: 0;">
-        
-<div class="det-hero-pill" style="background:#fff8f8; min-width: 80px;">
-  <div class="det-hero-pill__value" style="color:#c0392b;">0</div>
-  <div class="det-hero-pill__label">Abnormal</div>
-</div>
-<div class="det-hero-pill" style="background:#F0FDF4; min-width: 80px;">
-  <div class="det-hero-pill__value" style="color:#16A34A;">11</div>
-  <div class="det-hero-pill__label">Normal</div>
-</div>
-      </div>
-
-    </div>
-  </div>
-</div>
-
-  
-  <div class="det-all-normal-banner">
-    <span>✅ All parameters are within reference range</span>
-  </div>
-
-  
-<div class="det-normal-section">
-  <div class="det-section-heading">
-    <div class="det-section-heading__bar" style="background:#16A34A;"></div>
-    <span class="det-section-heading__text">Normal Parameters</span>
-  </div>
-  <div class="det-normal-grid">
-    
-<div class="det-normal-row">
-  <div class="det-normal-row__icon">
-    <svg width="12" height="12" viewBox="0 0 14 14" fill="none">
-      <path d="M2.5 7L5.5 10L11.5 4" stroke="white" stroke-width="2.2"
-            stroke-linecap="round" stroke-linejoin="round"/>
-    </svg>
-  </div>
-  <div class="det-normal-row__body">
-    <div class="det-normal-row__name">Total Bilirubin</div>
-    <div class="det-normal-row__val-row">
-      <span class="det-normal-row__value">0.46</span>
-      <span class="det-normal-row__unit">mg/dL</span>
-    </div>
-    <div class="det-normal-row__ref">Ref: 0.3 – 1.2</div>
-  </div>
-</div>
-<div class="det-normal-row">
-  <div class="det-normal-row__icon">
-    <svg width="12" height="12" viewBox="0 0 14 14" fill="none">
-      <path d="M2.5 7L5.5 10L11.5 4" stroke="white" stroke-width="2.2"
-            stroke-linecap="round" stroke-linejoin="round"/>
-    </svg>
-  </div>
-  <div class="det-normal-row__body">
-    <div class="det-normal-row__name">Direct Bilirubin</div>
-    <div class="det-normal-row__val-row">
-      <span class="det-normal-row__value">0.07</span>
-      <span class="det-normal-row__unit">mg/dL</span>
-    </div>
-    <div class="det-normal-row__ref">Ref: 0 – 0.3</div>
-  </div>
-</div>
-<div class="det-normal-row">
-  <div class="det-normal-row__icon">
-    <svg width="12" height="12" viewBox="0 0 14 14" fill="none">
-      <path d="M2.5 7L5.5 10L11.5 4" stroke="white" stroke-width="2.2"
-            stroke-linecap="round" stroke-linejoin="round"/>
-    </svg>
-  </div>
-  <div class="det-normal-row__body">
-    <div class="det-normal-row__name">Indirect Bilirubin</div>
-    <div class="det-normal-row__val-row">
-      <span class="det-normal-row__value">0.39</span>
-      <span class="det-normal-row__unit">mg/dL</span>
-    </div>
-    <div class="det-normal-row__ref">Ref: 0.2 – 0.8</div>
-  </div>
-</div>
-<div class="det-normal-row">
-  <div class="det-normal-row__icon">
-    <svg width="12" height="12" viewBox="0 0 14 14" fill="none">
-      <path d="M2.5 7L5.5 10L11.5 4" stroke="white" stroke-width="2.2"
-            stroke-linecap="round" stroke-linejoin="round"/>
-    </svg>
-  </div>
-  <div class="det-normal-row__body">
-    <div class="det-normal-row__name">Total Protein</div>
-    <div class="det-normal-row__val-row">
-      <span class="det-normal-row__value">7</span>
-      <span class="det-normal-row__unit">g/dL</span>
-    </div>
-    <div class="det-normal-row__ref">Ref: 6.6 – 8.3</div>
-  </div>
-</div>
-<div class="det-normal-row">
-  <div class="det-normal-row__icon">
-    <svg width="12" height="12" viewBox="0 0 14 14" fill="none">
-      <path d="M2.5 7L5.5 10L11.5 4" stroke="white" stroke-width="2.2"
-            stroke-linecap="round" stroke-linejoin="round"/>
-    </svg>
-  </div>
-  <div class="det-normal-row__body">
-    <div class="det-normal-row__name">Albumin</div>
-    <div class="det-normal-row__val-row">
-      <span class="det-normal-row__value">4.12</span>
-      <span class="det-normal-row__unit">g/dL</span>
-    </div>
-    <div class="det-normal-row__ref">Ref: 3.5 – 5.2</div>
-  </div>
-</div>
-<div class="det-normal-row">
-  <div class="det-normal-row__icon">
-    <svg width="12" height="12" viewBox="0 0 14 14" fill="none">
-      <path d="M2.5 7L5.5 10L11.5 4" stroke="white" stroke-width="2.2"
-            stroke-linecap="round" stroke-linejoin="round"/>
-    </svg>
-  </div>
-  <div class="det-normal-row__body">
-    <div class="det-normal-row__name">Globulin</div>
-    <div class="det-normal-row__val-row">
-      <span class="det-normal-row__value">2.88</span>
-      <span class="det-normal-row__unit">g/dL</span>
-    </div>
-    <div class="det-normal-row__ref">Ref: 2 – 3.5</div>
-  </div>
-</div>
-<div class="det-normal-row">
-  <div class="det-normal-row__icon">
-    <svg width="12" height="12" viewBox="0 0 14 14" fill="none">
-      <path d="M2.5 7L5.5 10L11.5 4" stroke="white" stroke-width="2.2"
-            stroke-linecap="round" stroke-linejoin="round"/>
-    </svg>
-  </div>
-  <div class="det-normal-row__body">
-    <div class="det-normal-row__name">A/G Ratio</div>
-    <div class="det-normal-row__val-row">
-      <span class="det-normal-row__value">1.43</span>
-      
-    </div>
-    <div class="det-normal-row__ref">Ref: 1 – 2.1</div>
-  </div>
-</div>
-<div class="det-normal-row">
-  <div class="det-normal-row__icon">
-    <svg width="12" height="12" viewBox="0 0 14 14" fill="none">
-      <path d="M2.5 7L5.5 10L11.5 4" stroke="white" stroke-width="2.2"
-            stroke-linecap="round" stroke-linejoin="round"/>
-    </svg>
-  </div>
-  <div class="det-normal-row__body">
-    <div class="det-normal-row__name">SGOT (AST)</div>
-    <div class="det-normal-row__val-row">
-      <span class="det-normal-row__value">41</span>
-      <span class="det-normal-row__unit">U/L</span>
-    </div>
-    <div class="det-normal-row__ref">Ref: < 50</div>
-  </div>
-</div>
-<div class="det-normal-row">
-  <div class="det-normal-row__icon">
-    <svg width="12" height="12" viewBox="0 0 14 14" fill="none">
-      <path d="M2.5 7L5.5 10L11.5 4" stroke="white" stroke-width="2.2"
-            stroke-linecap="round" stroke-linejoin="round"/>
-    </svg>
-  </div>
-  <div class="det-normal-row__body">
-    <div class="det-normal-row__name">SGPT (ALT)</div>
-    <div class="det-normal-row__val-row">
-      <span class="det-normal-row__value">44</span>
-      <span class="det-normal-row__unit">U/L</span>
-    </div>
-    <div class="det-normal-row__ref">Ref: < 50</div>
-  </div>
-</div>
-<div class="det-normal-row">
-  <div class="det-normal-row__icon">
-    <svg width="12" height="12" viewBox="0 0 14 14" fill="none">
-      <path d="M2.5 7L5.5 10L11.5 4" stroke="white" stroke-width="2.2"
-            stroke-linecap="round" stroke-linejoin="round"/>
-    </svg>
-  </div>
-  <div class="det-normal-row__body">
-    <div class="det-normal-row__name">Alkaline Phosphatase</div>
-    <div class="det-normal-row__val-row">
-      <span class="det-normal-row__value">63</span>
-      <span class="det-normal-row__unit">U/L</span>
-    </div>
-    <div class="det-normal-row__ref">Ref: 30 – 120</div>
-  </div>
-</div>
-<div class="det-normal-row">
-  <div class="det-normal-row__icon">
-    <svg width="12" height="12" viewBox="0 0 14 14" fill="none">
-      <path d="M2.5 7L5.5 10L11.5 4" stroke="white" stroke-width="2.2"
-            stroke-linecap="round" stroke-linejoin="round"/>
-    </svg>
-  </div>
-  <div class="det-normal-row__body">
-    <div class="det-normal-row__name">Gamma Glutamyl Transferase</div>
-    <div class="det-normal-row__val-row">
-      <span class="det-normal-row__value">23</span>
-      <span class="det-normal-row__unit">U/L</span>
-    </div>
-    <div class="det-normal-row__ref">Ref: < 55</div>
-  </div>
-</div>
-  </div>
-</div>
-
-</section>
-  </main>
-
-  <footer class="page-footer">
-    <span class="footer-brand">Smart Health Labs — Intelligent Diagnostics</span>
-    <span class="footer-page">Page 7 of 16</span>
-  </footer>
-</div>
-
-<div class="report-page">
-  <main class="page-content">
-    
-<section class="indepth-detail">
-
-  
-<div class="det-hero">
-  <!-- Decorative blobs -->
-  <div class="det-hero__blob det-hero__blob--tr"></div>
-  <div class="det-hero__blob det-hero__blob--bl"></div>
-
-  <div class="det-hero__inner">
-    <div class="det-hero__info" style="display: flex; justify-content: space-between; align-items: center; gap: 20px; width: 100%;">
-      
-      <!-- Left: Title & Badge -->
-      <div style="display: flex; flex-direction: column; align-items: flex-start; gap: 8px; flex: 1; min-width: 0;">
-        <h2 class="det-hero__name" style="font-size: 24px; word-wrap: break-word; overflow-wrap: break-word; margin: 0; line-height: 1.2;">TSH - THYROID STIMULATING HORMONE</h2>
-        <span class="det-hero__sev-badge"
-              style="color:#16A34A;background:#F0FDF4;border:1px solid #86EFAC;">
-          HEALTHY
-        </span>
-      </div>
-
-      <!-- Right: Stat pills -->
-      <div class="det-hero__pills" style="margin-bottom: 0; flex-shrink: 0;">
-        
-<div class="det-hero-pill" style="background:#fff8f8; min-width: 80px;">
-  <div class="det-hero-pill__value" style="color:#c0392b;">0</div>
-  <div class="det-hero-pill__label">Abnormal</div>
-</div>
-<div class="det-hero-pill" style="background:#F0FDF4; min-width: 80px;">
-  <div class="det-hero-pill__value" style="color:#16A34A;">1</div>
-  <div class="det-hero-pill__label">Normal</div>
-</div>
-      </div>
-
-    </div>
-  </div>
-</div>
-
-  
-  <div class="det-all-normal-banner">
-    <span>✅ All parameters are within reference range</span>
-  </div>
-
-  
-<div class="det-normal-section">
-  <div class="det-section-heading">
-    <div class="det-section-heading__bar" style="background:#16A34A;"></div>
-    <span class="det-section-heading__text">Normal Parameters</span>
-  </div>
-  <div class="det-normal-grid">
-    
-<div class="det-normal-row">
-  <div class="det-normal-row__icon">
-    <svg width="12" height="12" viewBox="0 0 14 14" fill="none">
-      <path d="M2.5 7L5.5 10L11.5 4" stroke="white" stroke-width="2.2"
-            stroke-linecap="round" stroke-linejoin="round"/>
-    </svg>
-  </div>
-  <div class="det-normal-row__body">
-    <div class="det-normal-row__name">TSH (Ultrasensitive)</div>
-    <div class="det-normal-row__val-row">
-      <span class="det-normal-row__value">1.7</span>
-      <span class="det-normal-row__unit">µIU/mL</span>
-    </div>
-    <div class="det-normal-row__ref">Ref: 0.35 – 5.5</div>
-  </div>
-</div>
-  </div>
-</div>
-
-</section>
-  </main>
-
-  <footer class="page-footer">
-    <span class="footer-brand">Smart Health Labs — Intelligent Diagnostics</span>
-    <span class="footer-page">Page 8 of 16</span>
-  </footer>
-</div>
-
-<div class="report-page">
-  <main class="page-content">
-    
-<section class="indepth-detail">
-
-  
-<div class="det-hero">
-  <!-- Decorative blobs -->
-  <div class="det-hero__blob det-hero__blob--tr"></div>
-  <div class="det-hero__blob det-hero__blob--bl"></div>
-
-  <div class="det-hero__inner">
-    <div class="det-hero__info" style="display: flex; justify-content: space-between; align-items: center; gap: 20px; width: 100%;">
-      
-      <!-- Left: Title & Badge -->
-      <div style="display: flex; flex-direction: column; align-items: flex-start; gap: 8px; flex: 1; min-width: 0;">
-        <h2 class="det-hero__name" style="font-size: 24px; word-wrap: break-word; overflow-wrap: break-word; margin: 0; line-height: 1.2;">25 HYDROXY VITAMIN D</h2>
-        <span class="det-hero__sev-badge"
-              style="color:#c0392b;background:#fff1f1;border:1px solid #fca5a5;">
-          ATTENTION
-        </span>
-      </div>
-
-      <!-- Right: Stat pills -->
-      <div class="det-hero__pills" style="margin-bottom: 0; flex-shrink: 0;">
-        
-<div class="det-hero-pill" style="background:#fff8f8; min-width: 80px;">
-  <div class="det-hero-pill__value" style="color:#c0392b;">1</div>
-  <div class="det-hero-pill__label">Abnormal</div>
-</div>
-<div class="det-hero-pill" style="background:#F0FDF4; min-width: 80px;">
-  <div class="det-hero-pill__value" style="color:#16A34A;">0</div>
-  <div class="det-hero-pill__label">Normal</div>
-</div>
-      </div>
-
-    </div>
-  </div>
-</div>
-
-  
-  <div class="det-section-heading det-section-heading--flagged">
-    <div class="det-section-heading__bar" style="background:#f87171;"></div>
-    <span class="det-section-heading__text">Parameters Requiring Attention</span>
-  </div>
-  <div class="det-flagged-list">
-    
-<div class="det-flagged-card" style="border-color:#fca5a5;background:#fff1f1;">
+<div class="det-flagged-card" style="border-color:#fcd5d5;background:#fff8f8;">
   <!-- Card header -->
   <div class="det-flagged-card__header">
     <div class="det-flagged-card__header-left">
-      <span class="det-flagged-pill" style="color:#c0392b;background:#fff1f1;border:1px solid #fca5a5;">
-        ‼ CRITICAL
+      <span class="det-flagged-pill" style="color:#c0392b;background:#fff8f8;border:1px solid #fcd5d5;">
+        ▼ LOW
       </span>
-      <span class="det-flagged-ref">Ref: 30 – 100 ng/mL</span>
+      <span class="det-flagged-ref">Ref: 150000 – 400000 /µL</span>
     </div>
-    <div class="det-flagged-card__value-box" style="background:#fff1f1;">
-      <div class="det-flagged-card__value" style="color:#c0392b;">6.59</div>
-      <div class="det-flagged-card__unit" style="color:#c0392b;">ng/mL</div>
+    <div class="det-flagged-card__value-box" style="background:#fff8f8;">
+      <div class="det-flagged-card__value" style="color:#c0392b;">145000</div>
+      <div class="det-flagged-card__unit" style="color:#c0392b;">/µL</div>
     </div>
   </div>
 
   <!-- Test name -->
-  <h3 class="det-flagged-card__name">Vitamin D, 25 Hydroxy (OH)</h3>
+  <h3 class="det-flagged-card__name">Platelet Count</h3>
 
   <!-- Smart Slider -->
   
 <div class="hsl-slider">
   <div class="hsl-slider__area">
-    <div class="hsl-bpos" style="left:8%;">
+    <div class="hsl-bpos" style="left:28.886%;">
       <div class="hsl-bubble" style="background:#f87171; box-shadow: 0 2px 8px #f8717155;">
-        <span class="hsl-bubble__val">6.59</span>
-        <span class="hsl-bubble__unit">ng/mL</span>
+        <span class="hsl-bubble__val">145000</span>
+        <span class="hsl-bubble__unit">/µL</span>
       </div>
       <div class="hsl-bubble__tip" style="border-top-color:#f87171;"></div>
     </div>
@@ -4947,15 +4189,119 @@ body {
   <div class="hsl-labels">
     <div class="hsl-label">
       <span class="hsl-label__text" style="color:#f87171;">&#8595; Low</span>
-      <span class="hsl-label__range">< 30</span>
+      <span class="hsl-label__range">< 150000</span>
     </div>
     <div class="hsl-label">
       <span class="hsl-label__text" style="color:#16A34A;">&#10003; Normal</span>
-      <span class="hsl-label__range">30 – 100</span>
+      <span class="hsl-label__range">150000 – 400000</span>
     </div>
     <div class="hsl-label">
       <span class="hsl-label__text" style="color:#f87171;">&#8593; High</span>
-      <span class="hsl-label__range">> 100</span>
+      <span class="hsl-label__range">> 400000</span>
+    </div>
+  </div>
+</div>
+</div>
+
+<div class="det-flagged-card" style="border-color:#fcd5d5;background:#fff8f8;">
+  <!-- Card header -->
+  <div class="det-flagged-card__header">
+    <div class="det-flagged-card__header-left">
+      <span class="det-flagged-pill" style="color:#c0392b;background:#fff8f8;border:1px solid #fcd5d5;">
+        ▼ LOW
+      </span>
+      <span class="det-flagged-ref">Ref: 4.5 – 5.9 million/µL</span>
+    </div>
+    <div class="det-flagged-card__value-box" style="background:#fff8f8;">
+      <div class="det-flagged-card__value" style="color:#c0392b;">4.1</div>
+      <div class="det-flagged-card__unit" style="color:#c0392b;">million/µL</div>
+    </div>
+  </div>
+
+  <!-- Test name -->
+  <h3 class="det-flagged-card__name">RBC Count</h3>
+
+  <!-- Smart Slider -->
+  
+<div class="hsl-slider">
+  <div class="hsl-slider__area">
+    <div class="hsl-bpos" style="left:22.21999999999999%;">
+      <div class="hsl-bubble" style="background:#f87171; box-shadow: 0 2px 8px #f8717155;">
+        <span class="hsl-bubble__val">4.1</span>
+        <span class="hsl-bubble__unit">million/µL</span>
+      </div>
+      <div class="hsl-bubble__tip" style="border-top-color:#f87171;"></div>
+    </div>
+    <div class="hsl-track">
+      <div class="hsl-seg" style="background:#fca5a5; border-radius:12px 0 0 12px;"></div>
+      <div class="hsl-seg" style="background:#86efac;"></div>
+      <div class="hsl-seg" style="background:#fca5a5; border-radius:0 12px 12px 0;"></div>
+    </div>
+  </div>
+  <div class="hsl-labels">
+    <div class="hsl-label">
+      <span class="hsl-label__text" style="color:#f87171;">&#8595; Low</span>
+      <span class="hsl-label__range">< 4.5</span>
+    </div>
+    <div class="hsl-label">
+      <span class="hsl-label__text" style="color:#16A34A;">&#10003; Normal</span>
+      <span class="hsl-label__range">4.5 – 5.9</span>
+    </div>
+    <div class="hsl-label">
+      <span class="hsl-label__text" style="color:#f87171;">&#8593; High</span>
+      <span class="hsl-label__range">> 5.9</span>
+    </div>
+  </div>
+</div>
+</div>
+
+<div class="det-flagged-card" style="border-color:#fcd5d5;background:#fff8f8;">
+  <!-- Card header -->
+  <div class="det-flagged-card__header">
+    <div class="det-flagged-card__header-left">
+      <span class="det-flagged-pill" style="color:#c0392b;background:#fff8f8;border:1px solid #fcd5d5;">
+        ▼ LOW
+      </span>
+      <span class="det-flagged-ref">Ref: 41 – 53 %</span>
+    </div>
+    <div class="det-flagged-card__value-box" style="background:#fff8f8;">
+      <div class="det-flagged-card__value" style="color:#c0392b;">36</div>
+      <div class="det-flagged-card__unit" style="color:#c0392b;">%</div>
+    </div>
+  </div>
+
+  <!-- Test name -->
+  <h3 class="det-flagged-card__name">Hematocrit</h3>
+
+  <!-- Smart Slider -->
+  
+<div class="hsl-slider">
+  <div class="hsl-slider__area">
+    <div class="hsl-bpos" style="left:19.670163934426228%;">
+      <div class="hsl-bubble" style="background:#f87171; box-shadow: 0 2px 8px #f8717155;">
+        <span class="hsl-bubble__val">36</span>
+        <span class="hsl-bubble__unit">%</span>
+      </div>
+      <div class="hsl-bubble__tip" style="border-top-color:#f87171;"></div>
+    </div>
+    <div class="hsl-track">
+      <div class="hsl-seg" style="background:#fca5a5; border-radius:12px 0 0 12px;"></div>
+      <div class="hsl-seg" style="background:#86efac;"></div>
+      <div class="hsl-seg" style="background:#fca5a5; border-radius:0 12px 12px 0;"></div>
+    </div>
+  </div>
+  <div class="hsl-labels">
+    <div class="hsl-label">
+      <span class="hsl-label__text" style="color:#f87171;">&#8595; Low</span>
+      <span class="hsl-label__range">< 41</span>
+    </div>
+    <div class="hsl-label">
+      <span class="hsl-label__text" style="color:#16A34A;">&#10003; Normal</span>
+      <span class="hsl-label__range">41 – 53</span>
+    </div>
+    <div class="hsl-label">
+      <span class="hsl-label__text" style="color:#f87171;">&#8593; High</span>
+      <span class="hsl-label__range">> 53</span>
     </div>
   </div>
 </div>
@@ -4963,13 +4309,70 @@ body {
   </div>
 
   
+<div class="det-normal-section">
+  <div class="det-section-heading">
+    <div class="det-section-heading__bar" style="background:#16A34A;"></div>
+    <span class="det-section-heading__text">Normal Parameters</span>
+  </div>
+  <div class="det-normal-grid">
+    
+<div class="det-normal-row">
+  <div class="det-normal-row__icon">
+    <svg width="12" height="12" viewBox="0 0 14 14" fill="none">
+      <path d="M2.5 7L5.5 10L11.5 4" stroke="white" stroke-width="2.2"
+            stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+  </div>
+  <div class="det-normal-row__body">
+    <div class="det-normal-row__name">WBC Count</div>
+    <div class="det-normal-row__val-row">
+      <span class="det-normal-row__value">9800</span>
+      <span class="det-normal-row__unit">cells/µL</span>
+    </div>
+    <div class="det-normal-row__ref">Ref: 4500 – 11000</div>
+  </div>
+</div>
+<div class="det-normal-row">
+  <div class="det-normal-row__icon">
+    <svg width="12" height="12" viewBox="0 0 14 14" fill="none">
+      <path d="M2.5 7L5.5 10L11.5 4" stroke="white" stroke-width="2.2"
+            stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+  </div>
+  <div class="det-normal-row__body">
+    <div class="det-normal-row__name">MCV</div>
+    <div class="det-normal-row__val-row">
+      <span class="det-normal-row__value">88</span>
+      <span class="det-normal-row__unit">fL</span>
+    </div>
+    <div class="det-normal-row__ref">Ref: 80 – 100</div>
+  </div>
+</div>
+<div class="det-normal-row">
+  <div class="det-normal-row__icon">
+    <svg width="12" height="12" viewBox="0 0 14 14" fill="none">
+      <path d="M2.5 7L5.5 10L11.5 4" stroke="white" stroke-width="2.2"
+            stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+  </div>
+  <div class="det-normal-row__body">
+    <div class="det-normal-row__name">sai</div>
+    <div class="det-normal-row__val-row">
+      <span class="det-normal-row__value">88</span>
+      <span class="det-normal-row__unit">fL</span>
+    </div>
+    <div class="det-normal-row__ref">Ref: 80 – 100</div>
+  </div>
+</div>
+  </div>
+</div>
 
 </section>
   </main>
 
   <footer class="page-footer">
-    <span class="footer-brand">Smart Health Labs — Intelligent Diagnostics</span>
-    <span class="footer-page">Page 9 of 16</span>
+    <span class="footer-brand">NexaHealth Analytics — Smart Health Insights</span>
+    <span class="footer-page">Page 3 of 7</span>
   </footer>
 </div>
 
@@ -4989,7 +4392,7 @@ body {
       
       <!-- Left: Title & Badge -->
       <div style="display: flex; flex-direction: column; align-items: flex-start; gap: 8px; flex: 1; min-width: 0;">
-        <h2 class="det-hero__name" style="font-size: 24px; word-wrap: break-word; overflow-wrap: break-word; margin: 0; line-height: 1.2;">General Panel</h2>
+        <h2 class="det-hero__name" style="font-size: 24px; word-wrap: break-word; overflow-wrap: break-word; margin: 0; line-height: 1.2;">Lipid Panel</h2>
         <span class="det-hero__sev-badge"
               style="color:#c0392b;background:#fff1f1;border:1px solid #fca5a5;">
           ATTENTION
@@ -5000,7 +4403,7 @@ body {
       <div class="det-hero__pills" style="margin-bottom: 0; flex-shrink: 0;">
         
 <div class="det-hero-pill" style="background:#fff8f8; min-width: 80px;">
-  <div class="det-hero-pill__value" style="color:#c0392b;">1</div>
+  <div class="det-hero-pill__value" style="color:#c0392b;">3</div>
   <div class="det-hero-pill__label">Abnormal</div>
 </div>
 <div class="det-hero-pill" style="background:#F0FDF4; min-width: 80px;">
@@ -5027,326 +4430,25 @@ body {
       <span class="det-flagged-pill" style="color:#c0392b;background:#fff8f8;border:1px solid #fcd5d5;">
         ▲ HIGH
       </span>
-      <span class="det-flagged-ref">Ref: 4.2 – 5.7 %</span>
+      <span class="det-flagged-ref">Ref: 0 – 200 mg/dL</span>
     </div>
     <div class="det-flagged-card__value-box" style="background:#fff8f8;">
-      <div class="det-flagged-card__value" style="color:#c0392b;">6.5</div>
-      <div class="det-flagged-card__unit" style="color:#c0392b;">%</div>
+      <div class="det-flagged-card__value" style="color:#c0392b;">210</div>
+      <div class="det-flagged-card__unit" style="color:#c0392b;">mg/dL</div>
     </div>
   </div>
 
   <!-- Test name -->
-  <h3 class="det-flagged-card__name">HbA1c (Glycated Haemoglobin)</h3>
+  <h3 class="det-flagged-card__name">Total Cholesterol</h3>
 
   <!-- Smart Slider -->
   
 <div class="hsl-slider">
   <div class="hsl-slider__area">
-    <div class="hsl-bpos" style="left:79.35714285714285%;">
+    <div class="hsl-bpos" style="left:73.06961538461537%;">
       <div class="hsl-bubble" style="background:#f87171; box-shadow: 0 2px 8px #f8717155;">
-        <span class="hsl-bubble__val">6.5</span>
-        <span class="hsl-bubble__unit">%</span>
-      </div>
-      <div class="hsl-bubble__tip" style="border-top-color:#f87171;"></div>
-    </div>
-    <div class="hsl-track">
-      <div class="hsl-seg" style="background:#fca5a5; border-radius:12px 0 0 12px;"></div>
-      <div class="hsl-seg" style="background:#86efac;"></div>
-      <div class="hsl-seg" style="background:#fca5a5; border-radius:0 12px 12px 0;"></div>
-    </div>
-  </div>
-  <div class="hsl-labels">
-    <div class="hsl-label">
-      <span class="hsl-label__text" style="color:#f87171;">&#8595; Low</span>
-      <span class="hsl-label__range">< 4.2</span>
-    </div>
-    <div class="hsl-label">
-      <span class="hsl-label__text" style="color:#16A34A;">&#10003; Normal</span>
-      <span class="hsl-label__range">4.2 – 5.7</span>
-    </div>
-    <div class="hsl-label">
-      <span class="hsl-label__text" style="color:#f87171;">&#8593; High</span>
-      <span class="hsl-label__range">> 5.7</span>
-    </div>
-  </div>
-</div>
-</div>
-  </div>
-
-  
-<div class="det-normal-section">
-  <div class="det-section-heading">
-    <div class="det-section-heading__bar" style="background:#16A34A;"></div>
-    <span class="det-section-heading__text">Normal Parameters</span>
-  </div>
-  <div class="det-normal-grid">
-    
-<div class="det-normal-row">
-  <div class="det-normal-row__icon">
-    <svg width="12" height="12" viewBox="0 0 14 14" fill="none">
-      <path d="M2.5 7L5.5 10L11.5 4" stroke="white" stroke-width="2.2"
-            stroke-linecap="round" stroke-linejoin="round"/>
-    </svg>
-  </div>
-  <div class="det-normal-row__body">
-    <div class="det-normal-row__name">Estimated Average Glucose (eAG)</div>
-    <div class="det-normal-row__val-row">
-      <span class="det-normal-row__value">139.85</span>
-      <span class="det-normal-row__unit">mg/dl</span>
-    </div>
-    <div class="det-normal-row__ref">Ref: Unknown</div>
-  </div>
-</div>
-  </div>
-</div>
-
-</section>
-  </main>
-
-  <footer class="page-footer">
-    <span class="footer-brand">Smart Health Labs — Intelligent Diagnostics</span>
-    <span class="footer-page">Page 10 of 16</span>
-  </footer>
-</div>
-
-<div class="report-page">
-  <main class="page-content">
-    
-<section class="indepth-detail">
-
-  
-<div class="det-hero">
-  <!-- Decorative blobs -->
-  <div class="det-hero__blob det-hero__blob--tr"></div>
-  <div class="det-hero__blob det-hero__blob--bl"></div>
-
-  <div class="det-hero__inner">
-    <div class="det-hero__info" style="display: flex; justify-content: space-between; align-items: center; gap: 20px; width: 100%;">
-      
-      <!-- Left: Title & Badge -->
-      <div style="display: flex; flex-direction: column; align-items: flex-start; gap: 8px; flex: 1; min-width: 0;">
-        <h2 class="det-hero__name" style="font-size: 24px; word-wrap: break-word; overflow-wrap: break-word; margin: 0; line-height: 1.2;">General Panel</h2>
-        <span class="det-hero__sev-badge"
-              style="color:#16A34A;background:#F0FDF4;border:1px solid #86EFAC;">
-          HEALTHY
-        </span>
-      </div>
-
-      <!-- Right: Stat pills -->
-      <div class="det-hero__pills" style="margin-bottom: 0; flex-shrink: 0;">
-        
-<div class="det-hero-pill" style="background:#fff8f8; min-width: 80px;">
-  <div class="det-hero-pill__value" style="color:#c0392b;">0</div>
-  <div class="det-hero-pill__label">Abnormal</div>
-</div>
-<div class="det-hero-pill" style="background:#F0FDF4; min-width: 80px;">
-  <div class="det-hero-pill__value" style="color:#16A34A;">3</div>
-  <div class="det-hero-pill__label">Normal</div>
-</div>
-      </div>
-
-    </div>
-  </div>
-</div>
-
-  
-  <div class="det-all-normal-banner">
-    <span>✅ All parameters are within reference range</span>
-  </div>
-
-  
-<div class="det-normal-section">
-  <div class="det-section-heading">
-    <div class="det-section-heading__bar" style="background:#16A34A;"></div>
-    <span class="det-section-heading__text">Normal Parameters</span>
-  </div>
-  <div class="det-normal-grid">
-    
-<div class="det-normal-row">
-  <div class="det-normal-row__icon">
-    <svg width="12" height="12" viewBox="0 0 14 14" fill="none">
-      <path d="M2.5 7L5.5 10L11.5 4" stroke="white" stroke-width="2.2"
-            stroke-linecap="round" stroke-linejoin="round"/>
-    </svg>
-  </div>
-  <div class="det-normal-row__body">
-    <div class="det-normal-row__name">Serum Urea</div>
-    <div class="det-normal-row__val-row">
-      <span class="det-normal-row__value">32</span>
-      <span class="det-normal-row__unit">mg/dL</span>
-    </div>
-    <div class="det-normal-row__ref">Ref: 17 – 43</div>
-  </div>
-</div>
-<div class="det-normal-row">
-  <div class="det-normal-row__icon">
-    <svg width="12" height="12" viewBox="0 0 14 14" fill="none">
-      <path d="M2.5 7L5.5 10L11.5 4" stroke="white" stroke-width="2.2"
-            stroke-linecap="round" stroke-linejoin="round"/>
-    </svg>
-  </div>
-  <div class="det-normal-row__body">
-    <div class="det-normal-row__name">Blood Urea Nitrogen (BUN)</div>
-    <div class="det-normal-row__val-row">
-      <span class="det-normal-row__value">14.95</span>
-      <span class="det-normal-row__unit">mg/dL</span>
-    </div>
-    <div class="det-normal-row__ref">Ref: 5 – 25</div>
-  </div>
-</div>
-<div class="det-normal-row">
-  <div class="det-normal-row__icon">
-    <svg width="12" height="12" viewBox="0 0 14 14" fill="none">
-      <path d="M2.5 7L5.5 10L11.5 4" stroke="white" stroke-width="2.2"
-            stroke-linecap="round" stroke-linejoin="round"/>
-    </svg>
-  </div>
-  <div class="det-normal-row__body">
-    <div class="det-normal-row__name">Serum Creatinine</div>
-    <div class="det-normal-row__val-row">
-      <span class="det-normal-row__value">1.17</span>
-      <span class="det-normal-row__unit">mg/dL</span>
-    </div>
-    <div class="det-normal-row__ref">Ref: 0.9 – 1.3</div>
-  </div>
-</div>
-  </div>
-</div>
-
-</section>
-  </main>
-
-  <footer class="page-footer">
-    <span class="footer-brand">Smart Health Labs — Intelligent Diagnostics</span>
-    <span class="footer-page">Page 11 of 16</span>
-  </footer>
-</div>
-
-<div class="report-page">
-  <main class="page-content">
-    
-<section class="indepth-detail">
-
-  
-<div class="det-hero">
-  <!-- Decorative blobs -->
-  <div class="det-hero__blob det-hero__blob--tr"></div>
-  <div class="det-hero__blob det-hero__blob--bl"></div>
-
-  <div class="det-hero__inner">
-    <div class="det-hero__info" style="display: flex; justify-content: space-between; align-items: center; gap: 20px; width: 100%;">
-      
-      <!-- Left: Title & Badge -->
-      <div style="display: flex; flex-direction: column; align-items: flex-start; gap: 8px; flex: 1; min-width: 0;">
-        <h2 class="det-hero__name" style="font-size: 24px; word-wrap: break-word; overflow-wrap: break-word; margin: 0; line-height: 1.2;">HOMA-IR (INSULIN RESISTANCE INDEX)</h2>
-        <span class="det-hero__sev-badge"
-              style="color:#c0392b;background:#fff1f1;border:1px solid #fca5a5;">
-          ATTENTION
-        </span>
-      </div>
-
-      <!-- Right: Stat pills -->
-      <div class="det-hero__pills" style="margin-bottom: 0; flex-shrink: 0;">
-        
-<div class="det-hero-pill" style="background:#fff8f8; min-width: 80px;">
-  <div class="det-hero-pill__value" style="color:#c0392b;">2</div>
-  <div class="det-hero-pill__label">Abnormal</div>
-</div>
-<div class="det-hero-pill" style="background:#F0FDF4; min-width: 80px;">
-  <div class="det-hero-pill__value" style="color:#16A34A;">1</div>
-  <div class="det-hero-pill__label">Normal</div>
-</div>
-      </div>
-
-    </div>
-  </div>
-</div>
-
-  
-  <div class="det-section-heading det-section-heading--flagged">
-    <div class="det-section-heading__bar" style="background:#f87171;"></div>
-    <span class="det-section-heading__text">Parameters Requiring Attention</span>
-  </div>
-  <div class="det-flagged-list">
-    
-<div class="det-flagged-card" style="border-color:#fca5a5;background:#fff1f1;">
-  <!-- Card header -->
-  <div class="det-flagged-card__header">
-    <div class="det-flagged-card__header-left">
-      <span class="det-flagged-pill" style="color:#c0392b;background:#fff1f1;border:1px solid #fca5a5;">
-        ‼ CRITICAL
-      </span>
-      <span class="det-flagged-ref">Ref: 3 – 25 mU/L</span>
-    </div>
-    <div class="det-flagged-card__value-box" style="background:#fff1f1;">
-      <div class="det-flagged-card__value" style="color:#c0392b;">70.7</div>
-      <div class="det-flagged-card__unit" style="color:#c0392b;">mU/L</div>
-    </div>
-  </div>
-
-  <!-- Test name -->
-  <h3 class="det-flagged-card__name">Insulin, Fasting</h3>
-
-  <!-- Smart Slider -->
-  
-<div class="hsl-slider">
-  <div class="hsl-slider__area">
-    <div class="hsl-bpos" style="left:92%;">
-      <div class="hsl-bubble" style="background:#f87171; box-shadow: 0 2px 8px #f8717155;">
-        <span class="hsl-bubble__val">70.7</span>
-        <span class="hsl-bubble__unit">mU/L</span>
-      </div>
-      <div class="hsl-bubble__tip" style="border-top-color:#f87171;"></div>
-    </div>
-    <div class="hsl-track">
-      <div class="hsl-seg" style="background:#fca5a5; border-radius:12px 0 0 12px;"></div>
-      <div class="hsl-seg" style="background:#86efac;"></div>
-      <div class="hsl-seg" style="background:#fca5a5; border-radius:0 12px 12px 0;"></div>
-    </div>
-  </div>
-  <div class="hsl-labels">
-    <div class="hsl-label">
-      <span class="hsl-label__text" style="color:#f87171;">&#8595; Low</span>
-      <span class="hsl-label__range">< 3</span>
-    </div>
-    <div class="hsl-label">
-      <span class="hsl-label__text" style="color:#16A34A;">&#10003; Normal</span>
-      <span class="hsl-label__range">3 – 25</span>
-    </div>
-    <div class="hsl-label">
-      <span class="hsl-label__text" style="color:#f87171;">&#8593; High</span>
-      <span class="hsl-label__range">> 25</span>
-    </div>
-  </div>
-</div>
-</div>
-
-<div class="det-flagged-card" style="border-color:#fca5a5;background:#fff1f1;">
-  <!-- Card header -->
-  <div class="det-flagged-card__header">
-    <div class="det-flagged-card__header-left">
-      <span class="det-flagged-pill" style="color:#c0392b;background:#fff1f1;border:1px solid #fca5a5;">
-        ‼ CRITICAL
-      </span>
-      <span class="det-flagged-ref">Ref: < 1.9 Index</span>
-    </div>
-    <div class="det-flagged-card__value-box" style="background:#fff1f1;">
-      <div class="det-flagged-card__value" style="color:#c0392b;">15.89</div>
-      <div class="det-flagged-card__unit" style="color:#c0392b;">Index</div>
-    </div>
-  </div>
-
-  <!-- Test name -->
-  <h3 class="det-flagged-card__name">Homa IR Index</h3>
-
-  <!-- Smart Slider -->
-  
-<div class="hsl-slider">
-  <div class="hsl-slider__area">
-    <div class="hsl-bpos" style="left:92%;">
-      <div class="hsl-bubble" style="background:#f87171; box-shadow: 0 2px 8px #f8717155;">
-        <span class="hsl-bubble__val">15.89</span>
-        <span class="hsl-bubble__unit">Index</span>
+        <span class="hsl-bubble__val">210</span>
+        <span class="hsl-bubble__unit">mg/dL</span>
       </div>
       <div class="hsl-bubble__tip" style="border-top-color:#f87171;"></div>
     </div>
@@ -5363,100 +4465,16 @@ body {
     </div>
     <div class="hsl-label">
       <span class="hsl-label__text" style="color:#16A34A;">&#10003; Normal</span>
-      <span class="hsl-label__range">0 – 1.9</span>
+      <span class="hsl-label__range">0 – 200</span>
     </div>
     <div class="hsl-label">
       <span class="hsl-label__text" style="color:#f87171;">&#8593; High</span>
-      <span class="hsl-label__range">> 1.9</span>
+      <span class="hsl-label__range">> 200</span>
     </div>
   </div>
 </div>
 </div>
-  </div>
 
-  
-<div class="det-normal-section">
-  <div class="det-section-heading">
-    <div class="det-section-heading__bar" style="background:#16A34A;"></div>
-    <span class="det-section-heading__text">Normal Parameters</span>
-  </div>
-  <div class="det-normal-grid">
-    
-<div class="det-normal-row">
-  <div class="det-normal-row__icon">
-    <svg width="12" height="12" viewBox="0 0 14 14" fill="none">
-      <path d="M2.5 7L5.5 10L11.5 4" stroke="white" stroke-width="2.2"
-            stroke-linecap="round" stroke-linejoin="round"/>
-    </svg>
-  </div>
-  <div class="det-normal-row__body">
-    <div class="det-normal-row__name">Plasma Glucose Fasting</div>
-    <div class="det-normal-row__val-row">
-      <span class="det-normal-row__value">91</span>
-      <span class="det-normal-row__unit">mg/dL</span>
-    </div>
-    <div class="det-normal-row__ref">Ref: < 100</div>
-  </div>
-</div>
-  </div>
-</div>
-
-</section>
-  </main>
-
-  <footer class="page-footer">
-    <span class="footer-brand">Smart Health Labs — Intelligent Diagnostics</span>
-    <span class="footer-page">Page 12 of 16</span>
-  </footer>
-</div>
-
-<div class="report-page">
-  <main class="page-content">
-    
-<section class="indepth-detail">
-
-  
-<div class="det-hero">
-  <!-- Decorative blobs -->
-  <div class="det-hero__blob det-hero__blob--tr"></div>
-  <div class="det-hero__blob det-hero__blob--bl"></div>
-
-  <div class="det-hero__inner">
-    <div class="det-hero__info" style="display: flex; justify-content: space-between; align-items: center; gap: 20px; width: 100%;">
-      
-      <!-- Left: Title & Badge -->
-      <div style="display: flex; flex-direction: column; align-items: flex-start; gap: 8px; flex: 1; min-width: 0;">
-        <h2 class="det-hero__name" style="font-size: 24px; word-wrap: break-word; overflow-wrap: break-word; margin: 0; line-height: 1.2;">COMPLETE BLOOD COUNT</h2>
-        <span class="det-hero__sev-badge"
-              style="color:#c0392b;background:#fff8f8;border:1px solid #fcd5d5;">
-          MONITOR
-        </span>
-      </div>
-
-      <!-- Right: Stat pills -->
-      <div class="det-hero__pills" style="margin-bottom: 0; flex-shrink: 0;">
-        
-<div class="det-hero-pill" style="background:#fff8f8; min-width: 80px;">
-  <div class="det-hero-pill__value" style="color:#c0392b;">4</div>
-  <div class="det-hero-pill__label">Abnormal</div>
-</div>
-<div class="det-hero-pill" style="background:#F0FDF4; min-width: 80px;">
-  <div class="det-hero-pill__value" style="color:#16A34A;">18</div>
-  <div class="det-hero-pill__label">Normal</div>
-</div>
-      </div>
-
-    </div>
-  </div>
-</div>
-
-  
-  <div class="det-section-heading det-section-heading--flagged">
-    <div class="det-section-heading__bar" style="background:#f87171;"></div>
-    <span class="det-section-heading__text">Parameters Requiring Attention</span>
-  </div>
-  <div class="det-flagged-list">
-    
 <div class="det-flagged-card" style="border-color:#fcd5d5;background:#fff8f8;">
   <!-- Card header -->
   <div class="det-flagged-card__header">
@@ -5464,25 +4482,25 @@ body {
       <span class="det-flagged-pill" style="color:#c0392b;background:#fff8f8;border:1px solid #fcd5d5;">
         ▲ HIGH
       </span>
-      <span class="det-flagged-ref">Ref: 4 – 5.5 10^6/μL</span>
+      <span class="det-flagged-ref">Ref: 0 – 100 mg/dL</span>
     </div>
     <div class="det-flagged-card__value-box" style="background:#fff8f8;">
-      <div class="det-flagged-card__value" style="color:#c0392b;">5.7</div>
-      <div class="det-flagged-card__unit" style="color:#c0392b;">10^6/μL</div>
+      <div class="det-flagged-card__value" style="color:#c0392b;">138</div>
+      <div class="det-flagged-card__unit" style="color:#c0392b;">mg/dL</div>
     </div>
   </div>
 
   <!-- Test name -->
-  <h3 class="det-flagged-card__name">Red Blood Cell Count (RBC)</h3>
+  <h3 class="det-flagged-card__name">LDL Cholesterol</h3>
 
   <!-- Smart Slider -->
   
 <div class="hsl-slider">
   <div class="hsl-slider__area">
-    <div class="hsl-bpos" style="left:71.78769230769231%;">
+    <div class="hsl-bpos" style="left:85.96701219512195%;">
       <div class="hsl-bubble" style="background:#f87171; box-shadow: 0 2px 8px #f8717155;">
-        <span class="hsl-bubble__val">5.7</span>
-        <span class="hsl-bubble__unit">10^6/μL</span>
+        <span class="hsl-bubble__val">138</span>
+        <span class="hsl-bubble__unit">mg/dL</span>
       </div>
       <div class="hsl-bubble__tip" style="border-top-color:#f87171;"></div>
     </div>
@@ -5495,63 +4513,11 @@ body {
   <div class="hsl-labels">
     <div class="hsl-label">
       <span class="hsl-label__text" style="color:#f87171;">&#8595; Low</span>
-      <span class="hsl-label__range">< 4</span>
+      <span class="hsl-label__range">< 0</span>
     </div>
     <div class="hsl-label">
       <span class="hsl-label__text" style="color:#16A34A;">&#10003; Normal</span>
-      <span class="hsl-label__range">4 – 5.5</span>
-    </div>
-    <div class="hsl-label">
-      <span class="hsl-label__text" style="color:#f87171;">&#8593; High</span>
-      <span class="hsl-label__range">> 5.5</span>
-    </div>
-  </div>
-</div>
-</div>
-
-<div class="det-flagged-card" style="border-color:#fcd5d5;background:#fff8f8;">
-  <!-- Card header -->
-  <div class="det-flagged-card__header">
-    <div class="det-flagged-card__header-left">
-      <span class="det-flagged-pill" style="color:#c0392b;background:#fff8f8;border:1px solid #fcd5d5;">
-        ▼ LOW
-      </span>
-      <span class="det-flagged-ref">Ref: 80 – 100 fL</span>
-    </div>
-    <div class="det-flagged-card__value-box" style="background:#fff8f8;">
-      <div class="det-flagged-card__value" style="color:#c0392b;">79.9</div>
-      <div class="det-flagged-card__unit" style="color:#c0392b;">fL</div>
-    </div>
-  </div>
-
-  <!-- Test name -->
-  <h3 class="det-flagged-card__name">Mean Corpuscular Volume (MCV)</h3>
-
-  <!-- Smart Slider -->
-  
-<div class="hsl-slider">
-  <div class="hsl-slider__area">
-    <div class="hsl-bpos" style="left:33.12298136645963%;">
-      <div class="hsl-bubble" style="background:#f87171; box-shadow: 0 2px 8px #f8717155;">
-        <span class="hsl-bubble__val">79.9</span>
-        <span class="hsl-bubble__unit">fL</span>
-      </div>
-      <div class="hsl-bubble__tip" style="border-top-color:#f87171;"></div>
-    </div>
-    <div class="hsl-track">
-      <div class="hsl-seg" style="background:#fca5a5; border-radius:12px 0 0 12px;"></div>
-      <div class="hsl-seg" style="background:#86efac;"></div>
-      <div class="hsl-seg" style="background:#fca5a5; border-radius:0 12px 12px 0;"></div>
-    </div>
-  </div>
-  <div class="hsl-labels">
-    <div class="hsl-label">
-      <span class="hsl-label__text" style="color:#f87171;">&#8595; Low</span>
-      <span class="hsl-label__range">< 80</span>
-    </div>
-    <div class="hsl-label">
-      <span class="hsl-label__text" style="color:#16A34A;">&#10003; Normal</span>
-      <span class="hsl-label__range">80 – 100</span>
+      <span class="hsl-label__range">0 – 100</span>
     </div>
     <div class="hsl-label">
       <span class="hsl-label__text" style="color:#f87171;">&#8593; High</span>
@@ -5566,27 +4532,27 @@ body {
   <div class="det-flagged-card__header">
     <div class="det-flagged-card__header-left">
       <span class="det-flagged-pill" style="color:#c0392b;background:#fff8f8;border:1px solid #fcd5d5;">
-        ▼ LOW
+        ▲ HIGH
       </span>
-      <span class="det-flagged-ref">Ref: 27 – 32 pg</span>
+      <span class="det-flagged-ref">Ref: 0 – 150 mg/dL</span>
     </div>
     <div class="det-flagged-card__value-box" style="background:#fff8f8;">
-      <div class="det-flagged-card__value" style="color:#c0392b;">24.9</div>
-      <div class="det-flagged-card__unit" style="color:#c0392b;">pg</div>
+      <div class="det-flagged-card__value" style="color:#c0392b;">165</div>
+      <div class="det-flagged-card__unit" style="color:#c0392b;">mg/dL</div>
     </div>
   </div>
 
   <!-- Test name -->
-  <h3 class="det-flagged-card__name">Mean Corpuscular Hb (MCH)</h3>
+  <h3 class="det-flagged-card__name">Triglycerides</h3>
 
   <!-- Smart Slider -->
   
 <div class="hsl-slider">
   <div class="hsl-slider__area">
-    <div class="hsl-bpos" style="left:23.471830985915485%;">
+    <div class="hsl-bpos" style="left:77.075625%;">
       <div class="hsl-bubble" style="background:#f87171; box-shadow: 0 2px 8px #f8717155;">
-        <span class="hsl-bubble__val">24.9</span>
-        <span class="hsl-bubble__unit">pg</span>
+        <span class="hsl-bubble__val">165</span>
+        <span class="hsl-bubble__unit">mg/dL</span>
       </div>
       <div class="hsl-bubble__tip" style="border-top-color:#f87171;"></div>
     </div>
@@ -5599,67 +4565,15 @@ body {
   <div class="hsl-labels">
     <div class="hsl-label">
       <span class="hsl-label__text" style="color:#f87171;">&#8595; Low</span>
-      <span class="hsl-label__range">< 27</span>
+      <span class="hsl-label__range">< 0</span>
     </div>
     <div class="hsl-label">
       <span class="hsl-label__text" style="color:#16A34A;">&#10003; Normal</span>
-      <span class="hsl-label__range">27 – 32</span>
+      <span class="hsl-label__range">0 – 150</span>
     </div>
     <div class="hsl-label">
       <span class="hsl-label__text" style="color:#f87171;">&#8593; High</span>
-      <span class="hsl-label__range">> 32</span>
-    </div>
-  </div>
-</div>
-</div>
-
-<div class="det-flagged-card" style="border-color:#fcd5d5;background:#fff8f8;">
-  <!-- Card header -->
-  <div class="det-flagged-card__header">
-    <div class="det-flagged-card__header-left">
-      <span class="det-flagged-pill" style="color:#c0392b;background:#fff8f8;border:1px solid #fcd5d5;">
-        ▼ LOW
-      </span>
-      <span class="det-flagged-ref">Ref: 32 – 36 %</span>
-    </div>
-    <div class="det-flagged-card__value-box" style="background:#fff8f8;">
-      <div class="det-flagged-card__value" style="color:#c0392b;">31.1</div>
-      <div class="det-flagged-card__unit" style="color:#c0392b;">%</div>
-    </div>
-  </div>
-
-  <!-- Test name -->
-  <h3 class="det-flagged-card__name">Mean Corp Hb Con (MCHC)</h3>
-
-  <!-- Smart Slider -->
-  
-<div class="hsl-slider">
-  <div class="hsl-slider__area">
-    <div class="hsl-bpos" style="left:29.10507042253522%;">
-      <div class="hsl-bubble" style="background:#f87171; box-shadow: 0 2px 8px #f8717155;">
-        <span class="hsl-bubble__val">31.1</span>
-        <span class="hsl-bubble__unit">%</span>
-      </div>
-      <div class="hsl-bubble__tip" style="border-top-color:#f87171;"></div>
-    </div>
-    <div class="hsl-track">
-      <div class="hsl-seg" style="background:#fca5a5; border-radius:12px 0 0 12px;"></div>
-      <div class="hsl-seg" style="background:#86efac;"></div>
-      <div class="hsl-seg" style="background:#fca5a5; border-radius:0 12px 12px 0;"></div>
-    </div>
-  </div>
-  <div class="hsl-labels">
-    <div class="hsl-label">
-      <span class="hsl-label__text" style="color:#f87171;">&#8595; Low</span>
-      <span class="hsl-label__range">< 32</span>
-    </div>
-    <div class="hsl-label">
-      <span class="hsl-label__text" style="color:#16A34A;">&#10003; Normal</span>
-      <span class="hsl-label__range">32 – 36</span>
-    </div>
-    <div class="hsl-label">
-      <span class="hsl-label__text" style="color:#f87171;">&#8593; High</span>
-      <span class="hsl-label__range">> 36</span>
+      <span class="hsl-label__range">> 150</span>
     </div>
   </div>
 </div>
@@ -5682,284 +4596,12 @@ body {
     </svg>
   </div>
   <div class="det-normal-row__body">
-    <div class="det-normal-row__name">Haemoglobin (HB)</div>
+    <div class="det-normal-row__name">HDL Cholesterol</div>
     <div class="det-normal-row__val-row">
-      <span class="det-normal-row__value">14.2</span>
-      <span class="det-normal-row__unit">g/dL</span>
+      <span class="det-normal-row__value">48</span>
+      <span class="det-normal-row__unit">mg/dL</span>
     </div>
-    <div class="det-normal-row__ref">Ref: 13.5 – 17.5</div>
-  </div>
-</div>
-<div class="det-normal-row">
-  <div class="det-normal-row__icon">
-    <svg width="12" height="12" viewBox="0 0 14 14" fill="none">
-      <path d="M2.5 7L5.5 10L11.5 4" stroke="white" stroke-width="2.2"
-            stroke-linecap="round" stroke-linejoin="round"/>
-    </svg>
-  </div>
-  <div class="det-normal-row__body">
-    <div class="det-normal-row__name">Hematocrit (PCV)</div>
-    <div class="det-normal-row__val-row">
-      <span class="det-normal-row__value">45.6</span>
-      <span class="det-normal-row__unit">%</span>
-    </div>
-    <div class="det-normal-row__ref">Ref: 40 – 54</div>
-  </div>
-</div>
-<div class="det-normal-row">
-  <div class="det-normal-row__icon">
-    <svg width="12" height="12" viewBox="0 0 14 14" fill="none">
-      <path d="M2.5 7L5.5 10L11.5 4" stroke="white" stroke-width="2.2"
-            stroke-linecap="round" stroke-linejoin="round"/>
-    </svg>
-  </div>
-  <div class="det-normal-row__body">
-    <div class="det-normal-row__name">RDW - CV</div>
-    <div class="det-normal-row__val-row">
-      <span class="det-normal-row__value">13.7</span>
-      <span class="det-normal-row__unit">%</span>
-    </div>
-    <div class="det-normal-row__ref">Ref: 11 – 16</div>
-  </div>
-</div>
-<div class="det-normal-row">
-  <div class="det-normal-row__icon">
-    <svg width="12" height="12" viewBox="0 0 14 14" fill="none">
-      <path d="M2.5 7L5.5 10L11.5 4" stroke="white" stroke-width="2.2"
-            stroke-linecap="round" stroke-linejoin="round"/>
-    </svg>
-  </div>
-  <div class="det-normal-row__body">
-    <div class="det-normal-row__name">RDW - SD</div>
-    <div class="det-normal-row__val-row">
-      <span class="det-normal-row__value">40.7</span>
-      <span class="det-normal-row__unit">fL</span>
-    </div>
-    <div class="det-normal-row__ref">Ref: 35 – 56</div>
-  </div>
-</div>
-<div class="det-normal-row">
-  <div class="det-normal-row__icon">
-    <svg width="12" height="12" viewBox="0 0 14 14" fill="none">
-      <path d="M2.5 7L5.5 10L11.5 4" stroke="white" stroke-width="2.2"
-            stroke-linecap="round" stroke-linejoin="round"/>
-    </svg>
-  </div>
-  <div class="det-normal-row__body">
-    <div class="det-normal-row__name">Total Leucocyte Count (TLC)</div>
-    <div class="det-normal-row__val-row">
-      <span class="det-normal-row__value">6540</span>
-      <span class="det-normal-row__unit">/uL</span>
-    </div>
-    <div class="det-normal-row__ref">Ref: 4000 – 11000</div>
-  </div>
-</div>
-<div class="det-normal-row">
-  <div class="det-normal-row__icon">
-    <svg width="12" height="12" viewBox="0 0 14 14" fill="none">
-      <path d="M2.5 7L5.5 10L11.5 4" stroke="white" stroke-width="2.2"
-            stroke-linecap="round" stroke-linejoin="round"/>
-    </svg>
-  </div>
-  <div class="det-normal-row__body">
-    <div class="det-normal-row__name">Neutrophils</div>
-    <div class="det-normal-row__val-row">
-      <span class="det-normal-row__value">59.5</span>
-      <span class="det-normal-row__unit">%</span>
-    </div>
-    <div class="det-normal-row__ref">Ref: 40 – 70</div>
-  </div>
-</div>
-<div class="det-normal-row">
-  <div class="det-normal-row__icon">
-    <svg width="12" height="12" viewBox="0 0 14 14" fill="none">
-      <path d="M2.5 7L5.5 10L11.5 4" stroke="white" stroke-width="2.2"
-            stroke-linecap="round" stroke-linejoin="round"/>
-    </svg>
-  </div>
-  <div class="det-normal-row__body">
-    <div class="det-normal-row__name">Lymphocytes</div>
-    <div class="det-normal-row__val-row">
-      <span class="det-normal-row__value">28.6</span>
-      <span class="det-normal-row__unit">%</span>
-    </div>
-    <div class="det-normal-row__ref">Ref: 20 – 40</div>
-  </div>
-</div>
-<div class="det-normal-row">
-  <div class="det-normal-row__icon">
-    <svg width="12" height="12" viewBox="0 0 14 14" fill="none">
-      <path d="M2.5 7L5.5 10L11.5 4" stroke="white" stroke-width="2.2"
-            stroke-linecap="round" stroke-linejoin="round"/>
-    </svg>
-  </div>
-  <div class="det-normal-row__body">
-    <div class="det-normal-row__name">Eosinophils</div>
-    <div class="det-normal-row__val-row">
-      <span class="det-normal-row__value">4.8</span>
-      <span class="det-normal-row__unit">%</span>
-    </div>
-    <div class="det-normal-row__ref">Ref: 0 – 6</div>
-  </div>
-</div>
-<div class="det-normal-row">
-  <div class="det-normal-row__icon">
-    <svg width="12" height="12" viewBox="0 0 14 14" fill="none">
-      <path d="M2.5 7L5.5 10L11.5 4" stroke="white" stroke-width="2.2"
-            stroke-linecap="round" stroke-linejoin="round"/>
-    </svg>
-  </div>
-  <div class="det-normal-row__body">
-    <div class="det-normal-row__name">Monocytes</div>
-    <div class="det-normal-row__val-row">
-      <span class="det-normal-row__value">7</span>
-      <span class="det-normal-row__unit">%</span>
-    </div>
-    <div class="det-normal-row__ref">Ref: 2 – 10</div>
-  </div>
-</div>
-<div class="det-normal-row">
-  <div class="det-normal-row__icon">
-    <svg width="12" height="12" viewBox="0 0 14 14" fill="none">
-      <path d="M2.5 7L5.5 10L11.5 4" stroke="white" stroke-width="2.2"
-            stroke-linecap="round" stroke-linejoin="round"/>
-    </svg>
-  </div>
-  <div class="det-normal-row__body">
-    <div class="det-normal-row__name">Basophils</div>
-    <div class="det-normal-row__val-row">
-      <span class="det-normal-row__value">0.1</span>
-      <span class="det-normal-row__unit">%</span>
-    </div>
-    <div class="det-normal-row__ref">Ref: 0 – 2</div>
-  </div>
-</div>
-<div class="det-normal-row">
-  <div class="det-normal-row__icon">
-    <svg width="12" height="12" viewBox="0 0 14 14" fill="none">
-      <path d="M2.5 7L5.5 10L11.5 4" stroke="white" stroke-width="2.2"
-            stroke-linecap="round" stroke-linejoin="round"/>
-    </svg>
-  </div>
-  <div class="det-normal-row__body">
-    <div class="det-normal-row__name">Absolute Neutrophil Count (ANC)</div>
-    <div class="det-normal-row__val-row">
-      <span class="det-normal-row__value">3891.3</span>
-      <span class="det-normal-row__unit">/μL</span>
-    </div>
-    <div class="det-normal-row__ref">Ref: 1500 – 8500</div>
-  </div>
-</div>
-<div class="det-normal-row">
-  <div class="det-normal-row__icon">
-    <svg width="12" height="12" viewBox="0 0 14 14" fill="none">
-      <path d="M2.5 7L5.5 10L11.5 4" stroke="white" stroke-width="2.2"
-            stroke-linecap="round" stroke-linejoin="round"/>
-    </svg>
-  </div>
-  <div class="det-normal-row__body">
-    <div class="det-normal-row__name">Absolute Lymphocyte Count (ALC)</div>
-    <div class="det-normal-row__val-row">
-      <span class="det-normal-row__value">1870.44</span>
-      <span class="det-normal-row__unit">/μL</span>
-    </div>
-    <div class="det-normal-row__ref">Ref: 1000 – 4000</div>
-  </div>
-</div>
-<div class="det-normal-row">
-  <div class="det-normal-row__icon">
-    <svg width="12" height="12" viewBox="0 0 14 14" fill="none">
-      <path d="M2.5 7L5.5 10L11.5 4" stroke="white" stroke-width="2.2"
-            stroke-linecap="round" stroke-linejoin="round"/>
-    </svg>
-  </div>
-  <div class="det-normal-row__body">
-    <div class="det-normal-row__name">Absolute Monocyte Count</div>
-    <div class="det-normal-row__val-row">
-      <span class="det-normal-row__value">457.8</span>
-      <span class="det-normal-row__unit">/μL</span>
-    </div>
-    <div class="det-normal-row__ref">Ref: 120 – 1200</div>
-  </div>
-</div>
-<div class="det-normal-row">
-  <div class="det-normal-row__icon">
-    <svg width="12" height="12" viewBox="0 0 14 14" fill="none">
-      <path d="M2.5 7L5.5 10L11.5 4" stroke="white" stroke-width="2.2"
-            stroke-linecap="round" stroke-linejoin="round"/>
-    </svg>
-  </div>
-  <div class="det-normal-row__body">
-    <div class="det-normal-row__name">Absolute Eosinophil Count (AEC)</div>
-    <div class="det-normal-row__val-row">
-      <span class="det-normal-row__value">313.92</span>
-      <span class="det-normal-row__unit">/uL</span>
-    </div>
-    <div class="det-normal-row__ref">Ref: 20 – 500</div>
-  </div>
-</div>
-<div class="det-normal-row">
-  <div class="det-normal-row__icon">
-    <svg width="12" height="12" viewBox="0 0 14 14" fill="none">
-      <path d="M2.5 7L5.5 10L11.5 4" stroke="white" stroke-width="2.2"
-            stroke-linecap="round" stroke-linejoin="round"/>
-    </svg>
-  </div>
-  <div class="det-normal-row__body">
-    <div class="det-normal-row__name">Absolute Basophil Count</div>
-    <div class="det-normal-row__val-row">
-      <span class="det-normal-row__value">6.54</span>
-      <span class="det-normal-row__unit">/μL</span>
-    </div>
-    <div class="det-normal-row__ref">Ref: 0 – 200</div>
-  </div>
-</div>
-<div class="det-normal-row">
-  <div class="det-normal-row__icon">
-    <svg width="12" height="12" viewBox="0 0 14 14" fill="none">
-      <path d="M2.5 7L5.5 10L11.5 4" stroke="white" stroke-width="2.2"
-            stroke-linecap="round" stroke-linejoin="round"/>
-    </svg>
-  </div>
-  <div class="det-normal-row__body">
-    <div class="det-normal-row__name">Platelet Count (PLT)</div>
-    <div class="det-normal-row__val-row">
-      <span class="det-normal-row__value">2.01</span>
-      <span class="det-normal-row__unit">lakhs/ µL</span>
-    </div>
-    <div class="det-normal-row__ref">Ref: 1.5 – 4.5</div>
-  </div>
-</div>
-<div class="det-normal-row">
-  <div class="det-normal-row__icon">
-    <svg width="12" height="12" viewBox="0 0 14 14" fill="none">
-      <path d="M2.5 7L5.5 10L11.5 4" stroke="white" stroke-width="2.2"
-            stroke-linecap="round" stroke-linejoin="round"/>
-    </svg>
-  </div>
-  <div class="det-normal-row__body">
-    <div class="det-normal-row__name">Mean Platelet Volume (MPV)</div>
-    <div class="det-normal-row__val-row">
-      <span class="det-normal-row__value">9.7</span>
-      <span class="det-normal-row__unit">fL</span>
-    </div>
-    <div class="det-normal-row__ref">Ref: 6.5 – 12</div>
-  </div>
-</div>
-<div class="det-normal-row">
-  <div class="det-normal-row__icon">
-    <svg width="12" height="12" viewBox="0 0 14 14" fill="none">
-      <path d="M2.5 7L5.5 10L11.5 4" stroke="white" stroke-width="2.2"
-            stroke-linecap="round" stroke-linejoin="round"/>
-    </svg>
-  </div>
-  <div class="det-normal-row__body">
-    <div class="det-normal-row__name">Plateletcrit (PCT)</div>
-    <div class="det-normal-row__val-row">
-      <span class="det-normal-row__value">0.2</span>
-      <span class="det-normal-row__unit">%</span>
-    </div>
-    <div class="det-normal-row__ref">Ref: 0.108 – 0.282</div>
+    <div class="det-normal-row__ref">Ref: 40 – 60</div>
   </div>
 </div>
   </div>
@@ -5969,8 +4611,8 @@ body {
   </main>
 
   <footer class="page-footer">
-    <span class="footer-brand">Smart Health Labs — Intelligent Diagnostics</span>
-    <span class="footer-page">Page 13 of 16</span>
+    <span class="footer-brand">NexaHealth Analytics — Smart Health Insights</span>
+    <span class="footer-page">Page 4 of 7</span>
   </footer>
 </div>
 
@@ -5990,10 +4632,10 @@ body {
       
       <!-- Left: Title & Badge -->
       <div style="display: flex; flex-direction: column; align-items: flex-start; gap: 8px; flex: 1; min-width: 0;">
-        <h2 class="det-hero__name" style="font-size: 24px; word-wrap: break-word; overflow-wrap: break-word; margin: 0; line-height: 1.2;">ERYTHROCYTE SEDIMENTATION RATE</h2>
+        <h2 class="det-hero__name" style="font-size: 24px; word-wrap: break-word; overflow-wrap: break-word; margin: 0; line-height: 1.2;">Thyroid Panel</h2>
         <span class="det-hero__sev-badge"
-              style="color:#c0392b;background:#fff1f1;border:1px solid #fca5a5;">
-          ATTENTION
+              style="color:#c0392b;background:#fff8f8;border:1px solid #fcd5d5;">
+          MONITOR
         </span>
       </div>
 
@@ -6005,7 +4647,7 @@ body {
   <div class="det-hero-pill__label">Abnormal</div>
 </div>
 <div class="det-hero-pill" style="background:#F0FDF4; min-width: 80px;">
-  <div class="det-hero-pill__value" style="color:#16A34A;">0</div>
+  <div class="det-hero-pill__value" style="color:#16A34A;">2</div>
   <div class="det-hero-pill__label">Normal</div>
 </div>
       </div>
@@ -6028,25 +4670,25 @@ body {
       <span class="det-flagged-pill" style="color:#c0392b;background:#fff8f8;border:1px solid #fcd5d5;">
         ▲ HIGH
       </span>
-      <span class="det-flagged-ref">Ref: 1 – 15 mm/hr</span>
+      <span class="det-flagged-ref">Ref: 0.4 – 4 mIU/L</span>
     </div>
     <div class="det-flagged-card__value-box" style="background:#fff8f8;">
-      <div class="det-flagged-card__value" style="color:#c0392b;">18</div>
-      <div class="det-flagged-card__unit" style="color:#c0392b;">mm/hr</div>
+      <div class="det-flagged-card__value" style="color:#c0392b;">4.8</div>
+      <div class="det-flagged-card__unit" style="color:#c0392b;">mIU/L</div>
     </div>
   </div>
 
   <!-- Test name -->
-  <h3 class="det-flagged-card__name">ERYTHROCYTE SEDIMENTATION RATE (ESR)</h3>
+  <h3 class="det-flagged-card__name">TSH</h3>
 
   <!-- Smart Slider -->
   
 <div class="hsl-slider">
   <div class="hsl-slider__area">
-    <div class="hsl-bpos" style="left:81.80999999999999%;">
+    <div class="hsl-bpos" style="left:81.47333333333333%;">
       <div class="hsl-bubble" style="background:#f87171; box-shadow: 0 2px 8px #f8717155;">
-        <span class="hsl-bubble__val">18</span>
-        <span class="hsl-bubble__unit">mm/hr</span>
+        <span class="hsl-bubble__val">4.8</span>
+        <span class="hsl-bubble__unit">mIU/L</span>
       </div>
       <div class="hsl-bubble__tip" style="border-top-color:#f87171;"></div>
     </div>
@@ -6059,15 +4701,15 @@ body {
   <div class="hsl-labels">
     <div class="hsl-label">
       <span class="hsl-label__text" style="color:#f87171;">&#8595; Low</span>
-      <span class="hsl-label__range">< 1</span>
+      <span class="hsl-label__range">< 0.4</span>
     </div>
     <div class="hsl-label">
       <span class="hsl-label__text" style="color:#16A34A;">&#10003; Normal</span>
-      <span class="hsl-label__range">1 – 15</span>
+      <span class="hsl-label__range">0.4 – 4</span>
     </div>
     <div class="hsl-label">
       <span class="hsl-label__text" style="color:#f87171;">&#8593; High</span>
-      <span class="hsl-label__range">> 15</span>
+      <span class="hsl-label__range">> 4</span>
     </div>
   </div>
 </div>
@@ -6075,13 +4717,54 @@ body {
   </div>
 
   
+<div class="det-normal-section">
+  <div class="det-section-heading">
+    <div class="det-section-heading__bar" style="background:#16A34A;"></div>
+    <span class="det-section-heading__text">Normal Parameters</span>
+  </div>
+  <div class="det-normal-grid">
+    
+<div class="det-normal-row">
+  <div class="det-normal-row__icon">
+    <svg width="12" height="12" viewBox="0 0 14 14" fill="none">
+      <path d="M2.5 7L5.5 10L11.5 4" stroke="white" stroke-width="2.2"
+            stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+  </div>
+  <div class="det-normal-row__body">
+    <div class="det-normal-row__name">Free T3</div>
+    <div class="det-normal-row__val-row">
+      <span class="det-normal-row__value">3.1</span>
+      <span class="det-normal-row__unit">pg/mL</span>
+    </div>
+    <div class="det-normal-row__ref">Ref: 2.3 – 4.2</div>
+  </div>
+</div>
+<div class="det-normal-row">
+  <div class="det-normal-row__icon">
+    <svg width="12" height="12" viewBox="0 0 14 14" fill="none">
+      <path d="M2.5 7L5.5 10L11.5 4" stroke="white" stroke-width="2.2"
+            stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+  </div>
+  <div class="det-normal-row__body">
+    <div class="det-normal-row__name">Free T4</div>
+    <div class="det-normal-row__val-row">
+      <span class="det-normal-row__value">1.1</span>
+      <span class="det-normal-row__unit">ng/dL</span>
+    </div>
+    <div class="det-normal-row__ref">Ref: 0.8 – 1.8</div>
+  </div>
+</div>
+  </div>
+</div>
 
 </section>
   </main>
 
   <footer class="page-footer">
-    <span class="footer-brand">Smart Health Labs — Intelligent Diagnostics</span>
-    <span class="footer-page">Page 14 of 16</span>
+    <span class="footer-brand">NexaHealth Analytics — Smart Health Insights</span>
+    <span class="footer-page">Page 5 of 7</span>
   </footer>
 </div>
 
@@ -6101,10 +4784,10 @@ body {
       
       <!-- Left: Title & Badge -->
       <div style="display: flex; flex-direction: column; align-items: flex-start; gap: 8px; flex: 1; min-width: 0;">
-        <h2 class="det-hero__name" style="font-size: 24px; word-wrap: break-word; overflow-wrap: break-word; margin: 0; line-height: 1.2;">URINE ROUTINE EXAMINATION</h2>
+        <h2 class="det-hero__name" style="font-size: 24px; word-wrap: break-word; overflow-wrap: break-word; margin: 0; line-height: 1.2;">Liver Function Test</h2>
         <span class="det-hero__sev-badge"
-              style="color:#16A34A;background:#F0FDF4;border:1px solid #86EFAC;">
-          HEALTHY
+              style="color:#c0392b;background:#fff1f1;border:1px solid #fca5a5;">
+          ATTENTION
         </span>
       </div>
 
@@ -6112,11 +4795,11 @@ body {
       <div class="det-hero__pills" style="margin-bottom: 0; flex-shrink: 0;">
         
 <div class="det-hero-pill" style="background:#fff8f8; min-width: 80px;">
-  <div class="det-hero-pill__value" style="color:#c0392b;">0</div>
+  <div class="det-hero-pill__value" style="color:#c0392b;">2</div>
   <div class="det-hero-pill__label">Abnormal</div>
 </div>
 <div class="det-hero-pill" style="background:#F0FDF4; min-width: 80px;">
-  <div class="det-hero-pill__value" style="color:#16A34A;">20</div>
+  <div class="det-hero-pill__value" style="color:#16A34A;">3</div>
   <div class="det-hero-pill__label">Normal</div>
 </div>
       </div>
@@ -6126,8 +4809,115 @@ body {
 </div>
 
   
-  <div class="det-all-normal-banner">
-    <span>✅ All parameters are within reference range</span>
+  <div class="det-section-heading det-section-heading--flagged">
+    <div class="det-section-heading__bar" style="background:#f87171;"></div>
+    <span class="det-section-heading__text">Parameters Requiring Attention</span>
+  </div>
+  <div class="det-flagged-list">
+    
+<div class="det-flagged-card" style="border-color:#fcd5d5;background:#fff8f8;">
+  <!-- Card header -->
+  <div class="det-flagged-card__header">
+    <div class="det-flagged-card__header-left">
+      <span class="det-flagged-pill" style="color:#c0392b;background:#fff8f8;border:1px solid #fcd5d5;">
+        ▲ HIGH
+      </span>
+      <span class="det-flagged-ref">Ref: 5 – 40 U/L</span>
+    </div>
+    <div class="det-flagged-card__value-box" style="background:#fff8f8;">
+      <div class="det-flagged-card__value" style="color:#c0392b;">52</div>
+      <div class="det-flagged-card__unit" style="color:#c0392b;">U/L</div>
+    </div>
+  </div>
+
+  <!-- Test name -->
+  <h3 class="det-flagged-card__name">SGOT (AST)</h3>
+
+  <!-- Smart Slider -->
+  
+<div class="hsl-slider">
+  <div class="hsl-slider__area">
+    <div class="hsl-bpos" style="left:84.51535714285714%;">
+      <div class="hsl-bubble" style="background:#f87171; box-shadow: 0 2px 8px #f8717155;">
+        <span class="hsl-bubble__val">52</span>
+        <span class="hsl-bubble__unit">U/L</span>
+      </div>
+      <div class="hsl-bubble__tip" style="border-top-color:#f87171;"></div>
+    </div>
+    <div class="hsl-track">
+      <div class="hsl-seg" style="background:#fca5a5; border-radius:12px 0 0 12px;"></div>
+      <div class="hsl-seg" style="background:#86efac;"></div>
+      <div class="hsl-seg" style="background:#fca5a5; border-radius:0 12px 12px 0;"></div>
+    </div>
+  </div>
+  <div class="hsl-labels">
+    <div class="hsl-label">
+      <span class="hsl-label__text" style="color:#f87171;">&#8595; Low</span>
+      <span class="hsl-label__range">< 5</span>
+    </div>
+    <div class="hsl-label">
+      <span class="hsl-label__text" style="color:#16A34A;">&#10003; Normal</span>
+      <span class="hsl-label__range">5 – 40</span>
+    </div>
+    <div class="hsl-label">
+      <span class="hsl-label__text" style="color:#f87171;">&#8593; High</span>
+      <span class="hsl-label__range">> 40</span>
+    </div>
+  </div>
+</div>
+</div>
+
+<div class="det-flagged-card" style="border-color:#fcd5d5;background:#fff8f8;">
+  <!-- Card header -->
+  <div class="det-flagged-card__header">
+    <div class="det-flagged-card__header-left">
+      <span class="det-flagged-pill" style="color:#c0392b;background:#fff8f8;border:1px solid #fcd5d5;">
+        ▲ HIGH
+      </span>
+      <span class="det-flagged-ref">Ref: 7 – 56 U/L</span>
+    </div>
+    <div class="det-flagged-card__value-box" style="background:#fff8f8;">
+      <div class="det-flagged-card__value" style="color:#c0392b;">68</div>
+      <div class="det-flagged-card__unit" style="color:#c0392b;">U/L</div>
+    </div>
+  </div>
+
+  <!-- Test name -->
+  <h3 class="det-flagged-card__name">SGPT (ALT)</h3>
+
+  <!-- Smart Slider -->
+  
+<div class="hsl-slider">
+  <div class="hsl-slider__area">
+    <div class="hsl-bpos" style="left:82.2834375%;">
+      <div class="hsl-bubble" style="background:#f87171; box-shadow: 0 2px 8px #f8717155;">
+        <span class="hsl-bubble__val">68</span>
+        <span class="hsl-bubble__unit">U/L</span>
+      </div>
+      <div class="hsl-bubble__tip" style="border-top-color:#f87171;"></div>
+    </div>
+    <div class="hsl-track">
+      <div class="hsl-seg" style="background:#fca5a5; border-radius:12px 0 0 12px;"></div>
+      <div class="hsl-seg" style="background:#86efac;"></div>
+      <div class="hsl-seg" style="background:#fca5a5; border-radius:0 12px 12px 0;"></div>
+    </div>
+  </div>
+  <div class="hsl-labels">
+    <div class="hsl-label">
+      <span class="hsl-label__text" style="color:#f87171;">&#8595; Low</span>
+      <span class="hsl-label__range">< 7</span>
+    </div>
+    <div class="hsl-label">
+      <span class="hsl-label__text" style="color:#16A34A;">&#10003; Normal</span>
+      <span class="hsl-label__range">7 – 56</span>
+    </div>
+    <div class="hsl-label">
+      <span class="hsl-label__text" style="color:#f87171;">&#8593; High</span>
+      <span class="hsl-label__range">> 56</span>
+    </div>
+  </div>
+</div>
+</div>
   </div>
 
   
@@ -6146,12 +4936,12 @@ body {
     </svg>
   </div>
   <div class="det-normal-row__body">
-    <div class="det-normal-row__name">VOLUME</div>
+    <div class="det-normal-row__name">Bilirubin Total</div>
     <div class="det-normal-row__val-row">
-      <span class="det-normal-row__value">20 ML</span>
-      <span class="det-normal-row__unit">mL</span>
+      <span class="det-normal-row__value">0.9</span>
+      <span class="det-normal-row__unit">mg/dL</span>
     </div>
-    <div class="det-normal-row__ref">Ref: Unknown</div>
+    <div class="det-normal-row__ref">Ref: 0.1 – 1.2</div>
   </div>
 </div>
 <div class="det-normal-row">
@@ -6162,12 +4952,12 @@ body {
     </svg>
   </div>
   <div class="det-normal-row__body">
-    <div class="det-normal-row__name">COLOUR</div>
+    <div class="det-normal-row__name">Albumin</div>
     <div class="det-normal-row__val-row">
-      <span class="det-normal-row__value">PALE YELLOW</span>
-      
+      <span class="det-normal-row__value">4.1</span>
+      <span class="det-normal-row__unit">g/dL</span>
     </div>
-    <div class="det-normal-row__ref">Ref: Unknown</div>
+    <div class="det-normal-row__ref">Ref: 3.5 – 5</div>
   </div>
 </div>
 <div class="det-normal-row">
@@ -6178,284 +4968,12 @@ body {
     </svg>
   </div>
   <div class="det-normal-row__body">
-    <div class="det-normal-row__name">APPEARANCE</div>
+    <div class="det-normal-row__name">Alkaline Phosphatase</div>
     <div class="det-normal-row__val-row">
-      <span class="det-normal-row__value">Clear</span>
-      
+      <span class="det-normal-row__value">88</span>
+      <span class="det-normal-row__unit">U/L</span>
     </div>
-    <div class="det-normal-row__ref">Ref: Unknown</div>
-  </div>
-</div>
-<div class="det-normal-row">
-  <div class="det-normal-row__icon">
-    <svg width="12" height="12" viewBox="0 0 14 14" fill="none">
-      <path d="M2.5 7L5.5 10L11.5 4" stroke="white" stroke-width="2.2"
-            stroke-linecap="round" stroke-linejoin="round"/>
-    </svg>
-  </div>
-  <div class="det-normal-row__body">
-    <div class="det-normal-row__name">PH (REACTION)</div>
-    <div class="det-normal-row__val-row">
-      <span class="det-normal-row__value">5</span>
-      
-    </div>
-    <div class="det-normal-row__ref">Ref: 5 – 8</div>
-  </div>
-</div>
-<div class="det-normal-row">
-  <div class="det-normal-row__icon">
-    <svg width="12" height="12" viewBox="0 0 14 14" fill="none">
-      <path d="M2.5 7L5.5 10L11.5 4" stroke="white" stroke-width="2.2"
-            stroke-linecap="round" stroke-linejoin="round"/>
-    </svg>
-  </div>
-  <div class="det-normal-row__body">
-    <div class="det-normal-row__name">SPECIFIC GRAVITY</div>
-    <div class="det-normal-row__val-row">
-      <span class="det-normal-row__value">1.025</span>
-      
-    </div>
-    <div class="det-normal-row__ref">Ref: 1.005 – 1.03</div>
-  </div>
-</div>
-<div class="det-normal-row">
-  <div class="det-normal-row__icon">
-    <svg width="12" height="12" viewBox="0 0 14 14" fill="none">
-      <path d="M2.5 7L5.5 10L11.5 4" stroke="white" stroke-width="2.2"
-            stroke-linecap="round" stroke-linejoin="round"/>
-    </svg>
-  </div>
-  <div class="det-normal-row__body">
-    <div class="det-normal-row__name">PROTEIN</div>
-    <div class="det-normal-row__val-row">
-      <span class="det-normal-row__value">ABSENT</span>
-      
-    </div>
-    <div class="det-normal-row__ref">Ref: Unknown</div>
-  </div>
-</div>
-<div class="det-normal-row">
-  <div class="det-normal-row__icon">
-    <svg width="12" height="12" viewBox="0 0 14 14" fill="none">
-      <path d="M2.5 7L5.5 10L11.5 4" stroke="white" stroke-width="2.2"
-            stroke-linecap="round" stroke-linejoin="round"/>
-    </svg>
-  </div>
-  <div class="det-normal-row__body">
-    <div class="det-normal-row__name">GLUCOSE</div>
-    <div class="det-normal-row__val-row">
-      <span class="det-normal-row__value">Negative</span>
-      
-    </div>
-    <div class="det-normal-row__ref">Ref: Unknown</div>
-  </div>
-</div>
-<div class="det-normal-row">
-  <div class="det-normal-row__icon">
-    <svg width="12" height="12" viewBox="0 0 14 14" fill="none">
-      <path d="M2.5 7L5.5 10L11.5 4" stroke="white" stroke-width="2.2"
-            stroke-linecap="round" stroke-linejoin="round"/>
-    </svg>
-  </div>
-  <div class="det-normal-row__body">
-    <div class="det-normal-row__name">BLOOD</div>
-    <div class="det-normal-row__val-row">
-      <span class="det-normal-row__value">ABSENT</span>
-      <span class="det-normal-row__unit">NA</span>
-    </div>
-    <div class="det-normal-row__ref">Ref: Unknown</div>
-  </div>
-</div>
-<div class="det-normal-row">
-  <div class="det-normal-row__icon">
-    <svg width="12" height="12" viewBox="0 0 14 14" fill="none">
-      <path d="M2.5 7L5.5 10L11.5 4" stroke="white" stroke-width="2.2"
-            stroke-linecap="round" stroke-linejoin="round"/>
-    </svg>
-  </div>
-  <div class="det-normal-row__body">
-    <div class="det-normal-row__name">KETONES</div>
-    <div class="det-normal-row__val-row">
-      <span class="det-normal-row__value">ABSENT</span>
-      
-    </div>
-    <div class="det-normal-row__ref">Ref: Unknown</div>
-  </div>
-</div>
-<div class="det-normal-row">
-  <div class="det-normal-row__icon">
-    <svg width="12" height="12" viewBox="0 0 14 14" fill="none">
-      <path d="M2.5 7L5.5 10L11.5 4" stroke="white" stroke-width="2.2"
-            stroke-linecap="round" stroke-linejoin="round"/>
-    </svg>
-  </div>
-  <div class="det-normal-row__body">
-    <div class="det-normal-row__name">BILIRUBIN</div>
-    <div class="det-normal-row__val-row">
-      <span class="det-normal-row__value">ABSENT</span>
-      
-    </div>
-    <div class="det-normal-row__ref">Ref: Unknown</div>
-  </div>
-</div>
-<div class="det-normal-row">
-  <div class="det-normal-row__icon">
-    <svg width="12" height="12" viewBox="0 0 14 14" fill="none">
-      <path d="M2.5 7L5.5 10L11.5 4" stroke="white" stroke-width="2.2"
-            stroke-linecap="round" stroke-linejoin="round"/>
-    </svg>
-  </div>
-  <div class="det-normal-row__body">
-    <div class="det-normal-row__name">UROBILINOGEN</div>
-    <div class="det-normal-row__val-row">
-      <span class="det-normal-row__value">NORMAL</span>
-      <span class="det-normal-row__unit">NA</span>
-    </div>
-    <div class="det-normal-row__ref">Ref: Unknown</div>
-  </div>
-</div>
-<div class="det-normal-row">
-  <div class="det-normal-row__icon">
-    <svg width="12" height="12" viewBox="0 0 14 14" fill="none">
-      <path d="M2.5 7L5.5 10L11.5 4" stroke="white" stroke-width="2.2"
-            stroke-linecap="round" stroke-linejoin="round"/>
-    </svg>
-  </div>
-  <div class="det-normal-row__body">
-    <div class="det-normal-row__name">NITRITE</div>
-    <div class="det-normal-row__val-row">
-      <span class="det-normal-row__value">ABSENT</span>
-      
-    </div>
-    <div class="det-normal-row__ref">Ref: Unknown</div>
-  </div>
-</div>
-<div class="det-normal-row">
-  <div class="det-normal-row__icon">
-    <svg width="12" height="12" viewBox="0 0 14 14" fill="none">
-      <path d="M2.5 7L5.5 10L11.5 4" stroke="white" stroke-width="2.2"
-            stroke-linecap="round" stroke-linejoin="round"/>
-    </svg>
-  </div>
-  <div class="det-normal-row__body">
-    <div class="det-normal-row__name">LEUCOCYTE ESTERASE</div>
-    <div class="det-normal-row__val-row">
-      <span class="det-normal-row__value">ABSENT</span>
-      
-    </div>
-    <div class="det-normal-row__ref">Ref: Unknown</div>
-  </div>
-</div>
-<div class="det-normal-row">
-  <div class="det-normal-row__icon">
-    <svg width="12" height="12" viewBox="0 0 14 14" fill="none">
-      <path d="M2.5 7L5.5 10L11.5 4" stroke="white" stroke-width="2.2"
-            stroke-linecap="round" stroke-linejoin="round"/>
-    </svg>
-  </div>
-  <div class="det-normal-row__body">
-    <div class="det-normal-row__name">PUS CELLS (WBCS)</div>
-    <div class="det-normal-row__val-row">
-      <span class="det-normal-row__value">2-4</span>
-      <span class="det-normal-row__unit">/hpf</span>
-    </div>
-    <div class="det-normal-row__ref">Ref: 0 – 5</div>
-  </div>
-</div>
-<div class="det-normal-row">
-  <div class="det-normal-row__icon">
-    <svg width="12" height="12" viewBox="0 0 14 14" fill="none">
-      <path d="M2.5 7L5.5 10L11.5 4" stroke="white" stroke-width="2.2"
-            stroke-linecap="round" stroke-linejoin="round"/>
-    </svg>
-  </div>
-  <div class="det-normal-row__body">
-    <div class="det-normal-row__name">RED BLOOD CELLS (RBCS)</div>
-    <div class="det-normal-row__val-row">
-      <span class="det-normal-row__value">ABSENT</span>
-      <span class="det-normal-row__unit">/hpf</span>
-    </div>
-    <div class="det-normal-row__ref">Ref: Unknown</div>
-  </div>
-</div>
-<div class="det-normal-row">
-  <div class="det-normal-row__icon">
-    <svg width="12" height="12" viewBox="0 0 14 14" fill="none">
-      <path d="M2.5 7L5.5 10L11.5 4" stroke="white" stroke-width="2.2"
-            stroke-linecap="round" stroke-linejoin="round"/>
-    </svg>
-  </div>
-  <div class="det-normal-row__body">
-    <div class="det-normal-row__name">EPITHELIAL CELLS</div>
-    <div class="det-normal-row__val-row">
-      <span class="det-normal-row__value">0-2</span>
-      <span class="det-normal-row__unit">/hpf</span>
-    </div>
-    <div class="det-normal-row__ref">Ref: 0 – 5</div>
-  </div>
-</div>
-<div class="det-normal-row">
-  <div class="det-normal-row__icon">
-    <svg width="12" height="12" viewBox="0 0 14 14" fill="none">
-      <path d="M2.5 7L5.5 10L11.5 4" stroke="white" stroke-width="2.2"
-            stroke-linecap="round" stroke-linejoin="round"/>
-    </svg>
-  </div>
-  <div class="det-normal-row__body">
-    <div class="det-normal-row__name">CASTS</div>
-    <div class="det-normal-row__val-row">
-      <span class="det-normal-row__value">ABSENT</span>
-      <span class="det-normal-row__unit">/hpf</span>
-    </div>
-    <div class="det-normal-row__ref">Ref: Unknown</div>
-  </div>
-</div>
-<div class="det-normal-row">
-  <div class="det-normal-row__icon">
-    <svg width="12" height="12" viewBox="0 0 14 14" fill="none">
-      <path d="M2.5 7L5.5 10L11.5 4" stroke="white" stroke-width="2.2"
-            stroke-linecap="round" stroke-linejoin="round"/>
-    </svg>
-  </div>
-  <div class="det-normal-row__body">
-    <div class="det-normal-row__name">CRYSTALS</div>
-    <div class="det-normal-row__val-row">
-      <span class="det-normal-row__value">ABSENT</span>
-      <span class="det-normal-row__unit">/hpf</span>
-    </div>
-    <div class="det-normal-row__ref">Ref: Unknown</div>
-  </div>
-</div>
-<div class="det-normal-row">
-  <div class="det-normal-row__icon">
-    <svg width="12" height="12" viewBox="0 0 14 14" fill="none">
-      <path d="M2.5 7L5.5 10L11.5 4" stroke="white" stroke-width="2.2"
-            stroke-linecap="round" stroke-linejoin="round"/>
-    </svg>
-  </div>
-  <div class="det-normal-row__body">
-    <div class="det-normal-row__name">BACTERIA, URINE</div>
-    <div class="det-normal-row__val-row">
-      <span class="det-normal-row__value">ABSENT</span>
-      
-    </div>
-    <div class="det-normal-row__ref">Ref: Unknown</div>
-  </div>
-</div>
-<div class="det-normal-row">
-  <div class="det-normal-row__icon">
-    <svg width="12" height="12" viewBox="0 0 14 14" fill="none">
-      <path d="M2.5 7L5.5 10L11.5 4" stroke="white" stroke-width="2.2"
-            stroke-linecap="round" stroke-linejoin="round"/>
-    </svg>
-  </div>
-  <div class="det-normal-row__body">
-    <div class="det-normal-row__name">YEAST CELLS</div>
-    <div class="det-normal-row__val-row">
-      <span class="det-normal-row__value">ABSENT</span>
-      
-    </div>
-    <div class="det-normal-row__ref">Ref: Unknown</div>
+    <div class="det-normal-row__ref">Ref: 44 – 147</div>
   </div>
 </div>
   </div>
@@ -6465,8 +4983,381 @@ body {
   </main>
 
   <footer class="page-footer">
-    <span class="footer-brand">Smart Health Labs — Intelligent Diagnostics</span>
-    <span class="footer-page">Page 15 of 16</span>
+    <span class="footer-brand">NexaHealth Analytics — Smart Health Insights</span>
+    <span class="footer-page">Page 6 of 7</span>
+  </footer>
+</div>
+
+<div class="report-page">
+  <main class="page-content">
+    
+<style>
+/* ── V3: Health Command Center ────────────────────────────────── */
+/* ── wrapper ── */
+.v3-hcc { font-family:'Inter','Segoe UI',system-ui,sans-serif; display:flex; flex-direction:column; gap:12px; }
+
+/* ── header ── */
+.v3-hdr {
+  background:linear-gradient(135deg,#0f172a 0%,#1e293b 45%,#2D4A9A 100%);
+  border-radius:14px; padding:22px 24px 18px; position:relative; overflow:hidden;
+  color:white;
+}
+.v3-hdr-bg {
+  position:absolute; inset:0; opacity:0.07; pointer-events:none;
+  background-image:radial-gradient(circle,rgba(255,255,255,0.9) 1px,transparent 1px);
+  background-size:22px 22px;
+}
+.v3-hdr-inner { position:relative; z-index:1; display:flex; align-items:center; gap:20px; }
+.v3-hdr-score { flex-shrink:0; text-align:center; }
+.v3-hdr-score-num { font-size:52px; font-weight:900; letter-spacing:-2px; line-height:1; color:white; }
+.v3-hdr-score-max { font-size:14px; color:rgba(255,255,255,0.55); font-weight:600; letter-spacing:0.04em; }
+.v3-hdr-divider { width:2px; align-self:stretch; background:rgba(255,255,255,0.18); border-radius:1px; flex-shrink:0; }
+.v3-hdr-content { flex:1; }
+.v3-hdr-title { font-size:18px; font-weight:800; letter-spacing:-0.02em; line-height:1.2; }
+.v3-hdr-sub { font-size:11px; color:rgba(255,255,255,0.65); margin-top:5px; line-height:1.6; }
+.v3-hdr-tags { display:flex; flex-wrap:wrap; gap:6px; margin-top:10px; }
+.v3-hdr-tag {
+  font-size:10px; font-weight:700; letter-spacing:0.04em; padding:3px 10px;
+  border-radius:20px; border:1.5px solid; white-space:nowrap;
+}
+
+/* ── category strip ── */
+.v3-cat-strip { display:flex; gap:8px; flex-wrap:wrap; }
+.v3-cat-strip-item {
+  display:flex; align-items:center; gap:8px; padding:9px 13px;
+  border-radius:10px; flex:1; min-width:100px;
+}
+.v3-cat-strip-icon {
+  width:28px; height:28px; border-radius:8px; flex-shrink:0;
+  display:flex; align-items:center; justify-content:center; font-size:14px;
+}
+.v3-cat-strip-name { font-size:9.5px; font-weight:700; letter-spacing:0.02em; line-height:1.2; }
+.v3-cat-strip-count { font-size:11px; font-weight:800; letter-spacing:-0.01em; }
+
+/* ── two-column grid ── */
+.v3-grid { display:grid; grid-template-columns:1.15fr 0.85fr; gap:10px; }
+
+/* ── col header ── */
+.v3-col-hdr { display:flex; align-items:center; gap:7px; margin-bottom:8px; padding-bottom:8px; border-bottom:2px solid; }
+.v3-col-hdr-icon { width:24px; height:24px; border-radius:7px; display:flex; align-items:center; justify-content:center; flex-shrink:0; font-size:12px; }
+.v3-col-hdr-title { font-size:10.5px; font-weight:800; letter-spacing:0.04em; }
+.v3-col-hdr-ct { margin-left:auto; font-size:18px; font-weight:900; line-height:1; }
+
+/* ── action cards (left column) ── */
+.v3-action-list { display:flex; flex-direction:column; gap:8px; }
+.v3-action-card { border-radius:10px; overflow:hidden; border:1px solid #e2e8f0; background:white; box-shadow:0 1px 4px rgba(0,0,0,0.05); }
+.v3-action-card-top {
+  padding:8px 12px; display:flex; align-items:center; justify-content:space-between; gap:8px;
+}
+.v3-action-card-badge { display:flex; align-items:baseline; gap:4px; }
+.v3-action-badge-num { font-size:18px; font-weight:900; color:white; line-height:1; }
+.v3-action-badge-label { font-size:8px; font-weight:700; letter-spacing:0.06em; color:rgba(255,255,255,0.8); text-transform:uppercase; }
+.v3-action-cat-chip { font-size:9px; font-weight:700; padding:3px 9px; border-radius:20px; letter-spacing:0.03em; }
+.v3-action-card-body { padding:11px 13px 12px; }
+.v3-action-title { font-size:11.5px; font-weight:800; color:#0f172a; margin-bottom:4px; }
+.v3-action-desc { font-size:9.5px; line-height:1.65; color:#475569; margin-bottom:8px; }
+.v3-action-footer { display:flex; align-items:center; justify-content:space-between; gap:8px; margin-bottom:7px; }
+.v3-action-test { font-size:9px; color:#64748b; background:#f1f5f9; padding:3px 8px; border-radius:6px; }
+.v3-action-cta {
+  font-size:9px; font-weight:700; color:white; padding:4px 11px;
+  border-radius:6px; letter-spacing:0.03em; white-space:nowrap;
+}
+.v3-action-time { font-size:9px; font-weight:600; padding:3px 9px; border-radius:20px; display:inline-flex; align-items:center; gap:4px; }
+
+/* ── quick-win cards (right column) ── */
+.v3-qw-list { display:flex; flex-direction:column; gap:8px; }
+.v3-qw-card {
+  display:flex; align-items:flex-start; gap:10px; padding:10px 12px;
+  background:white; border-radius:10px; border:1px solid #e2e8f0;
+}
+.v3-qw-icon {
+  width:32px; height:32px; border-radius:9px; flex-shrink:0;
+  display:flex; align-items:center; justify-content:center; font-size:15px; margin-top:1px;
+}
+.v3-qw-cat { font-size:9px; font-weight:700; letter-spacing:0.03em; margin-bottom:2px; }
+.v3-qw-title { font-size:10.5px; font-weight:700; color:#0f172a; margin-bottom:3px; }
+.v3-qw-desc { font-size:9px; line-height:1.6; color:#64748b; margin-bottom:5px; }
+.v3-qw-footer { display:flex; align-items:center; gap:6px; }
+.v3-qw-time { font-size:8.5px; font-weight:600; color:#94a3b8; background:#f8fafc; padding:2px 7px; border-radius:5px; border:1px solid #e2e8f0; }
+
+/* ── disclaimer ── */
+.v3-disclaimer {
+  font-size:9px; color:#94a3b8; line-height:1.6; text-align:center;
+  padding:10px 16px; background:#f8fafc; border-radius:8px; border:1px dashed #e2e8f0;
+}
+</style>
+
+<div class="v3-hcc">
+
+  <!-- HEADER -->
+  <div class="v3-hdr">
+    <div class="v3-hdr-bg"></div>
+    <div class="v3-hdr-inner">
+      <div class="v3-hdr-score">
+        <div class="v3-hdr-score-num">72</div>
+        <div class="v3-hdr-score-max">/ 100</div>
+      </div>
+      <div class="v3-hdr-divider"></div>
+      <div class="v3-hdr-content">
+        <div class="v3-hdr-title">Health Command Center</div>
+        <div class="v3-hdr-sub">
+          9 personalised recommendations across 5 health categories
+        </div>
+        <div class="v3-hdr-tags">
+          <span class="v3-hdr-tag" style="border-color:rgba(239,68,68,0.6); color:#fca5a5; background:rgba(239,68,68,0.12);">
+            &#9888; 2 Critical
+          </span>
+          <span class="v3-hdr-tag" style="border-color:rgba(245,158,11,0.6); color:#fcd34d; background:rgba(245,158,11,0.12);">
+            &#33; 4 Important
+          </span>
+          <span class="v3-hdr-tag" style="border-color:rgba(34,197,94,0.6); color:#86efac; background:rgba(34,197,94,0.12);">
+            &#10003; 3 Routine
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CATEGORY STRIP -->
+  <div class="v3-cat-strip">
+      <div class="v3-cat-strip-item" style="background:#fff1f2; border:1px solid #fda4af;">
+        <div class="v3-cat-strip-icon" style="background:#be123c; color:white;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg></div>
+        <div>
+          <div class="v3-cat-strip-name" style="color:#be123c;">Medication Alert</div>
+          <div class="v3-cat-strip-count" style="color:#be123c;">2 items</div>
+        </div>
+      </div>
+      <div class="v3-cat-strip-item" style="background:#eff6ff; border:1px solid #93c5fd;">
+        <div class="v3-cat-strip-icon" style="background:#1d4ed8; color:white;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg></div>
+        <div>
+          <div class="v3-cat-strip-name" style="color:#1d4ed8;">Follow-Up Tests</div>
+          <div class="v3-cat-strip-count" style="color:#1d4ed8;">2 items</div>
+        </div>
+      </div>
+      <div class="v3-cat-strip-item" style="background:#f0fdf4; border:1px solid #86efac;">
+        <div class="v3-cat-strip-icon" style="background:#166534; color:white;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 21h10"/><path d="M12 21a9 9 0 0 0 9-9H3a9 9 0 0 0 9 9Z"/></svg></div>
+        <div>
+          <div class="v3-cat-strip-name" style="color:#166534;">Diet & Nutrition</div>
+          <div class="v3-cat-strip-count" style="color:#166534;">2 items</div>
+        </div>
+      </div>
+      <div class="v3-cat-strip-item" style="background:#f5f3ff; border:1px solid #c4b5fd;">
+        <div class="v3-cat-strip-icon" style="background:#6d28d9; color:white;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></div>
+        <div>
+          <div class="v3-cat-strip-name" style="color:#6d28d9;">Lifestyle</div>
+          <div class="v3-cat-strip-count" style="color:#6d28d9;">2 items</div>
+        </div>
+      </div>
+      <div class="v3-cat-strip-item" style="background:#fffbeb; border:1px solid #fcd34d;">
+        <div class="v3-cat-strip-icon" style="background:#92400e; color:white;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg></div>
+        <div>
+          <div class="v3-cat-strip-name" style="color:#92400e;">Monitor</div>
+          <div class="v3-cat-strip-count" style="color:#92400e;">1 item</div>
+        </div>
+      </div></div>
+
+  <!-- TWO COLUMNS -->
+  <div class="v3-grid">
+
+    <!-- LEFT: Priority Actions -->
+    <div>
+      <div class="v3-col-hdr" style="border-color:#fecaca;">
+        <div class="v3-col-hdr-icon" style="background:#fff1f2; color:#be123c;">&#9888;</div>
+        <span class="v3-col-hdr-title" style="color:#be123c;">PRIORITY ACTIONS</span>
+        <span class="v3-col-hdr-ct" style="color:#be123c;">6</span>
+      </div>
+      <div class="v3-action-list">
+      <div class="v3-action-card">
+        <div class="v3-action-card-top" style="background:linear-gradient(to right,#be123c,#e11d48);">
+          <div class="v3-action-card-badge">
+            <span class="v3-action-badge-num">01</span>
+            <span class="v3-action-badge-label">CRITICAL</span>
+          </div>
+          <span class="v3-action-cat-chip" style="background:rgba(255,255,255,0.18); color:white;">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>&nbsp;Medication Alert
+          </span>
+        </div>
+        <div class="v3-action-card-body">
+          <div class="v3-action-title">Vitamin D Supplementation Required</div>
+          <div class="v3-action-desc">Vitamin D is critically low at 6.59 ng/mL (normal: 30–100). High-dose oral supplementation (60,000 IU/week for 8–12 weeks) followed by a maintenance dose is strongly recommended.</div>
+          <div class="v3-action-footer">
+            <span class="v3-action-test"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 2v7.527a2 2 0 0 1-.211.896L4.72 20.55a1 1 0 0 0 .9 1.45h12.76a1 1 0 0 0 .9-1.45l-5.069-10.127A2 2 0 0 1 14 9.527V2"/><path d="M8.5 2h7"/></svg>&nbsp;Vitamin D, 25 Hydroxy (OH)</span>
+            <div class="v3-action-cta" style="background:linear-gradient(135deg,#be123c,#e11d48);">Consult physician immediately&nbsp;<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14m-7-7 7 7-7 7"/></svg></div>
+          </div>
+          <div class="v3-action-time" style="color:#be123c; background:#fff1f2; border:1px solid #fecaca;">
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>&nbsp;Within 1 week
+          </div>
+        </div>
+      </div>
+      <div class="v3-action-card">
+        <div class="v3-action-card-top" style="background:linear-gradient(to right,#be123c,#e11d48);">
+          <div class="v3-action-card-badge">
+            <span class="v3-action-badge-num">02</span>
+            <span class="v3-action-badge-label">CRITICAL</span>
+          </div>
+          <span class="v3-action-cat-chip" style="background:rgba(255,255,255,0.18); color:white;">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>&nbsp;Medication Alert
+          </span>
+        </div>
+        <div class="v3-action-card-body">
+          <div class="v3-action-title">Insulin Resistance Detected</div>
+          <div class="v3-action-desc">Fasting insulin markedly elevated at 70.7 mU/L (ref: 3–25). Combined with HOMA-IR score, this indicates significant insulin resistance and metabolic dysfunction requiring prompt medical evaluation.</div>
+          <div class="v3-action-footer">
+            <span class="v3-action-test"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 2v7.527a2 2 0 0 1-.211.896L4.72 20.55a1 1 0 0 0 .9 1.45h12.76a1 1 0 0 0 .9-1.45l-5.069-10.127A2 2 0 0 1 14 9.527V2"/><path d="M8.5 2h7"/></svg>&nbsp;Insulin, Fasting & HOMA-IR</span>
+            <div class="v3-action-cta" style="background:linear-gradient(135deg,#be123c,#e11d48);">Schedule endocrinologist consult&nbsp;<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14m-7-7 7 7-7 7"/></svg></div>
+          </div>
+          <div class="v3-action-time" style="color:#be123c; background:#fff1f2; border:1px solid #fecaca;">
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>&nbsp;Within 2 weeks
+          </div>
+        </div>
+      </div>
+      <div class="v3-action-card">
+        <div class="v3-action-card-top" style="background:linear-gradient(to right,#b45309,#d97706);">
+          <div class="v3-action-card-badge">
+            <span class="v3-action-badge-num">03</span>
+            <span class="v3-action-badge-label">IMPORTANT</span>
+          </div>
+          <span class="v3-action-cat-chip" style="background:rgba(255,255,255,0.18); color:white;">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>&nbsp;Follow-Up Tests
+          </span>
+        </div>
+        <div class="v3-action-card-body">
+          <div class="v3-action-title">HbA1c (Glycated Haemoglobin) Test</div>
+          <div class="v3-action-desc">HbA1c is essential to assess average blood glucose over 3 months. Combined with elevated fasting insulin, this will confirm or rule out pre-diabetes or Type 2 Diabetes Mellitus.</div>
+          <div class="v3-action-footer">
+            <span class="v3-action-test"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 2v7.527a2 2 0 0 1-.211.896L4.72 20.55a1 1 0 0 0 .9 1.45h12.76a1 1 0 0 0 .9-1.45l-5.069-10.127A2 2 0 0 1 14 9.527V2"/><path d="M8.5 2h7"/></svg>&nbsp;Plasma Glucose Fasting</span>
+            <div class="v3-action-cta" style="background:linear-gradient(135deg,#1d4ed8,#2563eb);">Order lab test now&nbsp;<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14m-7-7 7 7-7 7"/></svg></div>
+          </div>
+          <div class="v3-action-time" style="color:#b45309; background:#fffbeb; border:1px solid #fde68a;">
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>&nbsp;Within 2 weeks
+          </div>
+        </div>
+      </div>
+      <div class="v3-action-card">
+        <div class="v3-action-card-top" style="background:linear-gradient(to right,#b45309,#d97706);">
+          <div class="v3-action-card-badge">
+            <span class="v3-action-badge-num">04</span>
+            <span class="v3-action-badge-label">IMPORTANT</span>
+          </div>
+          <span class="v3-action-cat-chip" style="background:rgba(255,255,255,0.18); color:white;">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>&nbsp;Follow-Up Tests
+          </span>
+        </div>
+        <div class="v3-action-card-body">
+          <div class="v3-action-title">Repeat Liver Function Test (LFT)</div>
+          <div class="v3-action-desc">SGPT (ALT) and SGOT (AST) are approaching upper limits, suggesting early hepatocellular stress. A repeat LFT after 4–6 weeks of dietary improvement and alcohol avoidance is advised.</div>
+          <div class="v3-action-footer">
+            <span class="v3-action-test"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 2v7.527a2 2 0 0 1-.211.896L4.72 20.55a1 1 0 0 0 .9 1.45h12.76a1 1 0 0 0 .9-1.45l-5.069-10.127A2 2 0 0 1 14 9.527V2"/><path d="M8.5 2h7"/></svg>&nbsp;SGPT (ALT) · SGOT (AST)</span>
+            <div class="v3-action-cta" style="background:linear-gradient(135deg,#1d4ed8,#2563eb);">Book LFT in 4–6 weeks&nbsp;<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14m-7-7 7 7-7 7"/></svg></div>
+          </div>
+          <div class="v3-action-time" style="color:#b45309; background:#fffbeb; border:1px solid #fde68a;">
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>&nbsp;4–6 weeks
+          </div>
+        </div>
+      </div>
+      <div class="v3-action-card">
+        <div class="v3-action-card-top" style="background:linear-gradient(to right,#b45309,#d97706);">
+          <div class="v3-action-card-badge">
+            <span class="v3-action-badge-num">05</span>
+            <span class="v3-action-badge-label">IMPORTANT</span>
+          </div>
+          <span class="v3-action-cat-chip" style="background:rgba(255,255,255,0.18); color:white;">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 21h10"/><path d="M12 21a9 9 0 0 0 9-9H3a9 9 0 0 0 9 9Z"/></svg>&nbsp;Diet & Nutrition
+          </span>
+        </div>
+        <div class="v3-action-card-body">
+          <div class="v3-action-title">Eliminate Refined Carbohydrates</div>
+          <div class="v3-action-desc">Immediately reduce white rice, white bread, processed snacks, and sugary beverages. Switch to a low-GI diet with whole grains, legumes, and green vegetables to restore insulin sensitivity.</div>
+          <div class="v3-action-footer">
+            <span class="v3-action-test"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 2v7.527a2 2 0 0 1-.211.896L4.72 20.55a1 1 0 0 0 .9 1.45h12.76a1 1 0 0 0 .9-1.45l-5.069-10.127A2 2 0 0 1 14 9.527V2"/><path d="M8.5 2h7"/></svg>&nbsp;Insulin Fasting · Plasma Glucose</span>
+            <div class="v3-action-cta" style="background:linear-gradient(135deg,#166534,#15803d);">Start low-GI diet today&nbsp;<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14m-7-7 7 7-7 7"/></svg></div>
+          </div>
+          <div class="v3-action-time" style="color:#b45309; background:#fffbeb; border:1px solid #fde68a;">
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>&nbsp;Immediate
+          </div>
+        </div>
+      </div>
+      <div class="v3-action-card">
+        <div class="v3-action-card-top" style="background:linear-gradient(to right,#b45309,#d97706);">
+          <div class="v3-action-card-badge">
+            <span class="v3-action-badge-num">07</span>
+            <span class="v3-action-badge-label">IMPORTANT</span>
+          </div>
+          <span class="v3-action-cat-chip" style="background:rgba(255,255,255,0.18); color:white;">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>&nbsp;Lifestyle
+          </span>
+        </div>
+        <div class="v3-action-card-body">
+          <div class="v3-action-title">Begin Structured Aerobic Exercise</div>
+          <div class="v3-action-desc">30 minutes of aerobic activity (brisk walking, cycling, swimming) 5 days/week reduces insulin resistance, improves HDL cholesterol, and supports liver enzyme normalisation — all validated clinically.</div>
+          <div class="v3-action-footer">
+            <span class="v3-action-test"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 2v7.527a2 2 0 0 1-.211.896L4.72 20.55a1 1 0 0 0 .9 1.45h12.76a1 1 0 0 0 .9-1.45l-5.069-10.127A2 2 0 0 1 14 9.527V2"/><path d="M8.5 2h7"/></svg>&nbsp;Insulin Fasting · Lipid Profile</span>
+            <div class="v3-action-cta" style="background:linear-gradient(135deg,#6d28d9,#7c3aed);">Start 30-min/day aerobics&nbsp;<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14m-7-7 7 7-7 7"/></svg></div>
+          </div>
+          <div class="v3-action-time" style="color:#b45309; background:#fffbeb; border:1px solid #fde68a;">
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>&nbsp;Start this week
+          </div>
+        </div>
+      </div></div>
+    </div>
+
+    <!-- RIGHT: Quick Wins -->
+    <div>
+      <div class="v3-col-hdr" style="border-color:#bbf7d0;">
+        <div class="v3-col-hdr-icon" style="background:#f0fdf4; color:#16a34a;">&#10003;</div>
+        <span class="v3-col-hdr-title" style="color:#16a34a;">QUICK WINS &amp; MAINTENANCE</span>
+        <span class="v3-col-hdr-ct" style="color:#16a34a;">3</span>
+      </div>
+      <div class="v3-qw-list">
+      <div class="v3-qw-card">
+        <div class="v3-qw-icon" style="background:linear-gradient(135deg,#166534,#15803d);"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 21h10"/><path d="M12 21a9 9 0 0 0 9-9H3a9 9 0 0 0 9 9Z"/></svg></div>
+        <div>
+          <div class="v3-qw-cat" style="color:#166534;">Diet & Nutrition</div>
+          <div class="v3-qw-title">Boost Vitamin D Through Food & Sunlight</div>
+          <div class="v3-qw-desc">Take 15–30 min of early morning sunlight daily. Include fatty fish (salmon, mackerel), egg yolks, and fortified dairy in your regular diet to accelerate Vitamin D recovery.</div>
+          <div class="v3-qw-footer">
+            <span class="v3-qw-time"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>&nbsp;Ongoing</span>
+          </div>
+        </div>
+      </div>
+      <div class="v3-qw-card">
+        <div class="v3-qw-icon" style="background:linear-gradient(135deg,#6d28d9,#7c3aed);"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></div>
+        <div>
+          <div class="v3-qw-cat" style="color:#6d28d9;">Lifestyle</div>
+          <div class="v3-qw-title">Optimise Sleep & Stress Management</div>
+          <div class="v3-qw-desc">Chronic cortisol elevation from poor sleep and stress directly worsens insulin resistance and promotes visceral fat accumulation. Target 7–8 hours of quality sleep with a consistent schedule.</div>
+          <div class="v3-qw-footer">
+            <span class="v3-qw-time"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>&nbsp;Ongoing</span>
+          </div>
+        </div>
+      </div>
+      <div class="v3-qw-card">
+        <div class="v3-qw-icon" style="background:linear-gradient(135deg,#92400e,#b45309);"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg></div>
+        <div>
+          <div class="v3-qw-cat" style="color:#92400e;">Monitor</div>
+          <div class="v3-qw-title">Annual Comprehensive Screening</div>
+          <div class="v3-qw-desc">Thyroid (TSH: 1.7 µIU/mL), Lipid Profile (Total Cholesterol: 172 mg/dL), and haematology are all within normal limits. Maintain current healthy habits and schedule a full-panel checkup in 12 months.</div>
+          <div class="v3-qw-footer">
+            <span class="v3-qw-time"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>&nbsp;In 12 months</span>
+          </div>
+        </div>
+      </div></div>
+    </div>
+
+  </div>
+
+  <!-- DISCLAIMER -->
+  <div class="v3-disclaimer">
+    &#9877; These recommendations are based on laboratory reference ranges and are for informational purposes only.
+    They do not replace professional medical advice, diagnosis, or treatment. Always consult a qualified healthcare provider.
+  </div>
+
+</div>
+  </main>
+
+  <footer class="page-footer">
+    <span class="footer-brand">NexaHealth Analytics — Smart Health Insights</span>
+    <span class="footer-page">Page 7 of 7</span>
   </footer>
 </div>
 
@@ -6662,35 +5553,9 @@ body {
       </div>
       
       <div class="back-qr-card">
-        
-<svg class="back-qr" width="90" height="90" viewBox="0 0 90 90"
-     xmlns="http://www.w3.org/2000/svg" aria-label="QR Code placeholder">
-  <!-- Outer border -->
-  <rect x="1" y="1" width="88" height="88" rx="6" fill="none"
-        stroke="var(--color-primary)" stroke-width="2"/>
-  <!-- Top-left finder -->
-  <rect x="8"  y="8"  width="24" height="24" rx="3" fill="var(--color-primary)"/>
-  <rect x="13" y="13" width="14" height="14" rx="1" fill="white"/>
-  <rect x="17" y="17" width="6"  height="6"  rx="1" fill="var(--color-primary)"/>
-  <!-- Top-right finder -->
-  <rect x="58" y="8"  width="24" height="24" rx="3" fill="var(--color-primary)"/>
-  <rect x="63" y="13" width="14" height="14" rx="1" fill="white"/>
-  <rect x="67" y="17" width="6"  height="6"  rx="1" fill="var(--color-primary)"/>
-  <!-- Bottom-left finder -->
-  <rect x="8"  y="58" width="24" height="24" rx="3" fill="var(--color-primary)"/>
-  <rect x="13" y="63" width="14" height="14" rx="1" fill="white"/>
-  <rect x="17" y="67" width="6"  height="6"  rx="1" fill="var(--color-primary)"/>
-  <!-- Data dots (decorative) -->
-  <rect x="40" y="8"  width="5" height="5" rx="1" fill="var(--color-primary)"/>
-  <rect x="48" y="8"  width="5" height="5" rx="1" fill="var(--color-primary)"/>
-  <rect x="40" y="16" width="5" height="5" rx="1" fill="var(--color-primary)"/>
-  <rect x="40" y="40" width="5" height="5" rx="1" fill="var(--color-primary)"/>
-  <rect x="48" y="48" width="5" height="5" rx="1" fill="var(--color-primary)"/>
-  <rect x="56" y="40" width="5" height="5" rx="1" fill="var(--color-primary)"/>
-  <rect x="56" y="56" width="5" height="5" rx="1" fill="var(--color-primary)"/>
-  <rect x="40" y="56" width="5" height="5" rx="1" fill="var(--color-primary)"/>
-</svg>
-        <div class="back-qr-label">Scan to verify</div>
+        <svg xmlns="http://www.w3.org/2000/svg" width="90" height="90" viewBox="0 0 41 41" shape-rendering="crispEdges"><path fill="#ffffff" d="M0 0h41v41H0z"/><path stroke="#2D4A9A" d="M0 0.5h7m2 0h3m2 0h1m2 0h1m3 0h1m1 0h1m1 0h1m1 0h1m1 0h1m4 0h7M0 1.5h1m5 0h1m3 0h1m1 0h6m1 0h3m1 0h4m1 0h1m1 0h3m1 0h1m5 0h1M0 2.5h1m1 0h3m1 0h1m1 0h1m4 0h6m2 0h2m2 0h1m1 0h1m1 0h1m4 0h1m1 0h3m1 0h1M0 3.5h1m1 0h3m1 0h1m1 0h1m2 0h1m7 0h3m1 0h2m1 0h1m3 0h2m2 0h1m1 0h3m1 0h1M0 4.5h1m1 0h3m1 0h1m1 0h1m1 0h1m1 0h1m4 0h2m2 0h3m1 0h1m2 0h2m1 0h2m1 0h1m1 0h3m1 0h1M0 5.5h1m5 0h1m1 0h1m1 0h2m1 0h2m1 0h1m1 0h4m1 0h4m1 0h2m4 0h1m5 0h1M0 6.5h7m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h7M8 7.5h1m3 0h5m4 0h1m4 0h2m3 0h1M0 8.5h1m1 0h5m2 0h1m2 0h1m3 0h2m5 0h1m1 0h2m2 0h1m4 0h5M0 9.5h4m3 0h4m3 0h1m3 0h7m1 0h1m1 0h1m1 0h3m2 0h1m2 0h2M1 10.5h4m1 0h4m1 0h2m5 0h1m2 0h2m4 0h1m2 0h1m5 0h1m2 0h2M2 11.5h1m1 0h2m1 0h4m2 0h2m1 0h2m1 0h2m2 0h2m1 0h2m4 0h1m2 0h3M1 12.5h1m4 0h1m2 0h1m3 0h2m1 0h1m1 0h1m1 0h3m1 0h2m2 0h8m1 0h2m1 0h1M2 13.5h1m4 0h1m2 0h3m4 0h1m3 0h2m2 0h3m1 0h1m3 0h1m2 0h1m2 0h1M0 14.5h3m3 0h1m1 0h1m1 0h2m1 0h2m3 0h1m1 0h2m1 0h2m1 0h3m1 0h6m2 0h3M2 15.5h1m1 0h2m5 0h3m1 0h1m1 0h1m4 0h2m1 0h1m1 0h1m1 0h1m3 0h4M1 16.5h1m1 0h5m6 0h2m2 0h1m1 0h2m1 0h2m1 0h3m1 0h1m1 0h2m1 0h1m1 0h3M0 17.5h1m4 0h1m1 0h1m1 0h3m1 0h1m4 0h1m1 0h1m3 0h1m1 0h2m2 0h1m1 0h3m1 0h5M0 18.5h1m2 0h1m2 0h3m3 0h3m1 0h1m1 0h2m2 0h2m4 0h1m1 0h2m1 0h2m1 0h1M2 19.5h1m4 0h1m1 0h4m2 0h1m10 0h2m1 0h2m1 0h2m2 0h3m1 0h1M0 20.5h5m1 0h1m2 0h2m2 0h1m1 0h1m2 0h1m1 0h3m1 0h1m2 0h2m3 0h1m2 0h2m1 0h1m1 0h1M0 21.5h2m2 0h1m3 0h1m1 0h1m1 0h3m5 0h2m2 0h1m1 0h2m2 0h2m1 0h2m2 0h4M0 22.5h2m2 0h5m2 0h1m1 0h1m1 0h2m2 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h2m2 0h4M2 23.5h2m3 0h5m2 0h2m5 0h1m4 0h2m3 0h2m4 0h4M0 24.5h1m1 0h2m1 0h3m1 0h1m2 0h2m3 0h1m1 0h2m2 0h1m1 0h3m1 0h1m3 0h2m1 0h1m1 0h1M0 25.5h1m1 0h1m1 0h2m5 0h1m2 0h1m2 0h1m1 0h2m1 0h3m1 0h1m1 0h1m1 0h3m2 0h1m1 0h1m1 0h1M1 26.5h1m4 0h1m2 0h4m1 0h2m2 0h1m1 0h2m2 0h1m1 0h2m1 0h2m1 0h1m3 0h1m2 0h2M0 27.5h1m1 0h1m2 0h1m1 0h2m1 0h4m2 0h5m2 0h2m2 0h2m2 0h2m3 0h2M0 28.5h3m1 0h3m4 0h2m2 0h1m3 0h1m1 0h3m5 0h1m1 0h5m1 0h2M0 29.5h1m1 0h1m1 0h2m4 0h2m1 0h2m1 0h3m1 0h1m3 0h7m5 0h1M0 30.5h1m3 0h3m1 0h1m2 0h6m2 0h1m1 0h1m4 0h1m4 0h2m1 0h4m2 0h1M0 31.5h1m3 0h1m3 0h2m2 0h1m3 0h5m1 0h1m1 0h2m2 0h2m4 0h3m2 0h1M0 32.5h1m1 0h5m2 0h1m1 0h1m2 0h1m4 0h1m1 0h1m4 0h1m3 0h1m1 0h7m1 0h1M8 33.5h3m1 0h2m1 0h1m1 0h1m2 0h2m2 0h9m3 0h1m2 0h2M0 34.5h7m2 0h2m2 0h2m1 0h2m1 0h1m1 0h1m1 0h1m1 0h2m5 0h1m1 0h1m1 0h1m2 0h1M0 35.5h1m5 0h1m1 0h1m2 0h1m2 0h1m1 0h3m2 0h2m1 0h2m1 0h2m1 0h1m1 0h1m3 0h3m1 0h1M0 36.5h1m1 0h3m1 0h1m1 0h2m1 0h4m1 0h1m2 0h1m1 0h1m1 0h1m2 0h1m1 0h1m1 0h8M0 37.5h1m1 0h3m1 0h1m1 0h1m1 0h1m2 0h1m1 0h2m1 0h1m1 0h5m2 0h1m2 0h2m1 0h1m1 0h1m1 0h1m1 0h2M0 38.5h1m1 0h3m1 0h1m1 0h2m1 0h1m1 0h1m1 0h5m1 0h1m1 0h2m1 0h2m2 0h1m2 0h4m2 0h1M0 39.5h1m5 0h1m3 0h2m1 0h3m1 0h2m1 0h2m2 0h1m7 0h2m2 0h4M0 40.5h7m1 0h2m1 0h2m1 0h1m2 0h3m5 0h1m1 0h1m1 0h1m1 0h1m2 0h4"/></svg>
+
+        <div class="back-qr-label">Scan to view your results</div>
       </div>
     </div>
     

@@ -46,10 +46,6 @@ function labelsToKey(name: string, labels?: Labels): string {
     return `${name}{${sorted}}`;
 }
 
-function keyToPrometheus(key: string): string {
-    return key;
-}
-
 // ---------------------------------------------------------------------------
 // Public API
 // ---------------------------------------------------------------------------
@@ -128,7 +124,7 @@ export function getMetricsText(): string {
 
         for (const [key, entry] of counters) {
             if (key.split('{')[0] === baseName) {
-                lines.push(`${keyToPrometheus(key)} ${entry.value}`);
+                lines.push(`${key} ${entry.value}`);
             }
         }
         lines.push('');
@@ -147,7 +143,7 @@ export function getMetricsText(): string {
 
         for (const [key, entry] of durations) {
             if (key.split('{')[0] === baseName) {
-                const promKey = keyToPrometheus(key);
+                const promKey = key;
                 lines.push(`${promKey}_count ${entry.count}`);
                 lines.push(`${promKey}_sum ${entry.sum.toFixed(1)}`);
                 lines.push(`${promKey}_min ${entry.min.toFixed(1)}`);

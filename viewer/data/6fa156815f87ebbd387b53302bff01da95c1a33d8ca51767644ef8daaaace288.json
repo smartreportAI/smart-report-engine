@@ -1,0 +1,243 @@
+{
+  "reportId": "RPT-2026-MPLE",
+  "reportDate": "14 March 2026",
+  "patientId": "PAT-2026-SAMPLE",
+  "age": 42,
+  "gender": "male",
+  "overallScore": 91,
+  "overallSeverity": "critical",
+  "profiles": [
+    {
+      "name": "Complete Blood Count",
+      "severity": "attention",
+      "abnormalCount": 4,
+      "normalCount": 3,
+      "parameters": [
+        {
+          "name": "Hemoglobin",
+          "value": 11.2,
+          "unit": "g/dL",
+          "range": {
+            "min": 13.5,
+            "max": 17.5
+          },
+          "status": "low"
+        },
+        {
+          "name": "WBC Count",
+          "value": 9800,
+          "unit": "cells/µL",
+          "range": {
+            "min": 4500,
+            "max": 11000
+          },
+          "status": "normal"
+        },
+        {
+          "name": "Platelet Count",
+          "value": 145000,
+          "unit": "/µL",
+          "range": {
+            "min": 150000,
+            "max": 400000
+          },
+          "status": "low"
+        },
+        {
+          "name": "RBC Count",
+          "value": 4.1,
+          "unit": "million/µL",
+          "range": {
+            "min": 4.5,
+            "max": 5.9
+          },
+          "status": "low"
+        },
+        {
+          "name": "Hematocrit",
+          "value": 36,
+          "unit": "%",
+          "range": {
+            "min": 41,
+            "max": 53
+          },
+          "status": "low"
+        },
+        {
+          "name": "MCV",
+          "value": 88,
+          "unit": "fL",
+          "range": {
+            "min": 80,
+            "max": 100
+          },
+          "status": "normal"
+        },
+        {
+          "name": "sai",
+          "value": 88,
+          "unit": "fL",
+          "range": {
+            "min": 80,
+            "max": 100
+          },
+          "status": "normal"
+        }
+      ]
+    },
+    {
+      "name": "Lipid Panel",
+      "severity": "attention",
+      "abnormalCount": 3,
+      "normalCount": 1,
+      "parameters": [
+        {
+          "name": "Total Cholesterol",
+          "value": 210,
+          "unit": "mg/dL",
+          "range": {
+            "min": 0,
+            "max": 200
+          },
+          "status": "high"
+        },
+        {
+          "name": "LDL Cholesterol",
+          "value": 138,
+          "unit": "mg/dL",
+          "range": {
+            "min": 0,
+            "max": 100
+          },
+          "status": "high"
+        },
+        {
+          "name": "HDL Cholesterol",
+          "value": 48,
+          "unit": "mg/dL",
+          "range": {
+            "min": 40,
+            "max": 60
+          },
+          "status": "normal"
+        },
+        {
+          "name": "Triglycerides",
+          "value": 165,
+          "unit": "mg/dL",
+          "range": {
+            "min": 0,
+            "max": 150
+          },
+          "status": "high"
+        }
+      ]
+    },
+    {
+      "name": "Thyroid Panel",
+      "severity": "monitor",
+      "abnormalCount": 1,
+      "normalCount": 2,
+      "parameters": [
+        {
+          "name": "TSH",
+          "value": 4.8,
+          "unit": "mIU/L",
+          "range": {
+            "min": 0.4,
+            "max": 4
+          },
+          "status": "high"
+        },
+        {
+          "name": "Free T3",
+          "value": 3.1,
+          "unit": "pg/mL",
+          "range": {
+            "min": 2.3,
+            "max": 4.2
+          },
+          "status": "normal"
+        },
+        {
+          "name": "Free T4",
+          "value": 1.1,
+          "unit": "ng/dL",
+          "range": {
+            "min": 0.8,
+            "max": 1.8
+          },
+          "status": "normal"
+        }
+      ]
+    },
+    {
+      "name": "Liver Function Test",
+      "severity": "attention",
+      "abnormalCount": 2,
+      "normalCount": 3,
+      "parameters": [
+        {
+          "name": "SGOT (AST)",
+          "value": 52,
+          "unit": "U/L",
+          "range": {
+            "min": 5,
+            "max": 40
+          },
+          "status": "high"
+        },
+        {
+          "name": "SGPT (ALT)",
+          "value": 68,
+          "unit": "U/L",
+          "range": {
+            "min": 7,
+            "max": 56
+          },
+          "status": "high"
+        },
+        {
+          "name": "Bilirubin Total",
+          "value": 0.9,
+          "unit": "mg/dL",
+          "range": {
+            "min": 0.1,
+            "max": 1.2
+          },
+          "status": "normal"
+        },
+        {
+          "name": "Albumin",
+          "value": 4.1,
+          "unit": "g/dL",
+          "range": {
+            "min": 3.5,
+            "max": 5
+          },
+          "status": "normal"
+        },
+        {
+          "name": "Alkaline Phosphatase",
+          "value": 88,
+          "unit": "U/L",
+          "range": {
+            "min": 44,
+            "max": 147
+          },
+          "status": "normal"
+        }
+      ]
+    }
+  ],
+  "branding": {
+    "labName": "NexaHealth Analytics",
+    "logoUrl": "",
+    "primaryColor": "#2D4A9A",
+    "secondaryColor": "#20BFDD",
+    "accentHealthy": "#388E3C",
+    "accentMonitor": "#D97706",
+    "accentAttention": "#DC2626",
+    "contactEmail": "reports@nexahealth.com"
+  }
+}

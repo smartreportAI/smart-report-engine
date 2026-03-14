@@ -7,4 +7,11 @@ export interface AppConfig {
   corsOrigin?: string;
   /** Optional default timeout for PDF generation in milliseconds. */
   pdfTimeoutMs?: number;
+  /**
+   * Base URL for the patient mobile viewer (embedded in QR codes).
+   * When absent, QR codes are decorative placeholders.
+   */
+  viewerBaseUrl?: string;
+  /** Viewer token TTL in days (default: 90). */
+  viewerTokenTtlDays: number;
 }

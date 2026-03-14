@@ -99,6 +99,14 @@ export const TenantConfigSchema = z.object({
     * producing a hard page break before every new profile.
     */
    profileContinuation: z.boolean().optional(),
+
+   /**
+    * If true, a patient-facing mobile web viewer is generated for each report.
+    * A unique QR code linking to the viewer is embedded in the cover and back pages.
+    * Requires VIEWER_BASE_URL to be set in the environment.
+    * Defaults to false.
+    */
+   webViewer: z.boolean().optional(),
 });
 
 export type TenantConfig = z.infer<typeof TenantConfigSchema>;

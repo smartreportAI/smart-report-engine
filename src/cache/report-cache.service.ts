@@ -40,6 +40,9 @@ export interface CachedReportEntry {
 
 const DEFAULT_CACHE_DIR = resolve(process.cwd(), 'cache', 'reports');
 
+/** Cache TTL: default 7 days, overridable with CACHE_TTL_DAYS env var. */
+const CACHE_TTL_MS = parseInt(process.env.CACHE_TTL_DAYS ?? '7', 10) * 24 * 60 * 60 * 1000;
+
 // ---------------------------------------------------------------------------
 // Fingerprint generation
 // ---------------------------------------------------------------------------
@@ -79,7 +82,14 @@ export function getCachedReport(
 
     try {
         const content = readFileSync(jsonPath, 'utf-8');
-        return JSON.parse(content) as CachedReportEntry;
+        const entry = JSON.parse(content) as CachedReportEntry;
+
+        // Expire entries older than CACHE_TTL_MS
+        if (Date.now() - new Date(entry.createdAt).getTime() > CACHE_TTL_MS) {
+            return null;
+        }
+
+        return entry;
     } catch {
         return null;
     }

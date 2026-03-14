@@ -21,7 +21,8 @@
  *      tenantId:   'my-new-client',          // unique slug, lowercase-kebab
  *      reportType: 'inDepth',                // 'inDepth' | 'essential'
  *      pageOrder:  INDEPTH_PAGE_ORDER,       // or ESSENTIAL_PAGE_ORDER
- *      ...DEFAULT_FLAGS,                     // profileContinuation, strictMapping …
+ *      ...DEFAULT_FLAGS,                     // profileContinuation, strictMapping, webViewer …
+ *      webViewer:  true,                     // enable patient-facing mobile viewer (needs VIEWER_BASE_URL)
  *      branding: {
  *        ...DEFAULT_BRANDING,                // inherit all visual defaults
  *        labName:      'My New Client Lab',  // override what differs
@@ -69,6 +70,13 @@
  *                        true  → unmapped parameters throw an error
  *                                (good for strictly controlled lab integrations).
  *
+ *    webViewer           boolean (default: false)
+ *                        true  → generate a patient-facing mobile web viewer
+ *                                per report. A unique QR code is embedded
+ *                                in the cover and back pages of the PDF.
+ *                                Requires VIEWER_BASE_URL env variable.
+ *                        false → QR codes remain decorative placeholders.
+ *
  *  Branding (TenantBrandingConfig):
  *    labName             string   — Lab / business name in header & footer.
  *    logoUrl             string   — Logo image URL.
@@ -104,6 +112,7 @@ export const INDEPTH_PAGE_ORDER = [
   'indepth-how-to-read',
   'indepth-summary',
   'indepth-detail',
+  'indepth-recommendations',
   'indepth-back',
 ] as const;
 
@@ -124,6 +133,8 @@ const DEFAULT_FLAGS = {
   profileContinuation: false,
   /** false = unmapped parameters pass through. true = throw on unmapped params. */
   strictMapping: false,
+  /** true = generate patient-facing mobile web viewer (requires VIEWER_BASE_URL). */
+  webViewer: false,
 } as const;
 
 /* ============================================================
@@ -156,6 +167,7 @@ const DEMO_CONFIG: TenantConfig = {
   reportType: 'inDepth',
   pageOrder:  [...INDEPTH_PAGE_ORDER],
   ...DEFAULT_FLAGS,
+  webViewer: true,
   branding: {
     ...DEFAULT_BRANDING,
     primaryColor:  '#f97407',
@@ -190,6 +202,7 @@ const TENANT_BETA_CONFIG: TenantConfig = {
   reportType: 'inDepth',
   pageOrder:  [...INDEPTH_PAGE_ORDER],
   ...DEFAULT_FLAGS,
+  webViewer: true,
   branding: {
     ...DEFAULT_BRANDING,
     labName:        'NexaHealth Analytics',

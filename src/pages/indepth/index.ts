@@ -7,3 +7,4 @@ export { inDepthHowToReadPage } from './how-to-read.page';
 export { inDepthSummaryPage } from './summary.page';
 export { inDepthDetailPage } from './detail.page';
 export { inDepthBackPage } from './back.page';
+export { inDepthRecommendationsPage } from './recommendations.page';

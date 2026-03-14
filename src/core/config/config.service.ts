@@ -21,6 +21,8 @@ function loadConfig(): AppConfig {
     logLevel: env.LOG_LEVEL,
     corsOrigin: env.CORS_ORIGIN,
     pdfTimeoutMs: env.PDF_TIMEOUT_MS,
+    viewerBaseUrl: env.VIEWER_BASE_URL,
+    viewerTokenTtlDays: env.VIEWER_TOKEN_TTL_DAYS,
   };
 }
 

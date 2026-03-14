@@ -14,6 +14,14 @@ export const configSchema = z.object({
    * If not set, the engine falls back to 30_000ms.
    */
   PDF_TIMEOUT_MS: z.coerce.number().int().positive().optional(),
+  /**
+   * Base URL for the patient mobile viewer (embedded in QR codes on PDF).
+   * Example: "https://reports.saihealthlabs.com"
+   * If not set, QR codes remain as decorative placeholders (backward-compatible).
+   */
+  VIEWER_BASE_URL: z.string().url().optional(),
+  /** Viewer token TTL in days. Default: 90. */
+  VIEWER_TOKEN_TTL_DAYS: z.coerce.number().int().positive().default(90),
 });
 
 export type RawEnv = z.input<typeof configSchema>;

@@ -10,35 +10,36 @@
 
 import type { ReportPage, PageRenderContext } from '../../core/page-registry/page.types';
 import type { NormalizedReport } from '../../domain/models/report.model';
+import type { ParameterResult } from '../../domain/models/parameter.model';
+import type { ProfileResult } from '../../domain/models/profile.model';
 
-import { renderScoreGauge } from '../shared/index';
+import { renderScoreGauge, getSeverityStyle as getSharedSeverityStyle } from '../shared/index';
 
 /* ────────────────────────────────────────────────────────────────── */
-/*  Helper Renderers                                                  */
+/*  Pre-computed report statistics (single pass)                      */
 /* ────────────────────────────────────────────────────────────────── */
 
-
-
-function getSeverityStyle(sev: string) {
-  if (sev === 'healthy' || sev === 'normal') {
-    return { color: '#10b981', bg: '#f0fdf4', dot: '#10b981', label: 'Healthy' };
-  }
-  if (sev === 'monitor' || sev === 'medium') {
-    return { color: '#f59e0b', bg: '#fffbeb', dot: '#f59e0b', label: 'Monitor' };
-  }
-  if (sev === 'low') {
-    return { color: '#3b82f6', bg: '#eff6ff', dot: '#3b82f6', label: 'Low' };
-  }
-  return { color: '#f87171', bg: '#fff8f8', dot: '#f87171', label: 'Attention' };
+interface ParamObservation {
+  text: string;
+  severity: string;
 }
 
-function renderStatusGrid(report: NormalizedReport): string {
+interface ReportStats {
+  normalCount: number;
+  abnormalCount: number;
+  unknownCount: number;
+  /** Abnormal parameters collected for clinical observations */
+  observations: ParamObservation[];
+}
+
+function computeReportStats(report: NormalizedReport): ReportStats {
   let normalCount = 0;
   let abnormalCount = 0;
   let unknownCount = 0;
+  const observations: ParamObservation[] = [];
 
-  report.profiles.forEach(p => {
-    p.parameters.forEach(param => {
+  for (const p of report.profiles) {
+    for (const param of p.parameters) {
       const hasRange = param.range && (param.range.min !== undefined || param.range.max !== undefined);
       if (!hasRange) {
         unknownCount++;
@@ -47,8 +48,25 @@ function renderStatusGrid(report: NormalizedReport): string {
       } else {
         abnormalCount++;
       }
-    });
-  });
+
+      if (param.status !== 'normal') {
+        observations.push({
+          text: `<strong>${param.name}</strong> is ${param.status.toUpperCase()} (${param.value} ${param.unit || ''}). Found in <em>${p.name}</em> profile.`,
+          severity: param.status === 'critical' ? 'attention' : (param.status === 'low' ? 'low' : 'monitor'),
+        });
+      }
+    }
+  }
+
+  return { normalCount, abnormalCount, unknownCount, observations };
+}
+
+/* ────────────────────────────────────────────────────────────────── */
+/*  Helper Renderers                                                  */
+/* ────────────────────────────────────────────────────────────────── */
+
+function renderStatusGrid(report: NormalizedReport, stats: ReportStats): string {
+  const { normalCount, abnormalCount, unknownCount } = stats;
 
   const cards = [];
 
@@ -110,7 +128,7 @@ function getParamStatusStyle(status: string): { bg: string; color: string; label
     case 'normal': return { bg: '#dcfce7', color: '#166534', label: 'Normal' };
     case 'low': return { bg: '#fff1f1', color: '#c0392b', label: 'Low' };
     case 'high': return { bg: '#fff1f1', color: '#c0392b', label: 'High' };
-    case 'critical': return { bg: '#fff1f1', color: '#c0392b', label: 'High' };
+    case 'critical': return { bg: '#fff1f1', color: '#c0392b', label: 'Critical' };
     default: return { bg: '#f3f4f6', color: '#374151', label: 'Normal' };
   }
 }
@@ -119,8 +137,8 @@ function getParamStatusStyle(status: string): { bg: string; color: string; label
 function getSeverityAccent(sev: string): { bar: string; badgeBg: string; badgeColor: string; label: string; headerBg: string } {
   if (sev === 'healthy') return { bar: '#22c55e', badgeBg: '#dcfce7', badgeColor: '#166534', label: '✓ Normal', headerBg: '#f0fdf4' };
   if (sev === 'low') return { bar: '#f87171', badgeBg: '#fff1f1', badgeColor: '#c0392b', label: '↓ Low', headerBg: '#fff8f8' };
-  if (sev === 'monitor') return { bar: '#f87171', badgeBg: '#fff1f1', badgeColor: '#c0392b', label: '⚠ High', headerBg: '#fff8f8' };
-  return { bar: '#f87171', badgeBg: '#fff1f1', badgeColor: '#c0392b', label: '✗ High', headerBg: '#fff8f8' } as any;
+  if (sev === 'monitor') return { bar: '#f59e0b', badgeBg: '#fffbeb', badgeColor: '#d97706', label: '⚠ Monitor', headerBg: '#fffbeb' };
+  return { bar: '#f87171', badgeBg: '#fff1f1', badgeColor: '#c0392b', label: '✗ Attention', headerBg: '#fff8f8' };
 }
 
 /* ── Dot SVG indicator ── */
@@ -265,26 +283,15 @@ function renderReportSummary(report: NormalizedReport): string {
     </div>`;
 }
 
-function renderClinicalObservations(report: NormalizedReport): string {
-  const observations: Array<{ text: string, severity: string }> = [];
-
-  report.profiles.forEach(p => {
-    p.parameters.forEach(param => {
-      if (param.status !== 'normal') {
-        observations.push({
-          text: `<strong>${param.name}</strong> is ${param.status.toUpperCase()} (${param.value} ${param.unit || ''}). Found in <em>${p.name}</em> profile.`,
-          severity: param.status === 'critical' ? 'attention' : (param.status === 'low' ? 'low' : 'monitor')
-        });
-      }
-    });
-  });
+function renderClinicalObservations(stats: ReportStats): string {
+  let observations = stats.observations;
 
   if (observations.length === 0) {
-    observations.push({ text: 'All analyzed parameters are within normal reference ranges.', severity: 'healthy' });
+    observations = [{ text: 'All analyzed parameters are within normal reference ranges.', severity: 'healthy' }];
   }
 
   const rows = observations.slice(0, 8).map(obs => {
-    const style = getSeverityStyle(obs.severity);
+    const style = getSharedSeverityStyle(obs.severity);
     return `
             <div class="observation-row" style="background-color:${style.bg}">
                 <div class="observation-dot" style="background-color:${style.dot}"></div>
@@ -341,6 +348,9 @@ export const inDepthSummaryPage: ReportPage = {
   generate(ctx: PageRenderContext): string {
     const report = ctx.data as NormalizedReport;
 
+    // Single pass over all profiles/parameters — shared by all sections
+    const stats = computeReportStats(report);
+
     return `
 <section class="indepth-summary-v2">
     <!-- MASTER HEALTH SCORE SECTION -->
@@ -350,7 +360,7 @@ export const inDepthSummaryPage: ReportPage = {
         </div>
         <div style="flex: 1; display: flex; flex-direction: column;">
             <h2 class="section-heading-v2" style="font-size: 15px; margin-bottom: 10px; margin-top:0;">MASTER HEALTH SCORE</h2>
-            ${renderStatusGrid(report)}
+            ${renderStatusGrid(report, stats)}
         </div>
     </div>
 
@@ -362,7 +372,7 @@ export const inDepthSummaryPage: ReportPage = {
     <div class="summary-divider" style="margin-top: 6px; margin-bottom: 6px;"></div>
 
     <!-- KEY CLINICAL OBSERVATIONS -->
-    ${renderClinicalObservations(report)}
+    ${renderClinicalObservations(stats)}
 
     <!-- AI CLINICAL RECOMMENDATIONS (if present) -->
     ${renderAiRecommendations(report)}

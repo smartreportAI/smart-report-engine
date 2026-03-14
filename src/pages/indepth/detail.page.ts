@@ -28,108 +28,21 @@
 import type { ReportPage, PageRenderContext } from '../../core/page-registry/page.types';
 import type { ProfileResult } from '../../domain/models/profile.model';
 import type { ParameterResult, ParameterStatus } from '../../domain/models/parameter.model';
-import { renderScoreGauge, renderSmartSlider } from '../shared/index';
-
-/* ─────────────────────────────────────────────────────────────────
-   Colour helpers
-   ───────────────────────────────────────────────────────────────── */
-
-function statusColor(status: ParameterStatus): string {
-  switch (status) {
-    case 'normal': return '#16A34A';
-    case 'low': return '#c0392b';
-    case 'high': return '#c0392b';
-    case 'critical': return '#c0392b';
-  }
-}
-
-function statusBgColor(status: ParameterStatus): string {
-  switch (status) {
-    case 'normal': return '#F0FDF4';
-    case 'low': return '#fff8f8';
-    case 'high': return '#fff8f8';
-    case 'critical': return '#fff1f1';
-  }
-}
-
-function statusBorderColor(status: ParameterStatus): string {
-  switch (status) {
-    case 'normal': return '#BBF7D0';
-    case 'low': return '#fcd5d5';
-    case 'high': return '#fcd5d5';
-    case 'critical': return '#fca5a5';
-  }
-}
-
-function statusAccentColor(status: ParameterStatus): string {
-  switch (status) {
-    case 'normal': return '#16A34A';
-    case 'low': return '#f87171';
-    case 'high': return '#f87171';
-    case 'critical': return '#f87171';
-  }
-}
-
-function statusLabel(status: ParameterStatus): string {
-  switch (status) {
-    case 'normal': return '✔ NORMAL';
-    case 'low': return '▼ LOW';
-    case 'high': return '▲ HIGH';
-    case 'critical': return '‼ CRITICAL';
-  }
-}
-
-function severityColor(sev: string): string {
-  if (sev === 'healthy') return '#16A34A';
-  if (sev === 'monitor') return '#c0392b';
-  return '#c0392b';
-}
-
-function severityBgColor(sev: string): string {
-  if (sev === 'healthy') return '#F0FDF4';
-  if (sev === 'monitor') return '#fff8f8';
-  return '#fff1f1';
-}
-
-function severityBorderColor(sev: string): string {
-  if (sev === 'healthy') return '#86EFAC';
-  if (sev === 'monitor') return '#fcd5d5';
-  return '#fca5a5';
-}
-
-/* ─────────────────────────────────────────────────────────────────
-   Safe value helpers — never render a blank
-   ───────────────────────────────────────────────────────────────── */
-
-function safeValue(v: number | string | undefined | null): string {
-  if (v === undefined || v === null || v === '') return 'Unknown';
-  const n = Number(v);
-  if (typeof v === 'string' && isNaN(n)) return v;   // text value (e.g. "ABSENT")
-  if (isNaN(n)) return 'Unknown';
-  return String(v);
-}
-
-function safeUnit(u: string | undefined): string {
-  return (u && u.trim()) ? u.trim() : '';
-}
-
-function formatRange(param: ParameterResult): string {
-  if (!param.range) return 'Unknown';
-  const { min, max } = param.range;
-  if (min === undefined && max === undefined) return 'Unknown';
-  if (min === undefined || min === null) return `< ${max}`;
-  if (max === undefined || max === null) return `> ${min}`;
-  return `${min} – ${max}`;
-}
+import {
+  renderScoreGauge, renderSmartSlider,
+  getStatusStyle, getSeverityStyle,
+  safeValue, safeUnit, formatRange,
+} from '../shared/index';
 
 /* ─────────────────────────────────────────────────────────────────
    1. PROFILE HERO
    ───────────────────────────────────────────────────────────────── */
 
 function renderProfileHero(profile: ProfileResult): string {
-  const sevColor = severityColor(profile.severity);
-  const sevBg = severityBgColor(profile.severity);
-  const sevBorder = severityBorderColor(profile.severity);
+  const sev = getSeverityStyle(profile.severity);
+  const sevColor = sev.color;
+  const sevBg = sev.bg;
+  const sevBorder = sev.border;
   const sevLabel = profile.severity.toUpperCase();
 
   const total = profile.parameters.length;
@@ -188,11 +101,11 @@ function renderProfileHero(profile: ProfileResult): string {
    ───────────────────────────────────────────────────────────────── */
 
 function renderFlaggedCard(param: ParameterResult, showSlider: boolean): string {
-  const color = statusColor(param.status);
-  const bgColor = statusBgColor(param.status);
-  const borderColor = statusBorderColor(param.status);
-  const accentColor = statusAccentColor(param.status);
-  const label = statusLabel(param.status);
+  const s = getStatusStyle(param.status);
+  const color = s.color;
+  const bgColor = s.bg;
+  const borderColor = s.border;
+  const label = s.label;
   const displayVal = safeValue(param.value);
   const unit = safeUnit(param.unit);
   const refRange = formatRange(param);

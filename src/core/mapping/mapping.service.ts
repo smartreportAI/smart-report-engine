@@ -104,6 +104,7 @@ export function mapRawReportInput(
             age: raw.age,
             gender: raw.gender,
             profiles,
+            aiAssessment: raw.aiAssessment,
         },
         unmappedParameters,
     };

@@ -6,12 +6,7 @@ import type {
 import type { NormalizedReport } from '../domain/models/report.model';
 import { generateInputHash, generateReportId } from './audit.utils';
 import { saveAuditRecord } from './storage/file.storage';
-
-// ---------------------------------------------------------------------------
-// Constants
-// ---------------------------------------------------------------------------
-
-const ENGINE_VERSION = '1.0.0';
+import { version as ENGINE_VERSION } from '../../package.json';
 
 // ---------------------------------------------------------------------------
 // Public API

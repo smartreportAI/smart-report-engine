@@ -22,6 +22,11 @@ const DEFAULT_CONFIG: RateLimitConfig = {
     windowMs: 60_000, // 1 minute
 };
 
+/**
+ * Exported constant so HTTP headers and other callers don't hardcode this value.
+ */
+export const RATE_LIMIT_MAX_REQUESTS = DEFAULT_CONFIG.maxRequests;
+
 export class RateLimiter {
     private readonly config: RateLimitConfig;
     private readonly windows = new Map<string, WindowState>();

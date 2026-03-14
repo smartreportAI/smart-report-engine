@@ -13,52 +13,13 @@ import {
     getCachedReport,
     storeCachedReport,
 } from '../cache/report-cache.service';
-import { pageRegistry } from '../core/page-registry/page.registry';
-import { masterOverviewPage } from '../pages/master-overview.page';
-import { profileDetailPage } from '../pages/profile-detail.page';
-import {
-    inDepthCoverPage,
-    inDepthHowToReadPage,
-    inDepthSummaryPage,
-    inDepthDetailPage,
-    inDepthBackPage,
-} from '../pages/indepth/index';
-import type { PageRenderContext } from '../core/page-registry/page.types';
+import { seedPageRegistry } from '../core/page-registry/seed-registry';
+import { config } from '../core/config/config.service';
+import { buildViewerPayload } from '../viewer/viewer.service';
+import { createViewerToken } from '../viewer/token.service';
+import { generateViewerQrSvg } from '../viewer/qr.service';
 
 import { CLIENT_REGISTRY } from '../config/clients.config';
-
-/* ---------------------------------------------------------------
-   Page registry seeding (same as server.ts)
-   --------------------------------------------------------------- */
-
-function seedPages(): void {
-    pageRegistry.register(masterOverviewPage);
-    pageRegistry.register(profileDetailPage);
-
-    // InDepth pages
-    pageRegistry.register(inDepthCoverPage);
-    pageRegistry.register(inDepthHowToReadPage);
-    pageRegistry.register(inDepthSummaryPage);
-    pageRegistry.register(inDepthDetailPage);
-    pageRegistry.register(inDepthBackPage);
-
-    const placeholders = [
-        'cover', 'summary', 'executiveSummary', 'bloodPanel',
-        'lipidProfile', 'thyroidPanel', 'vitaminAnalysis',
-        'recommendations', 'appendix',
-    ];
-
-    for (const name of placeholders) {
-        if (!pageRegistry.has(name)) {
-            pageRegistry.register({
-                name,
-                generate(_ctx: PageRenderContext): string {
-                    return `<div class="section-title" style="padding:40px 0;text-align:center;color:#94a3b8;">[${name}] — page not yet implemented</div>`;
-                },
-            });
-        }
-    }
-}
 
 /* ---------------------------------------------------------------
    CLI entry point
@@ -123,7 +84,7 @@ async function main(): Promise<void> {
     }
 
     // 4. Seed pages, map
-    seedPages();
+    seedPageRegistry();
     const { report: mappedData, unmappedParameters } = mapRawReportInput(reportData, tenant);
 
     // 5. Cache check
@@ -160,7 +121,33 @@ async function main(): Promise<void> {
 
     // 6. Normalize + Build
     const normalized = normalizeReport(mappedData);
-    const result = buildReport(normalized, tenant);
+
+    // 6a. Viewer token + real QR code (gated by tenant.webViewer + VIEWER_BASE_URL)
+    let viewerQrSvg: string | undefined;
+    let viewerUrl: string | undefined;
+    if (tenant.webViewer && config.viewerBaseUrl) {
+        try {
+            const reportDisplayId = `RPT-${new Date().getFullYear()}-${normalized.patientId.slice(-4).toUpperCase()}`;
+            const reportDate = new Date().toLocaleDateString('en-IN', {
+                day: '2-digit', month: 'long', year: 'numeric',
+            });
+            const viewerPayload = buildViewerPayload(normalized, tenant, reportDisplayId, reportDate);
+            const token = createViewerToken({
+                fingerprint,
+                tenantId,
+                patientId: normalized.patientId,
+                reportDisplayId,
+                reportDate,
+                payload: viewerPayload,
+            });
+            viewerUrl = `${config.viewerBaseUrl}/view/${token}`;
+            viewerQrSvg = await generateViewerQrSvg(viewerUrl, tenant.branding.primaryColor, 90);
+        } catch {
+            console.error('  ⚠ Viewer QR generation failed — using placeholder');
+        }
+    }
+
+    const result = buildReport(normalized, tenant, viewerQrSvg, viewerUrl);
 
     // 7. Audit (new generation only)
     const audit = createAuditRecord({
@@ -172,6 +159,7 @@ async function main(): Promise<void> {
     });
     const auditPath = recordAudit(audit);
 
+    // 8. Cache store
     storeCachedReport(fingerprint, {
         tenantId,
         html: result.html,
@@ -232,6 +220,12 @@ async function main(): Promise<void> {
     console.log(`  Input Hash: ${audit.inputHash}`);
     console.log(`  Saved To:   ${auditPath}`);
     console.log(`  Cache Key:  ${fingerprint}`);
+
+    if (viewerUrl) {
+        console.log('');
+        console.log('🔗 Patient Viewer');
+        console.log(`  URL:  ${viewerUrl}`);
+    }
 }
 
 main().catch((err) => {

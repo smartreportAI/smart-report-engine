@@ -74,16 +74,11 @@ function normalizeParameter(raw: RawParameterInput): ParameterResult {
 // Profile normalization
 // ---------------------------------------------------------------------------
 
-function deriveProfileSeverity(parameters: ParameterResult[]): ProfileSeverity {
-  const total = parameters.length;
+function deriveProfileSeverity(abnormalCount: number, total: number, hasCritical: boolean): ProfileSeverity {
   if (total === 0) return 'healthy';
-
-  const hasCritical = parameters.some((p) => p.status === 'critical');
   if (hasCritical) return 'attention';
 
-  const abnormalRatio =
-    parameters.filter((p) => p.status !== 'normal').length / total;
-
+  const abnormalRatio = abnormalCount / total;
   if (abnormalRatio >= 0.4) return 'attention';
   if (abnormalRatio >= 0.15) return 'monitor';
   return 'healthy';
@@ -92,17 +87,27 @@ function deriveProfileSeverity(parameters: ParameterResult[]): ProfileSeverity {
 function normalizeProfile(raw: RawProfileInput): ProfileResult {
   const parameters = raw.parameters.map(normalizeParameter);
 
-  const abnormalCount = parameters.filter((p) => p.status !== 'normal').length;
+  // Single pass: count abnormal/critical and sum scores
+  let abnormalCount = 0;
+  let hasCritical = false;
+  let scoreSum = 0;
+
+  for (const p of parameters) {
+    scoreSum += p.signalScore;
+    if (p.status !== 'normal') {
+      abnormalCount++;
+      if (p.status === 'critical') hasCritical = true;
+    }
+  }
+
   const normalCount = parameters.length - abnormalCount;
 
   const profileScore =
     parameters.length > 0
-      ? Math.round(
-        parameters.reduce((sum, p) => sum + p.signalScore, 0) / parameters.length,
-      )
+      ? Math.round(scoreSum / parameters.length)
       : 100;
 
-  const severity = deriveProfileSeverity(parameters);
+  const severity = deriveProfileSeverity(abnormalCount, parameters.length, hasCritical);
 
   return {
     id: toId(raw.profileName),
@@ -120,9 +125,12 @@ function normalizeProfile(raw: RawProfileInput): ProfileResult {
 // ---------------------------------------------------------------------------
 
 function deriveOverallSeverity(profiles: ProfileResult[]): OverallSeverity {
-  if (profiles.some((p) => p.severity === 'attention')) return 'critical';
-  if (profiles.some((p) => p.severity === 'monitor')) return 'monitor';
-  return 'stable';
+  let hasMonitor = false;
+  for (const p of profiles) {
+    if (p.severity === 'attention') return 'critical';
+    if (p.severity === 'monitor') hasMonitor = true;
+  }
+  return hasMonitor ? 'monitor' : 'stable';
 }
 
 // ---------------------------------------------------------------------------

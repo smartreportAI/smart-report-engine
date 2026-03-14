@@ -12,3 +12,8 @@ export type { FooterOptions } from './components/footer.component';
 export type { PatientHeaderOptions } from './components/patient-header.component';
 export type { ScoreGaugeOptions, ParamGaugeOptions } from './components/speedometer.component';
 export type { SmartSliderOptions } from './components/slider.component';
+
+// Shared colour system and value helpers
+export { getStatusStyle, getSeverityStyle, hexToRgb } from './color-system';
+export type { StatusStyle, SeverityStyle } from './color-system';
+export { safeValue, safeUnit, formatRange } from './value-helpers';

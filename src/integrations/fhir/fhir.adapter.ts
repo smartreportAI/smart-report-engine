@@ -235,11 +235,23 @@ export function adaptFhirBundleToRawReport(bundle: FHIRBundle): RawReportInput {
     const age = patient.birthDate ? calculateAge(patient.birthDate) : 0;
     const gender = mapGender(patient.gender);
 
+    // Extract patient name from HumanName array (prefer 'official', fall back to first entry)
+    let patientName: string | undefined;
+    if (patient.name && patient.name.length > 0) {
+        const nameEntry = patient.name.find((n) => n.use === 'official') ?? patient.name[0];
+        const nameParts = [
+            nameEntry.given?.join(' '),
+            nameEntry.family,
+        ].filter(Boolean);
+        patientName = nameParts.join(' ') || nameEntry.text || undefined;
+    }
+
     // 6. Group observations into profiles
     const profiles = groupIntoProfiles(observations, diagnosticReports);
 
     return {
         patientId,
+        patientName,
         age,
         gender,
         profiles,

@@ -21,6 +21,10 @@ import {
   observeDuration,
   METRIC,
 } from '../../metrics/metrics.service';
+import { config } from '../../core/config/config.service';
+import { buildViewerPayload } from '../../viewer/viewer.service';
+import { createViewerToken } from '../../viewer/token.service';
+import { generateViewerQrSvg } from '../../viewer/qr.service';
 
 /**
  * Inline mock tenant store — will be replaced by a shared TenantService
@@ -125,7 +129,35 @@ export async function reportRoutes(app: FastifyInstance): Promise<void> {
       /* ---- 5. Normalize + Build ---- */
       incrementCounter(METRIC.CACHE_MISS_TOTAL, { source });
       const normalized = normalizeReport(mappedData);
-      const result = buildReport(normalized, tenant);
+
+      /* ---- 5a. Viewer token + real QR code (gated by tenant.webViewer + VIEWER_BASE_URL) ---- */
+      let viewerQrSvg: string | undefined;
+      let viewerUrl: string | undefined;
+      if (tenant.webViewer && config.viewerBaseUrl) {
+        try {
+          const reportDisplayId = `RPT-${new Date().getFullYear()}-${normalized.patientId.slice(-4).toUpperCase()}`;
+          const reportDate = new Date().toLocaleDateString('en-IN', {
+            day: '2-digit', month: 'long', year: 'numeric',
+          });
+          const viewerPayload = buildViewerPayload(normalized, tenant, reportDisplayId, reportDate);
+          const token = createViewerToken({
+            fingerprint,
+            tenantId,
+            patientId: normalized.patientId,
+            reportDisplayId,
+            reportDate,
+            payload: viewerPayload,
+          });
+          const viewerUrl_ = `${config.viewerBaseUrl}/view/${token}`;
+          viewerQrSvg = await generateViewerQrSvg(viewerUrl_, tenant.branding.primaryColor, 90);
+          viewerUrl = viewerUrl_;
+          app.log.info({ tenantId, reportDisplayId }, 'Viewer token created with real QR code');
+        } catch (err) {
+          app.log.warn({ err }, 'Viewer token/QR generation failed — falling back to placeholder QR');
+        }
+      }
+
+      const result = buildReport(normalized, tenant, viewerQrSvg, viewerUrl);
       incrementCounter(METRIC.SEVERITY_TOTAL, { severity: result.overallSeverity });
 
       /* ---- 6. Audit (only for new generations) ---- */
@@ -148,7 +180,6 @@ export async function reportRoutes(app: FastifyInstance): Promise<void> {
       if (output === 'pdf') {
         // Retry once on transient PDF failures (e.g. Puppeteer crash / timeout)
         const maxAttempts = 2;
-        let lastError: unknown;
 
         for (let attempt = 1; attempt <= maxAttempts; attempt++) {
           try {
@@ -186,7 +217,6 @@ export async function reportRoutes(app: FastifyInstance): Promise<void> {
               }),
             );
           } catch (err) {
-            lastError = err;
             app.log.error({ err, attempt }, 'PDF generation failed');
 
             if (attempt === maxAttempts) {
@@ -200,6 +230,9 @@ export async function reportRoutes(app: FastifyInstance): Promise<void> {
                   ),
                 );
             }
+
+            // Brief pause before retry to allow transient Puppeteer errors to clear
+            await new Promise((r) => setTimeout(r, 500));
           }
         }
       }

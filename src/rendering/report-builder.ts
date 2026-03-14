@@ -7,9 +7,6 @@ import type { TenantConfig } from '../modules/tenants/tenant.types';
 import { resolveStrategy } from './strategies';
 import type { ReportStrategy } from './strategies';
 
-/** Pages that should NOT have header/footer (full-bleed pages) */
-const FULL_BLEED_PAGES = new Set(['indepth-cover', 'indepth-back']);
-
 export interface ReportBuildResult {
   /** Full HTML document (for HTML output — backward compatible) */
   html: string;
@@ -47,6 +44,8 @@ function generatePageSections(
   strategy: ReportStrategy,
   branding: TenantConfig['branding'],
   profileContinuation?: boolean,
+  viewerQrSvg?: string,
+  viewerUrl?: string,
 ): { sections: string[]; rendered: string[]; skipped: string[] } {
   const sections: string[] = [];
   const rendered: string[] = [];
@@ -64,14 +63,14 @@ function generatePageSections(
       if (profileContinuation === true) {
         // Merge all profiles into a single section — no forced page break between them
         const combinedHtml = report.profiles
-          .map(profile => page.generate({ data: profile, strategy, branding }))
+          .map(profile => page.generate({ data: profile, strategy, branding, viewerQrSvg, viewerUrl }))
           .join('\n');
         sections.push(combinedHtml);
         rendered.push(`${pageName}:all`);
       } else {
         // Default: one renderLayout wrapper per profile → page-break-after: always
         for (const profile of report.profiles) {
-          const ctx: PageRenderContext = { data: profile, strategy, branding };
+          const ctx: PageRenderContext = { data: profile, strategy, branding, viewerQrSvg, viewerUrl };
           sections.push(page.generate(ctx));
           rendered.push(`${pageName}:${profile.id}`);
         }
@@ -85,7 +84,7 @@ function generatePageSections(
       continue;
     }
 
-    const ctx: PageRenderContext = { data: report, strategy, branding };
+    const ctx: PageRenderContext = { data: report, strategy, branding, viewerQrSvg, viewerUrl };
     sections.push(page.generate(ctx));
     rendered.push(pageName);
   }
@@ -117,6 +116,8 @@ function generatePageSections(
 export function buildReport(
   normalized: NormalizedReport,
   tenantConfig: TenantConfig,
+  viewerQrSvg?: string,
+  viewerUrl?: string,
 ): ReportBuildResult {
   const strategy = resolveStrategy(tenantConfig.reportType);
 
@@ -126,6 +127,8 @@ export function buildReport(
     strategy,
     tenantConfig.branding,
     tenantConfig.profileContinuation,
+    viewerQrSvg,
+    viewerUrl,
   );
 
   const reportId = `RPT-${new Date().getFullYear()}-${normalized.patientId.slice(-4).toUpperCase()}`;
@@ -147,7 +150,10 @@ export function buildReport(
     },
   };
 
-  const totalPages = sections.length;
+  // Count only content pages (exclude full-bleed cover and back)
+  const contentPageCount = rendered.filter(
+    (name) => name !== 'indepth-cover' && name !== 'indepth-back',
+  ).length;
 
   // ── Separate pages into cover, content, back ──────────────────
   const coverRawPages: string[] = [];
@@ -155,6 +161,7 @@ export function buildReport(
   const backRawPages: string[] = [];
 
   const wrappedAll: string[] = [];
+  let contentPageIndex = 0;
 
   sections.forEach((content, idx) => {
     const name = rendered[idx];
@@ -166,10 +173,11 @@ export function buildReport(
       backRawPages.push(content);
       wrappedAll.push(content); // No layout wrapper for back
     } else {
+      contentPageIndex++;
       const wrapped = renderLayout(content, {
         ...layoutOpts,
-        pageNumber: idx + 1,
-        totalPages,
+        pageNumber: contentPageIndex,
+        totalPages: contentPageCount,
       });
       contentRawPages.push(wrapped);
       wrappedAll.push(wrapped);

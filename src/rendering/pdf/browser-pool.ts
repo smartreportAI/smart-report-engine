@@ -9,15 +9,16 @@ import puppeteer, { type Browser } from 'puppeteer';
  *
  * Configuration:
  *   - maxBrowsers:        Maximum concurrent browser processes.
- *   - maxPagesPerBrowser: Maximum pages opened on a single browser
- *                         before it is recycled (prevents memory leaks).
+ *   - maxPagesPerBrowser: Maximum total (lifetime) pages served by a single
+ *                         browser before it is recycled to prevent memory leaks.
  *   - idleTimeoutMs:      How long an idle browser stays alive before
  *                         being shut down.
  */
 
 interface PoolEntry {
     browser: Browser;
-    pageCount: number;
+    pageCount: number;      // active pages currently open
+    lifetimeCount: number;  // total pages ever served — used for recycling
     lastUsedAt: number;
 }
 
@@ -75,13 +76,16 @@ export class BrowserPool {
             throw new Error('BrowserPool is shutting down.');
         }
 
-        // Try to find an existing browser with capacity
+        // Try to find an existing browser with active + lifetime capacity
         const available = this.pool.find(
-            (e) => e.pageCount < this.config.maxPagesPerBrowser,
+            (e) =>
+                e.pageCount < this.config.maxPagesPerBrowser &&
+                e.lifetimeCount < this.config.maxPagesPerBrowser,
         );
 
         if (available) {
             available.pageCount++;
+            available.lifetimeCount++;
             available.lastUsedAt = Date.now();
             return available.browser;
         }
@@ -90,6 +94,7 @@ export class BrowserPool {
         if (this.pool.length < this.config.maxBrowsers) {
             const entry = await this.launchBrowser();
             entry.pageCount++;
+            entry.lifetimeCount++;
             entry.lastUsedAt = Date.now();
             return entry.browser;
         }
@@ -99,6 +104,7 @@ export class BrowserPool {
             this.waitQueue.push({
                 resolve: (entry: PoolEntry) => {
                     entry.pageCount++;
+                    entry.lifetimeCount++;
                     entry.lastUsedAt = Date.now();
                     resolve(entry.browser);
                 },
@@ -110,8 +116,8 @@ export class BrowserPool {
     /**
      * Releases a browser back to the pool after use.
      *
-     * If the browser has exceeded maxPagesPerBrowser across its lifetime,
-     * it is closed and removed from the pool.
+     * If the browser has served its lifetime quota (lifetimeCount >= maxPagesPerBrowser)
+     * and has no active pages, it is closed and removed from the pool.
      */
     async releaseBrowser(browser: Browser): Promise<void> {
         const entry = this.pool.find((e) => e.browser === browser);
@@ -121,17 +127,23 @@ export class BrowserPool {
         entry.pageCount = Math.max(0, entry.pageCount - 1);
         entry.lastUsedAt = Date.now();
 
-        // Serve any waiting callers
+        // Serve any waiting callers if this browser still has active-page capacity
         if (this.waitQueue.length > 0 && entry.pageCount < this.config.maxPagesPerBrowser) {
             const waiter = this.waitQueue.shift()!;
             waiter.resolve(entry);
             return;
         }
 
-        // Check if browser should be recycled
-        // We track total pages via a simple heuristic: close if connected pages
-        // are 0 and it has been used many times. For simplicity, the pool
-        // handles recycling via the idle reaper.
+        // Recycle browser if lifetime quota is exhausted and it is now idle
+        if (entry.pageCount === 0 && entry.lifetimeCount >= this.config.maxPagesPerBrowser) {
+            const idx = this.pool.indexOf(entry);
+            if (idx !== -1) this.pool.splice(idx, 1);
+            try {
+                await entry.browser.close();
+            } catch {
+                // Already closed
+            }
+        }
     }
 
     /**
@@ -195,6 +207,7 @@ export class BrowserPool {
         const entry: PoolEntry = {
             browser,
             pageCount: 0,
+            lifetimeCount: 0,
             lastUsedAt: Date.now(),
         };
 

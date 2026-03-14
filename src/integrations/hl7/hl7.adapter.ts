@@ -163,6 +163,10 @@ export function adaptHl7ToRawReport(message: string): RawReportInput {
     const age = calculateAgeFromHl7Date(parsed.patient.dateOfBirth);
     const gender = mapGender(parsed.patient.gender);
 
+    // Build patient name from PID-5 components (givenName + familyName)
+    const nameParts = [parsed.patient.givenName, parsed.patient.familyName].filter(Boolean);
+    const patientName = nameParts.join(' ') || undefined;
+
     // 6. Group OBX segments into profiles by OBR
     const profiles: RawProfileInput[] = [];
 
@@ -202,6 +206,7 @@ export function adaptHl7ToRawReport(message: string): RawReportInput {
 
     return {
         patientId,
+        patientName,
         age,
         gender,
         profiles,

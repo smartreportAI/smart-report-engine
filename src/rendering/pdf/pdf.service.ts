@@ -104,16 +104,20 @@ export async function generatePdfFromHtml(
             options.footerTemplate,
         );
 
-        // Race against timeout
-        const result = await Promise.race([
-            pdfPromise,
-            createTimeout(timeoutMs),
-        ]);
+        // Race against timeout — clear timer on completion to prevent leak
+        const { promise: timeoutPromise, clear: clearTimer } = createTimeout(timeoutMs);
+        try {
+            const result = await Promise.race([pdfPromise, timeoutPromise]);
+            clearTimer();
 
-        const elapsed = Date.now() - startMs;
-        if (debug) console.log(`[pdf] Done in ${elapsed}ms — ${result.length} bytes`);
+            const elapsed = Date.now() - startMs;
+            if (debug) console.log(`[pdf] Done in ${elapsed}ms — ${result.length} bytes`);
 
-        return result;
+            return result;
+        } catch (err) {
+            clearTimer();
+            throw err;
+        }
     } finally {
         await browserPool.releaseBrowser(browser);
     }
@@ -169,9 +173,10 @@ async function generateWithBrowser(
     }
 }
 
-function createTimeout(ms: number): Promise<never> {
-    return new Promise((_resolve, reject) => {
-        const timer = setTimeout(() => {
+function createTimeout(ms: number): { promise: Promise<never>; clear: () => void } {
+    let timer: ReturnType<typeof setTimeout>;
+    const promise = new Promise<never>((_resolve, reject) => {
+        timer = setTimeout(() => {
             reject(new Error(`PDF generation timed out after ${ms}ms.`));
         }, ms);
 
@@ -180,4 +185,9 @@ function createTimeout(ms: number): Promise<never> {
             timer.unref();
         }
     });
+
+    return {
+        promise,
+        clear: () => clearTimeout(timer),
+    };
 }

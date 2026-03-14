@@ -13,8 +13,6 @@
  */
 
 import type { ReportPage, PageRenderContext } from '../../core/page-registry/page.types';
-import type { NormalizedReport } from '../../domain/models/report.model';
-import type { TenantBrandingConfig } from '../../modules/tenants/tenant.types';
 
 /* ------------------------------------------------------------------ */
 
@@ -50,33 +48,21 @@ function renderQrPlaceholder(primaryColor: string): string {
 </svg>`;
 }
 
-function renderContactBlock(branding: TenantBrandingConfig): string {
-  const lines: string[] = [];
-  if (branding.contactPhone) lines.push(`<div class="back-contact__line">☎ ${branding.contactPhone}</div>`);
-  if (branding.contactEmail) lines.push(`<div class="back-contact__line">✉ ${branding.contactEmail}</div>`);
-  if (lines.length === 0) return '';
-
-  return `
-<div class="back-contact">
-  <div class="back-contact__heading">Contact Us</div>
-  ${lines.join('\n')}
-</div>`;
-}
-
 /* ------------------------------------------------------------------ */
 
 export const inDepthBackPage: ReportPage = {
   name: 'indepth-back',
 
   generate(ctx: PageRenderContext): string {
-    const report = ctx.data as NormalizedReport;
     const strategy = ctx.strategy;
-    void report;
+    const viewerQrSvg = ctx.viewerQrSvg;
+    const viewerUrl = ctx.viewerUrl;
 
     // Use actual CSS variable so it responds dynamically to the tenant's primary UI color
     const primaryColor = 'var(--color-primary)';
-    // Passing the CSS variable so the QR code adopts the dynamic tenant color natively in the SVG
-    const qr = renderQrPlaceholder(primaryColor);
+    // Use real QR if supplied; fall back to branded placeholder
+    const qr = viewerQrSvg ?? renderQrPlaceholder(primaryColor);
+    const qrLabel = viewerQrSvg ? 'Scan to view your results' : 'Scan to verify';
 
     const poweredBy = strategy.allowRecommendations
       ? `<div class="back-powered-by">Powered by <strong>Smart Health Engine</strong></div>`
@@ -275,8 +261,10 @@ export const inDepthBackPage: ReportPage = {
       </div>
       
       <div class="back-qr-card">
+        ${viewerUrl ? `<a href="${viewerUrl}" target="_blank" style="text-decoration:none;color:inherit;display:flex;flex-direction:column;align-items:center;">` : ''}
         ${qr}
-        <div class="back-qr-label">Scan to verify</div>
+        <div class="back-qr-label">${qrLabel}</div>
+        ${viewerUrl ? '</a>' : ''}
       </div>
     </div>
     
