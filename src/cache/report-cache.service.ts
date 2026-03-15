@@ -40,8 +40,16 @@ export interface CachedReportEntry {
 
 const DEFAULT_CACHE_DIR = resolve(process.cwd(), 'cache', 'reports');
 
-/** Cache TTL: default 7 days, overridable with CACHE_TTL_DAYS env var. */
-const CACHE_TTL_MS = parseInt(process.env.CACHE_TTL_DAYS ?? '7', 10) * 24 * 60 * 60 * 1000;
+/** Cache TTL: default 1 day, overridable with CACHE_TTL_DAYS env var. */
+const CACHE_TTL_MS = parseInt(process.env.CACHE_TTL_DAYS ?? '1', 10) * 24 * 60 * 60 * 1000;
+
+/**
+ * Cache version stamp — pulled from env var CACHE_VERSION.
+ * Change this value in Railway Variables to immediately invalidate all
+ * existing cached reports (they'll regenerate fresh on next request).
+ * Example: set CACHE_VERSION=2 in Railway → all old cache is bypassed.
+ */
+const CACHE_VERSION = process.env.CACHE_VERSION ?? '1';
 
 // ---------------------------------------------------------------------------
 // Fingerprint generation
@@ -59,7 +67,9 @@ export function generateReportFingerprint(
     mappedInput: unknown,
     tenantId: string,
 ): string {
-    return generateInputHash({ data: mappedInput, tenant: tenantId });
+    // Include CACHE_VERSION so changing it in Railway env vars
+    // instantly invalidates all stale cached reports.
+    return generateInputHash({ data: mappedInput, tenant: tenantId, v: CACHE_VERSION });
 }
 
 // ---------------------------------------------------------------------------
