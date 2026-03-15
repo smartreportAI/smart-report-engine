@@ -1,4 +1,4 @@
-﻿import { generatePdfFromHtml } from './pdf.service';
+import { generatePdfFromHtml } from './pdf.service';
 import { mergePdfBuffers } from './pdf-merge';
 import { buildHeaderTemplate, buildFooterTemplate, getPdfMargins } from '../html-layout';
 import type { PatientStripInfo } from '../html-layout';
@@ -36,25 +36,22 @@ export async function generateMultipassPdf(
 
     const fullBleedMargin = { top: '0px', bottom: '0px', left: '0px', right: '0px' };
 
-    const coverPromise = input.coverHtml
-        ? generatePdfFromHtml(input.coverHtml, { margin: fullBleedMargin })
+    // Run sequentially — not Promise.all — to avoid exhausting all 3 browser
+    // pool slots with a single request, which causes queue timeouts when
+    // concurrent requests arrive.
+    const coverPdf  = input.coverHtml
+        ? await generatePdfFromHtml(input.coverHtml, { margin: fullBleedMargin })
         : null;
 
-    const contentPromise = generatePdfFromHtml(input.contentHtml, {
+    const contentPdf = await generatePdfFromHtml(input.contentHtml, {
         margin: getPdfMargins(tenant.branding, !!input.patient),
         headerTemplate: buildHeaderTemplate(tenant.branding, input.patient),
         footerTemplate: buildFooterTemplate(tenant.branding),
     });
 
-    const backPromise = input.backHtml
-        ? generatePdfFromHtml(input.backHtml, { margin: fullBleedMargin })
+    const backPdf = input.backHtml
+        ? await generatePdfFromHtml(input.backHtml, { margin: fullBleedMargin })
         : null;
-
-    const [coverPdf, contentPdf, backPdf] = await Promise.all([
-        coverPromise,
-        contentPromise,
-        backPromise,
-    ]);
 
     const pdfSegments: Buffer[] = [];
     if (coverPdf) pdfSegments.push(coverPdf);

@@ -61,7 +61,7 @@ const DEFAULT_MARGINS = {
  * cloud deployments (e.g. Render) can allow a slightly longer window
  * without changing application logic.
  */
-const DEFAULT_TIMEOUT_MS = config.pdfTimeoutMs ?? 30_000;
+const DEFAULT_TIMEOUT_MS = config.pdfTimeoutMs ?? 90_000; // 90s default — Railway Chrome needs more time
 
 /* ---------------------------------------------------------------
    Core PDF Generation
