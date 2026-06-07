@@ -101,12 +101,21 @@ export const TenantConfigSchema = z.object({
    profileContinuation: z.boolean().optional(),
 
    /**
-    * If true, a patient-facing mobile web viewer is generated for each report.
-    * A unique QR code linking to the viewer is embedded in the cover and back pages.
-    * Requires VIEWER_BASE_URL to be set in the environment.
-    * Defaults to false.
+    * Client-specific ID mapping overrides.
+    * These take PRIORITY over the default ID mapping.
+    * Use when a client's LIS sends different observation IDs.
+    * Example: { "CLIENT_ID_001": "Total Cholesterol" }
     */
-   webViewer: z.boolean().optional(),
+   idMappingOverrides: z.record(z.string(), z.string()).optional(),
+
+   /**
+    * Client-specific profile mapping overrides.
+    * These take PRIORITY over the default profile mapping.
+    * Use when a client wants different profile grouping.
+    * Example: { "Total Cholesterol": "Heart Health" }
+    */
+   profileMappingOverrides: z.record(z.string(), z.string()).optional(),
+
 });
 
 export type TenantConfig = z.infer<typeof TenantConfigSchema>;

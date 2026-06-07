@@ -1,0 +1,72 @@
+{
+  "tenantId": "demo",
+  "output": "pdf",
+  "labData": {
+    "org": "demo-lab",
+    "Centre": "demo-lab",
+    "LabNo": "DL001-NORMAL",
+    "PName": "Mr. Healthy Patient",
+    "Gender": "M",
+    "Age": "32",
+    "ReferredBy": "Dr. Wellness",
+    "patientMobile": "9876543210",
+    "hasPastData": false,
+    "results": [
+      {
+        "Package_name": "Basic Health Checkup",
+        "investigation": [
+          {
+            "test_name": "Lipid Profile",
+            "barcodeNo": "DL001A",
+            "SampleType": "Serum",
+            "SampleCollDate": "07-Jun-2026 08:00AM",
+            "ApprovalDate": "07-Jun-2026",
+            "observations": [
+              { "name": "Total Cholesterol", "id": "BM0106", "value": "180", "MinValue": "", "MaxValue": "200", "unit": "mg/dL", "method": "Enzymatic" },
+              { "name": "Triglycerides", "id": "BM0107", "value": "130", "MinValue": "", "MaxValue": "150", "unit": "mg/dL", "method": "GPO-PAP" },
+              { "name": "HDL Cholesterol", "id": "BM0108", "value": "55", "MinValue": "40", "MaxValue": "", "unit": "mg/dL", "method": "Direct" },
+              { "name": "LDL Cholesterol", "id": "BM0109", "value": "90", "MinValue": "", "MaxValue": "100", "unit": "mg/dL", "method": "Calculated" },
+              { "name": "VLDL", "id": "BM0110", "value": "26", "MinValue": "", "MaxValue": "30", "unit": "mg/dL", "method": "Calculated" }
+            ]
+          },
+          {
+            "test_name": "Liver Function Test",
+            "barcodeNo": "DL001B",
+            "SampleType": "Serum",
+            "SampleCollDate": "07-Jun-2026 08:00AM",
+            "ApprovalDate": "07-Jun-2026",
+            "observations": [
+              { "name": "SGOT (AST)", "id": "BM0008", "value": "28", "MinValue": "", "MaxValue": "40", "unit": "U/L", "method": "UV Kinetic" },
+              { "name": "SGPT (ALT)", "id": "BM0009", "value": "32", "MinValue": "", "MaxValue": "41", "unit": "U/L", "method": "UV Kinetic" },
+              { "name": "Total Bilirubin", "id": "BM0001", "value": "0.7", "MinValue": "0.1", "MaxValue": "1.2", "unit": "mg/dL", "method": "Diazo" },
+              { "name": "Albumin", "id": "BM0005", "value": "4.5", "MinValue": "3.5", "MaxValue": "5.0", "unit": "g/dL", "method": "BCG" }
+            ]
+          },
+          {
+            "test_name": "Blood Sugar",
+            "barcodeNo": "DL001C",
+            "SampleType": "Fluoride plasma",
+            "SampleCollDate": "07-Jun-2026 08:00AM",
+            "ApprovalDate": "07-Jun-2026",
+            "observations": [
+              { "name": "Blood Sugar (Fasting)", "id": "BM0044", "value": "88", "MinValue": "70", "MaxValue": "100", "unit": "mg/dL", "method": "GOD-POD" },
+              { "name": "HbA1c", "id": "BM0047", "value": "5.2", "MinValue": "4.0", "MaxValue": "5.7", "unit": "%", "method": "HPLC" }
+            ]
+          },
+          {
+            "test_name": "Thyroid",
+            "barcodeNo": "DL001D",
+            "SampleType": "Serum",
+            "SampleCollDate": "07-Jun-2026 08:00AM",
+            "ApprovalDate": "07-Jun-2026",
+            "observations": [
+              { "name": "TSH", "id": "BM0016", "value": "2.5", "MinValue": "0.4", "MaxValue": "4.0", "unit": "mIU/L", "method": "CLIA" }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}
+
+

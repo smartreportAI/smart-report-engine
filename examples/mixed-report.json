@@ -1,0 +1,129 @@
+{
+  "tenantId": "demo",
+  "output": "pdf",
+  "labData": {
+    "org": "demo-lab",
+    "Centre": "demo-lab",
+    "LabNo": "DL004-MIXED",
+    "WorkOrderID": "WO.2026060401",
+    "PName": "Mr. Ravi Kumar",
+    "Gender": "M",
+    "Age": "42",
+    "ReferredBy": "Dr. Mehta",
+    "patientMobile": "9876512345",
+    "patientCategory": "OP (Master Health Checkup)",
+    "hasPastData": false,
+    "results": [
+      {
+        "Package_name": "Master Health Checkup - Male",
+        "Package_book_code": "MHC001",
+        "investigation": [
+          {
+            "test_name": "Lipid Profile",
+            "test_code": "LP001",
+            "barcodeNo": "DL004A",
+            "SampleType": "Serum",
+            "SampleCollDate": "07-Jun-2026 08:30AM",
+            "ApprovalDate": "07-Jun-2026",
+            "ApprovedByDoctorID": "DOC101",
+            "isNABL": 1,
+            "observations": [
+              { "name": "Total Cholesterol", "id": "BM0106", "value": "210", "MinValue": "", "MaxValue": "200", "unit": "mg/dL", "method": "Enzymatic", "observation_time": "07-Jun-2026" },
+              { "name": "Triglycerides", "id": "BM0107", "value": "120", "MinValue": "", "MaxValue": "150", "unit": "mg/dL", "method": "GPO-PAP", "observation_time": "07-Jun-2026" },
+              { "name": "HDL Cholesterol", "id": "BM0108", "value": "52", "MinValue": "40", "MaxValue": "", "unit": "mg/dL", "method": "Direct", "observation_time": "07-Jun-2026" },
+              { "name": "LDL Cholesterol", "id": "BM0109", "value": "134", "MinValue": "", "MaxValue": "100", "unit": "mg/dL", "method": "Calculated", "observation_time": "07-Jun-2026" },
+              { "name": "VLDL", "id": "BM0110", "value": "24", "MinValue": "", "MaxValue": "30", "unit": "mg/dL", "method": "Calculated", "observation_time": "07-Jun-2026" },
+              { "name": "Total Cholesterol : HDL ratio", "id": "BM0112", "value": "4.0", "MinValue": "", "MaxValue": "4.5", "unit": "Ratio", "method": "Calculated", "observation_time": "07-Jun-2026" }
+            ]
+          },
+          {
+            "test_name": "Liver Function Test",
+            "test_code": "LFT001",
+            "barcodeNo": "DL004B",
+            "SampleType": "Serum",
+            "SampleCollDate": "07-Jun-2026 08:30AM",
+            "ApprovalDate": "07-Jun-2026",
+            "observations": [
+              { "name": "Total Bilirubin", "id": "BM0001", "value": "0.9", "MinValue": "0.1", "MaxValue": "1.2", "unit": "mg/dL", "method": "Diazo" },
+              { "name": "Direct Bilirubin", "id": "BM0002", "value": "0.2", "MinValue": "", "MaxValue": "0.3", "unit": "mg/dL", "method": "Diazo" },
+              { "name": "SGOT (AST)", "id": "BM0008", "value": "35", "MinValue": "", "MaxValue": "40", "unit": "U/L", "method": "UV Kinetic" },
+              { "name": "SGPT (ALT)", "id": "BM0009", "value": "48", "MinValue": "", "MaxValue": "41", "unit": "U/L", "method": "UV Kinetic" },
+              { "name": "GGT", "id": "BM0010", "value": "42", "MinValue": "", "MaxValue": "55", "unit": "U/L", "method": "Kinetic" },
+              { "name": "Albumin", "id": "BM0005", "value": "4.2", "MinValue": "3.5", "MaxValue": "5.0", "unit": "g/dL", "method": "BCG" },
+              { "name": "Protein (Total)", "id": "BM0004", "value": "7.1", "MinValue": "6.6", "MaxValue": "8.3", "unit": "g/dL", "method": "Biuret" }
+            ]
+          },
+          {
+            "test_name": "Kidney Function Test",
+            "test_code": "KFT001",
+            "barcodeNo": "DL004C",
+            "SampleType": "Serum",
+            "SampleCollDate": "07-Jun-2026 08:30AM",
+            "ApprovalDate": "07-Jun-2026",
+            "observations": [
+              { "name": "Serum Creatinine", "id": "BM0030", "value": "1.0", "MinValue": "0.7", "MaxValue": "1.3", "unit": "mg/dL", "method": "Jaffe" },
+              { "name": "Blood Urea", "id": "BM0028", "value": "32", "MinValue": "15", "MaxValue": "40", "unit": "mg/dL", "method": "UV Kinetic" },
+              { "name": "Blood Urea Nitrogen (BUN)", "id": "BM0029", "value": "15", "MinValue": "7", "MaxValue": "20", "unit": "mg/dL", "method": "Calculated" },
+              { "name": "Uric Acid", "id": "BM0031", "value": "7.2", "MinValue": "3.5", "MaxValue": "7.0", "unit": "mg/dL", "method": "Uricase" }
+            ]
+          },
+          {
+            "test_name": "Diabetes Panel",
+            "test_code": "DM001",
+            "barcodeNo": "DL004D",
+            "SampleType": "Fluoride plasma",
+            "SampleCollDate": "07-Jun-2026 08:30AM",
+            "ApprovalDate": "07-Jun-2026",
+            "observations": [
+              { "name": "Blood Sugar (Fasting)", "id": "BM0044", "value": "112", "MinValue": "70", "MaxValue": "100", "unit": "mg/dL", "method": "GOD-POD" },
+              { "name": "HbA1c (Glycosylated Haemoglobin)", "id": "BM0047", "value": "6.1", "MinValue": "4.0", "MaxValue": "5.7", "unit": "%", "method": "HPLC" },
+              { "name": "eAG (Estimated Average Glucose)", "id": "BM0048", "value": "128", "MinValue": "", "MaxValue": "117", "unit": "mg/dL", "method": "Calculated" }
+            ]
+          },
+          {
+            "test_name": "Thyroid Profile",
+            "test_code": "THY001",
+            "barcodeNo": "DL004E",
+            "SampleType": "Serum",
+            "SampleCollDate": "07-Jun-2026 08:30AM",
+            "ApprovalDate": "07-Jun-2026",
+            "observations": [
+              { "name": "TSH", "id": "BM0016", "value": "3.2", "MinValue": "0.4", "MaxValue": "4.0", "unit": "mIU/L", "method": "CLIA" },
+              { "name": "Free T3 (Triiodothyronine)", "id": "BM0018", "value": "3.1", "MinValue": "2.3", "MaxValue": "4.2", "unit": "pg/mL", "method": "CLIA" },
+              { "name": "Free T4 (Thyroxine)", "id": "BM0019", "value": "1.2", "MinValue": "0.8", "MaxValue": "1.8", "unit": "ng/dL", "method": "CLIA" }
+            ]
+          },
+          {
+            "test_name": "CBC",
+            "test_code": "CBC001",
+            "barcodeNo": "DL004F",
+            "SampleType": "EDTA Blood",
+            "SampleCollDate": "07-Jun-2026 08:30AM",
+            "ApprovalDate": "07-Jun-2026",
+            "observations": [
+              { "name": "Haemoglobin", "id": "BM0151", "value": "14.5", "MinValue": "13", "MaxValue": "17", "unit": "g/dL", "method": "SLS" },
+              { "name": "Total Leukocyte Count", "id": "BM0115", "value": "7.2", "MinValue": "4", "MaxValue": "11", "unit": "x10^3/uL", "method": "DC Detection" },
+              { "name": "Platelet Count", "id": "BM0128", "value": "250", "MinValue": "150", "MaxValue": "450", "unit": "x10^3/uL", "method": "Impedance" },
+              { "name": "RBC count", "id": "BM0087", "value": "5.1", "MinValue": "4.5", "MaxValue": "5.5", "unit": "x10^6/uL", "method": "DC Detection" },
+              { "name": "ESR", "id": "BM0279", "value": "18", "MinValue": "0", "MaxValue": "15", "unit": "mm/hr", "method": "Westergren" }
+            ]
+          },
+          {
+            "test_name": "Vitamin Profile",
+            "test_code": "VIT001",
+            "barcodeNo": "DL004G",
+            "SampleType": "Serum",
+            "SampleCollDate": "07-Jun-2026 08:30AM",
+            "ApprovalDate": "07-Jun-2026",
+            "observations": [
+              { "name": "Vitamin D (25-Hydroxy)", "id": "BM0058", "value": "18", "MinValue": "30", "MaxValue": "100", "unit": "ng/mL", "method": "CLIA" },
+              { "name": "Vitamin B12", "id": "BM0059", "value": "320", "MinValue": "200", "MaxValue": "900", "unit": "pg/mL", "method": "ECLIA" }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}
+
+

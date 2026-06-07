@@ -55,14 +55,11 @@ export const inDepthBackPage: ReportPage = {
 
   generate(ctx: PageRenderContext): string {
     const strategy = ctx.strategy;
-    const viewerQrSvg = ctx.viewerQrSvg;
-    const viewerUrl = ctx.viewerUrl;
 
     // Use actual CSS variable so it responds dynamically to the tenant's primary UI color
     const primaryColor = 'var(--color-primary)';
-    // Use real QR if supplied; fall back to branded placeholder
-    const qr = viewerQrSvg ?? renderQrPlaceholder(primaryColor);
-    const qrLabel = viewerQrSvg ? 'Scan to view your results' : 'Scan to verify';
+    const qr = renderQrPlaceholder(primaryColor);
+    const qrLabel = 'Scan to verify';
 
     const poweredBy = strategy.allowRecommendations
       ? `<div class="back-powered-by">Powered by <strong>Smart Health Engine</strong></div>`
@@ -261,10 +258,8 @@ export const inDepthBackPage: ReportPage = {
       </div>
       
       <div class="back-qr-card">
-        ${viewerUrl ? `<a href="${viewerUrl}" target="_blank" style="text-decoration:none;color:inherit;display:flex;flex-direction:column;align-items:center;">` : ''}
         ${qr}
         <div class="back-qr-label">${qrLabel}</div>
-        ${viewerUrl ? '</a>' : ''}
       </div>
     </div>
     

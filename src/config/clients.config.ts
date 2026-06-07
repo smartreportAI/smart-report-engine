@@ -5,8 +5,7 @@
  * ============================================================
  *
  *  This is the SINGLE SOURCE OF TRUTH for all client/tenant
- *  configurations. Every route (JSON, FHIR, HL7), the HTTP API,
- *  and the CLI all import CLIENT_REGISTRY from here.
+ *  configurations. The API and CLI all import CLIENT_REGISTRY from here.
  *
  * ─────────────────────────────────────────────────────────────
  *  HOW TO ONBOARD A NEW CLIENT
@@ -21,8 +20,7 @@
  *      tenantId:   'my-new-client',          // unique slug, lowercase-kebab
  *      reportType: 'inDepth',                // 'inDepth' | 'essential'
  *      pageOrder:  INDEPTH_PAGE_ORDER,       // or ESSENTIAL_PAGE_ORDER
- *      ...DEFAULT_FLAGS,                     // profileContinuation, strictMapping, webViewer …
- *      webViewer:  true,                     // enable patient-facing mobile viewer (needs VIEWER_BASE_URL)
+ *      ...DEFAULT_FLAGS,                     // profileContinuation, strictMapping
  *      branding: {
  *        ...DEFAULT_BRANDING,                // inherit all visual defaults
  *        labName:      'My New Client Lab',  // override what differs
@@ -30,7 +28,6 @@
  *        primaryColor: '#123456',
  *        footerText:   'My New Client — Health Reports',
  *        contactEmail: 'reports@mynewclient.com',
- *        // Any flag not listed here inherits the default value.
  *      },
  *    };
  *
@@ -39,10 +36,8 @@
  *    'my-new-client': MY_NEW_CLIENT_CONFIG,
  *
  *  Step 3 — That's it. No other file needs to be touched.
- *           The client is immediately available on all endpoints:
+ *           The client is immediately available on:
  *             POST /reports/generate  { "tenantId": "my-new-client", … }
- *             POST /ingest/fhir       { "tenantId": "my-new-client", … }
- *             POST /ingest/hl7        { "tenantId": "my-new-client", … }
  *             GET  /tenants/my-new-client
  *             CLI: npx tsx src/cli/generate.ts examples/sample.json --tenant my-new-client
  *
@@ -70,12 +65,16 @@
  *                        true  → unmapped parameters throw an error
  *                                (good for strictly controlled lab integrations).
  *
- *    webViewer           boolean (default: false)
- *                        true  → generate a patient-facing mobile web viewer
- *                                per report. A unique QR code is embedded
- *                                in the cover and back pages of the PDF.
- *                                Requires VIEWER_BASE_URL env variable.
- *                        false → QR codes remain decorative placeholders.
+ *    idMappingOverrides  Record<string, string> (optional)
+ *                        Client-specific ID overrides. Takes priority over defaults.
+ *                        Use when a client's LIS sends different observation IDs.
+ *                        Example: { "CLIENT_001": "Total Cholesterol" }
+ *
+ *    profileMappingOverrides  Record<string, string> (optional)
+ *                        Client-specific profile grouping overrides.
+ *                        Use when a client wants tests in different profiles.
+ *                        Example: { "Uric Acid": "Kidney Profile" }
+ *
  *
  *  Branding (TenantBrandingConfig):
  *    labName             string   — Lab / business name in header & footer.
@@ -133,8 +132,6 @@ const DEFAULT_FLAGS = {
   profileContinuation: false,
   /** false = unmapped parameters pass through. true = throw on unmapped params. */
   strictMapping: false,
-  /** true = generate patient-facing mobile web viewer (requires VIEWER_BASE_URL). */
-  webViewer: false,
 } as const;
 
 /* ============================================================
@@ -167,7 +164,6 @@ const DEMO_CONFIG: TenantConfig = {
   reportType: 'inDepth',
   pageOrder:  [...INDEPTH_PAGE_ORDER],
   ...DEFAULT_FLAGS,
-  webViewer: true,
   branding: {
     ...DEFAULT_BRANDING,
     primaryColor:  '#f97407',
@@ -202,7 +198,6 @@ const TENANT_BETA_CONFIG: TenantConfig = {
   reportType: 'inDepth',
   pageOrder:  [...INDEPTH_PAGE_ORDER],
   ...DEFAULT_FLAGS,
-  webViewer: true,
   branding: {
     ...DEFAULT_BRANDING,
     labName:        'NexaHealth Analytics',

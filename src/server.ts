@@ -2,22 +2,19 @@ import { config } from './core/config/config.service';
 import { buildApp } from './app';
 import { seedPageRegistry } from './core/page-registry/seed-registry';
 import { shutdownPdfService } from './rendering/pdf/pdf.service';
-import { rateLimiter } from './core/rate-limit/rate-limit.service';
-import { deleteExpiredTokens } from './viewer/token.service';
+import { closeDb, seedDemoClient } from './database';
 
 async function start(): Promise<void> {
   seedPageRegistry();
 
-  // Clean up any viewer tokens that expired while the server was offline
-  deleteExpiredTokens();
+  // Seed demo client in MongoDB (creates if not exists)
+  await seedDemoClient();
 
   const app = buildApp();
 
   try {
-    await app.listen({ port: config.port, host: config.host });
-    app.log.info(
-      `Smart Report Engine running on http://${config.host}:${config.port}`,
-    );
+    await app.listen({ port: 3000, host: '0.0.0.0' });
+    app.log.info('Smart Report Engine running on http://0.0.0.0:3000');
   } catch (error) {
     app.log.error(error, 'Failed to start server');
     process.exit(1);
@@ -28,7 +25,7 @@ async function start(): Promise<void> {
     app.log.info(`Received ${signal}. Shutting down gracefully...`);
     await app.close();
     await shutdownPdfService();
-    rateLimiter.destroy();
+    await closeDb();
     process.exit(0);
   };
 

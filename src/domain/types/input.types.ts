@@ -22,6 +22,8 @@ export interface RawParameterInput {
   value: number | string;
   unit?: string | null;
   referenceRange?: RawReferenceRange;
+  /** NirogGyan observation ID (e.g. "NGPM0106") — used for ID-based mapping */
+  observationId?: string;
 }
 
 export interface RawProfileInput {

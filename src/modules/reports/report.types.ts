@@ -1,7 +1,7 @@
 import { z } from 'zod';
 
-/** Supported output formats for a report generation request. */
-export const OutputFormatSchema = z.enum(['html', 'pdf']).default('html');
+/** Supported output formats. PDF is the default and primary output. HTML is for debugging only. */
+export const OutputFormatSchema = z.enum(['pdf', 'html']).default('pdf');
 export type OutputFormat = z.infer<typeof OutputFormatSchema>;
 
 /**
@@ -75,6 +75,98 @@ export const GenerateReportBodySchema = z.object({
 });
 
 export type GenerateReportBody = z.infer<typeof GenerateReportBodySchema>;
+
+/**
+ * Raw Lab Input schema — the format that labs actually send.
+ * Labs send: org, Centre, PName, Gender, Age, results[].investigation[].observations[]
+ * The engine normalizes this internally.
+ */
+export const LabInputBodySchema = z.object({
+  tenantId: z.string().min(1),
+  output: OutputFormatSchema,
+  /** Raw lab JSON (same format as Remedies accepts) */
+  labData: z.object({
+    org: z.string().min(1),
+    Centre: z.string().min(1),
+    WorkOrderID: z.string().optional(),
+    LabNo: z.string().optional(),
+    PName: z.string().min(1),
+    Gender: z.string().min(1),
+    Age: z.union([z.string(), z.number()]),
+    ReferredBy: z.string().optional(),
+    patientMobile: z.string().optional(),
+    patientCategory: z.string().optional(),
+    qrURL: z.string().optional(),
+    hasPastData: z.boolean().optional(),
+    results: z.array(z.object({
+      Package_name: z.string().optional(),
+      Package_book_code: z.string().optional(),
+      investigation: z.array(z.object({
+        test_name: z.string().optional().default(''),
+        test_code: z.string().optional(),
+        barcodeNo: z.string().optional(),
+        SampleType: z.string().optional(),
+        SampleCollDate: z.string().optional(),
+        SampleRcvDate: z.string().optional(),
+        ApprovalDate: z.string().optional(),
+        ApprovedByDoctorID: z.string().optional(),
+        isNABL: z.number().optional(),
+        Comments: z.string().optional(),
+        observations: z.array(z.object({
+          name: z.string().default(''),
+          id: z.string().default(''),
+          value: z.string().default(''),
+          MinValue: z.string().default(''),
+          MaxValue: z.string().default(''),
+          unit: z.string().default(''),
+          method: z.string().optional(),
+          observation_time: z.string().optional(),
+          impression: z.string().optional(),
+          DisplayValue: z.string().optional(),
+          isCAP: z.number().optional(),
+          isNGSP: z.number().optional(),
+          flag: z.string().optional(),
+          pastObservation: z.array(z.object({
+            value: z.string(),
+            date: z.string(),
+            MinValue: z.string().optional(),
+            MaxValue: z.string().optional(),
+          })).optional(),
+        })).default([]),
+      })).default([]),
+      /** Some labs use capital "Investigation" */
+      Investigation: z.array(z.object({
+        test_name: z.string().optional().default(''),
+        test_code: z.string().optional(),
+        barcodeNo: z.string().optional(),
+        SampleType: z.string().optional(),
+        SampleCollDate: z.string().optional(),
+        ApprovalDate: z.string().optional(),
+        ApprovedByDoctorID: z.string().optional(),
+        isNABL: z.number().optional(),
+        observations: z.array(z.object({
+          name: z.string().default(''),
+          id: z.string().default(''),
+          value: z.string().default(''),
+          MinValue: z.string().default(''),
+          MaxValue: z.string().default(''),
+          unit: z.string().default(''),
+          method: z.string().optional(),
+          observation_time: z.string().optional(),
+          impression: z.string().optional(),
+          isCAP: z.number().optional(),
+          isNGSP: z.number().optional(),
+          pastObservation: z.array(z.object({
+            value: z.string(),
+            date: z.string(),
+          })).optional(),
+        })).default([]),
+      })).optional(),
+    })).min(1),
+  }),
+});
+
+export type LabInputBody = z.infer<typeof LabInputBodySchema>;
 
 export interface ReportGenerationResult {
   html?: string;

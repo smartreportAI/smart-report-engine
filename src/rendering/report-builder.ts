@@ -28,15 +28,6 @@ export interface ReportBuildResult {
 /**
  * Resolves a page name from the tenant's pageOrder to the correct data
  * slice and invokes the page's generate() method.
- *
- * Special page names:
- *   "master-overview"  → receives the full NormalizedReport
- *   "profile-detail"   → expanded into one page per profile
- *
- * All other names are resolved from the registry and receive the full report.
- *
- * Each page receives a PageRenderContext { data, strategy } — never
- * a raw report or tenant config directly.
  */
 function generatePageSections(
   pageOrder: string[],
@@ -44,8 +35,6 @@ function generatePageSections(
   strategy: ReportStrategy,
   branding: TenantConfig['branding'],
   profileContinuation?: boolean,
-  viewerQrSvg?: string,
-  viewerUrl?: string,
 ): { sections: string[]; rendered: string[]; skipped: string[] } {
   const sections: string[] = [];
   const rendered: string[] = [];
@@ -63,14 +52,14 @@ function generatePageSections(
       if (profileContinuation === true) {
         // Merge all profiles into a single section — no forced page break between them
         const combinedHtml = report.profiles
-          .map(profile => page.generate({ data: profile, strategy, branding, viewerQrSvg, viewerUrl }))
+          .map(profile => page.generate({ data: profile, strategy, branding }))
           .join('\n');
         sections.push(combinedHtml);
         rendered.push(`${pageName}:all`);
       } else {
         // Default: one renderLayout wrapper per profile → page-break-after: always
         for (const profile of report.profiles) {
-          const ctx: PageRenderContext = { data: profile, strategy, branding, viewerQrSvg, viewerUrl };
+          const ctx: PageRenderContext = { data: profile, strategy, branding };
           sections.push(page.generate(ctx));
           rendered.push(`${pageName}:${profile.id}`);
         }
@@ -84,7 +73,7 @@ function generatePageSections(
       continue;
     }
 
-    const ctx: PageRenderContext = { data: report, strategy, branding, viewerQrSvg, viewerUrl };
+    const ctx: PageRenderContext = { data: report, strategy, branding };
     sections.push(page.generate(ctx));
     rendered.push(pageName);
   }
@@ -104,20 +93,10 @@ function generatePageSections(
  *   5. Wrap content pages with the branded layout (header / footer / strip)
  *   6. Split output into cover, content, and back segments for multi-pass PDF
  *   7. Combine all into a single HTML document (backward-compatible)
- *
- * Multi-pass PDF strategy:
- *   - Cover/back pages are "full-bleed" (no header/footer)
- *   - Content pages get renderLayout() wrappers (HTML header/footer)
- *   - The PDF generator renders content pages with Puppeteer native headers
- *     (which repeat on every physical page, even overflow pages)
- *   - Cover/back are rendered as separate PDFs with no headers
- *   - All PDFs are merged into the final document
  */
 export function buildReport(
   normalized: NormalizedReport,
   tenantConfig: TenantConfig,
-  viewerQrSvg?: string,
-  viewerUrl?: string,
 ): ReportBuildResult {
   const strategy = resolveStrategy(tenantConfig.reportType);
 
@@ -127,8 +106,6 @@ export function buildReport(
     strategy,
     tenantConfig.branding,
     tenantConfig.profileContinuation,
-    viewerQrSvg,
-    viewerUrl,
   );
 
   const reportId = `RPT-${new Date().getFullYear()}-${normalized.patientId.slice(-4).toUpperCase()}`;
@@ -142,7 +119,7 @@ export function buildReport(
     patient: {
       patientId: normalized.patientId,
       patientName: normalized.patientName,
-      labId: normalized.patientId, // Defaulting labId to patientId as per current data structure
+      labId: normalized.patientId,
       reportId: reportId,
       age: normalized.age,
       gender: normalized.gender,
@@ -168,10 +145,10 @@ export function buildReport(
 
     if (name === 'indepth-cover') {
       coverRawPages.push(content);
-      wrappedAll.push(content); // No layout wrapper for cover
+      wrappedAll.push(content);
     } else if (name === 'indepth-back') {
       backRawPages.push(content);
-      wrappedAll.push(content); // No layout wrapper for back
+      wrappedAll.push(content);
     } else {
       contentPageIndex++;
       const wrapped = renderLayout(content, {

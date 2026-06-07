@@ -1,0 +1,1249 @@
+NG Test Name,NG ID,NG Profile,Test Content,Department
+Total Bilirubin,NGPM0001,Liver Profile,Yes,Pathology
+Direct Bilirubin,NGPM0002,Liver Profile,Yes,Radiology
+Indirect Bilirubin,NGPM0003,Liver Profile,Yes,Radiology
+Protein (Total),NGPM0004,Liver Profile,Yes,Pathology
+Albumin,NGPM0005,Liver Profile,Yes,Pathology
+Globulin,NGPM0006,Liver Profile,Yes,Pathology
+Albumin : Globulin ratio,NGPM0007,Liver Profile,Yes,Pathology
+SGOT (AST),NGPM0008,Liver Profile,Yes,Pathology
+SGPT (ALT),NGPM0009,Liver Profile,Yes,Pathology
+GGT,NGPM0010,Liver Profile,Yes,Pathology
+LDH,NGPM0012,Liver Profile,Yes,Pathology
+SGOT (ALT),NGPM0013,Liver Profile,Yes,Pathology
+T3 (Triiodothyronine),NGPM0014,Thyroid Profile,Yes,Pathology
+T4 (Thyroxine),NGPM0015,Thyroid Profile,Yes,Pathology
+TSH,NGPM0016,Thyroid Profile,Yes,Pathology
+Anti Thyroglobulin Abs,NGPM0017,Thyroid Profile,Yes,Pathology
+Free T3 (Triiodothyronine),NGPM0018,Thyroid Profile,Yes,Pathology
+Free T4 (Thyroxine),NGPM0019,Thyroid Profile,Yes,Pathology
+Iron,NGPM0020,Anemia Studies,Yes,Pathology
+UIBC,NGPM0021,Anemia Studies,Yes,Pathology
+TIBC,NGPM0022,Anemia Studies,Yes,Pathology
+Transferrin Serum,NGPM0023,Anemia Studies,Yes,Pathology
+% Saturation Transferrin,NGPM0024,Anemia Studies,Yes,Pathology
+G6PD (Quantitative),NGPM0025,Anemia Studies,Yes,Pathology
+Sickle Cell Solubility Test-Sickling phenomenon,NGPM0026,Anemia Studies,Yes,Pathology
+Ferritin,NGPM0027,Anemia Studies,Yes,Pathology
+Blood Urea,NGPM0028,Kidney Profile,Yes,Pathology
+Blood Urea Nitrogen (BUN),NGPM0029,Kidney Profile,Yes,Pathology
+Serum Creatinine,NGPM0030,Kidney Profile,Yes,Pathology
+Uric Acid,NGPM0031,Electrolyte Profile,Yes,Pathology
+Urea : Creatinine ratio,NGPM0032,Kidney Profile,Yes,Pathology
+BUN : Creatinine ratio,NGPM0033,Kidney Profile,Yes,Pathology
+Albuminuria,NGPM0034,Kidney Profile,Yes,Pathology
+Glomerular Filtration Rate,NGPM0035,Kidney Profile,Yes,Pathology
+Glomerular Filtration Rate CKD,NGPM0036,Kidney Profile,Yes,Pathology
+Sodium,NGPM0037,Electrolyte Profile,Yes,Pathology
+Potassium,NGPM0038,Electrolyte Profile,Yes,Pathology
+Chloride,NGPM0039,Electrolyte Profile,Yes,Pathology
+Calcium,NGPM0040,Electrolyte Profile,Yes,Pathology
+Phosphorus,NGPM0041,Electrolyte Profile,Yes,Pathology
+Magnesium,NGPM0042,Electrolyte Profile,Yes,Pathology
+Zinc,NGPM0043,Electrolyte Profile,Yes,Pathology
+Blood Sugar (Fasting),NGPM0044,Diabetes Monitoring,Yes,Pathology
+Blood Sugar (Random),NGPM0045,Diabetes Monitoring,Yes,Pathology
+Blood Sugar (Postprandial),NGPM0046,Diabetes Monitoring,Yes,Pathology
+HbA1c (Glycosylated Haemoglobin),NGPM0047,Diabetes Monitoring,Yes,Pathology
+eAG (Estimated Average Glucose),NGPM0048,Diabetes Monitoring,Yes,Pathology
+Amylase,NGPM0049,Diabetes Monitoring,Yes,Pathology
+Microalbumin,NGPM0050,Diabetes Monitoring,Yes,Pathology
+Glucose in Urine,NGPM0051,Urinalysis,Yes,Pathology
+Insulin (Random),NGPM0052,Diabetes Monitoring,Yes,Pathology
+Insulin (Fasting),NGPM0053,Diabetes Monitoring,Yes,Pathology
+Blood Group,NGPM0054,Blood Group,No,Pathology
+PT TEST,NGPM0055,Blood Clotting,Yes,Pathology
+D-Dimer,NGPM0057,Blood Clotting,Yes,Pathology
+Vitamin D (25-Hydroxy),NGPM0058,Vitamin Profile,Yes,Pathology
+Vitamin B12,NGPM0059,Vitamin Profile,Yes,Pathology
+Vitamin B9,NGPM0060,Vitamin Profile,Yes,Pathology
+Vitamin B6,NGPM0061,Vitamin Profile,No,Pathology
+Vitamin B1,NGPM0062,Vitamin Profile,No,Pathology
+Vitamin B2,NGPM0063,Vitamin Profile,No,Pathology
+Vitamin C,NGPM0064,Vitamin Profile,No,Pathology
+Vitamin A,NGPM0065,Vitamin Profile,No,Pathology
+ALP,NGPM0067,Liver Profile,Yes,Pathology
+RA factor (quantitative),NGPM0068,Arthritis Screening,Yes,Radiology
+ASO (quantitative),NGPM0069,Arthritis Screening,Yes,Pathology
+Urine Colour,NGPM0070,Urinalysis,Yes,Pathology
+Urobilinogen,NGPM0073,Urinalysis,Yes,Pathology
+Bile Salts,NGPM0074,Urinalysis,No,Pathology
+Bile Pigment,NGPM0075,Urinalysis,No,Pathology
+Bilirubin,NGPM0076,Urinalysis,No,Pathology
+Ketone,NGPM0077,Urinalysis,Yes,Pathology
+Blood,NGPM0078,Urinalysis,No,Pathology
+Protein,NGPM0079,Urinalysis,Yes,Pathology
+Nitrite,NGPM0080,Urinalysis,No,Pathology
+Leukocytes,NGPM0081,Urinalysis,No,Pathology
+Absorbic Acid,NGPM0082,Urinalysis,No,Pathology
+Urinary Calcium,NGPM0083,Urinalysis,Yes,Pathology
+Specific Gravity,NGPM0084,Urinalysis,Yes,Pathology
+pH,NGPM0085,Urinalysis,Yes,Pathology
+Pus Cells,NGPM0086,Urinalysis,Yes,Pathology
+RBC count,NGPM0087,Blood Counts,Yes,Pathology
+Casts,NGPM0088,Urinalysis,No,Pathology
+Crystals,NGPM0089,Urinalysis,No,Pathology
+Epithelial Cells,NGPM0090,Urinalysis,Yes,Pathology
+Bacteria,NGPM0091,Urinalysis,No,Radiology
+URINE SPOT PROTEIN,NGPM0093,Urinalysis,No,Pathology
+URINE SPOT CREATININE,NGPM0094,Urinalysis,No,Pathology
+SPOT PROTEIN & CREATININE RATIO,NGPM0095,Urinalysis,No,Pathology
+DEPOSITS :,NGPM0096,Urinalysis,No,Pathology
+Acetone,NGPM0097,Urinalysis,No,Pathology
+Amorphous Deposit,NGPM0098,Urinalysis,No,Pathology
+Other compounds in Urine,NGPM0099,Urinalysis,Yes,Pathology
+Candida in Urine,NGPM0100,Urinalysis,No,Microbiology
+Apo A,NGPM0101,Lipid Profile,Yes,Pathology
+Apo B,NGPM0102,Lipid Profile,Yes,Pathology
+APO B : APO A Ratio,NGPM0103,Lipid Profile,Yes,Pathology
+Total Cholesterol,NGPM0106,Lipid Profile,Yes,Pathology
+Triglycerides,NGPM0107,Lipid Profile,Yes,Pathology
+HDL Cholesterol,NGPM0108,Lipid Profile,Yes,Pathology
+LDL Cholesterol,NGPM0109,Lipid Profile,Yes,Pathology
+VLDL,NGPM0110,Lipid Profile,Yes,Pathology
+HsCRP,NGPM0111,Lipid Profile,Yes,Pathology
+Total Cholesterol : HDL ratio,NGPM0112,Lipid Profile,Yes,Pathology
+LDL : HDL ratio,NGPM0113,Lipid Profile,Yes,Pathology
+Non - HDL Cholesterol,NGPM0114,Lipid Profile,Yes,Pathology
+Total Leukocyte Count,NGPM0115,Blood Counts,Yes,Pathology
+Neutrophils,NGPM0116,Blood Counts,Yes,Pathology
+Abs. Neutrophil Count,NGPM0117,Blood Counts,Yes,Pathology
+Lymphocytes,NGPM0118,Blood Counts,Yes,Pathology
+Abs. Lymphocyte Count,NGPM0119,Blood Counts,Yes,Pathology
+Eosinophils,NGPM0120,Blood Counts,Yes,Pathology
+Abs. Eosinophil Count,NGPM0121,Blood Counts,Yes,Pathology
+Monocytes,NGPM0122,Blood Counts,Yes,Pathology
+Abs. Monocyte Count,NGPM0123,Blood Counts,Yes,Pathology
+Basophils,NGPM0124,Blood Counts,Yes,Pathology
+Abs. Basophil Count,NGPM0125,Blood Counts,Yes,Pathology
+Immature Granulocytes,NGPM0126,Blood Counts,Yes,Pathology
+Abs. Immature Granulocytes,NGPM0127,Blood Counts,Yes,Pathology
+Platelet Count,NGPM0128,Blood Counts,Yes,Pathology
+P-LCR,NGPM0129,Blood Counts,Yes,Pathology
+PDW,NGPM0130,Blood Counts,Yes,Pathology
+MPV,NGPM0131,Blood Counts,Yes,Pathology
+PCT,NGPM0132,Blood Counts,Yes,Radiology
+Nucleated red blood cells,NGPM0133,Blood Counts,Yes,Pathology
+Absolute Nucleated red blood cells,NGPM0134,Blood Counts,No,Pathology
+Large Unstained Cell,NGPM0135,Blood Counts,Yes,Pathology
+Absolute Large Unstained Cell,NGPM0136,Blood Counts,No,Pathology
+Peripheral smear,NGPM0137,Blood Counts,Yes,Pathology
+Reticulocytes Count,NGPM0138,Blood Counts,Yes,Pathology
+Meta-Myelocytes,NGPM0139,Blood Counts,No,Pathology
+Pro-Myelocytes,NGPM0140,Blood Counts,No,Pathology
+Atypical Lymphocytes (LUC),NGPM0141,Blood Counts,No,Pathology
+Blast Cells,NGPM0142,Blood Counts,No,Pathology
+PT (Control),NGPM0143,Prothrombin Time,No,Pathology
+Mean Normal Prothrombic Time,NGPM0144,Prothrombin Time,No,Pathology
+Activated Partial Thromboplastin Time,NGPM0145,Blood Clotting,No,Radiology
+Partial Thromboplastin Time(Control),NGPM0146,Prothrombin Time,No,Pathology
+PT-INR,NGPM0147,Prothrombin Time,No,Pathology
+PT ratio,NGPM0148,Prothrombin Time,No,Pathology
+RDW,NGPM0149,Blood Counts,Yes,Pathology
+Rh Factor,NGPM0150,Blood Group,No,Radiology
+Haemoglobin,NGPM0151,Blood Counts,Yes,Pathology
+MCV,NGPM0153,Blood Counts,Yes,Pathology
+MCH,NGPM0154,Blood Counts,Yes,Pathology
+MCHC,NGPM0155,Blood Counts,Yes,Pathology
+Haematocrit,NGPM0156,Blood Counts,Yes,Pathology
+RDW-SD,NGPM0157,Blood Counts,Yes,Pathology
+RDW-CV,NGPM0158,Blood Counts,Yes,Pathology
+Estradiol (E2),NGPM0159,Hormones,Yes,Pathology
+AMH,NGPM0160,Hormones,Yes,Pathology
+Androstenedione,NGPM0161,Hormones,No,Pathology
+Testosterone,NGPM0162,Hormones,Yes,Pathology
+Leutinizing Harmone,NGPM0163,Hormones,Yes,Pathology
+FSH,NGPM0164,Hormones,Yes,Pathology
+Estrogen,NGPM0165,Hormones,Yes,Pathology
+Progesterone,NGPM0166,Hormones,Yes,Pathology
+DHEA-Sulphate,NGPM0167,Hormones,Yes,Pathology
+Prolactin,NGPM0168,Hormones,Yes,Radiology
+Urine for Beta HCG,NGPM0169,Hormones,Yes,Pathology
+Pregnancy Test Serum,NGPM0170,Hormones,Yes,Pathology
+Semen Type,NGPM0171,Semen Culture and Sensitivity,No,Pathology
+Prostate-Specific Antigen Total,NGPM0172,Cancer Profile,Yes,Pathology
+CA 125,NGPM0173,Cancer Profile,Yes,Pathology
+CA 15-3,NGPM0174,Cancer Profile,Yes,Pathology
+CA 19-9,NGPM0175,Cancer Profile,Yes,Pathology
+CEA,NGPM0176,Cancer Profile,No,Pathology
+Dengue NS1,NGPM0177,Viral Infections,No,Pathology
+Malaria (VIVAX),NGPM0179,Viral Infections,No,Pathology
+Rubella Ab IgM,NGPM0180,Infectious Diseases,No,Pathology
+Varicella Zoster Ab IgG,NGPM0181,Viral Infections,No,Pathology
+Prostate-Specific Antigen Free,NGPM0182,Cancer Profile,No,Pathology
+Anti HCV,NGPM0184,Hepatitis,No,Pathology
+HAV AB,NGPM0185,Hepatitis,No,Pathology
+HAV AB Total,NGPM0186,Hepatitis,No,Pathology
+HCV AB,NGPM0187,Hepatitis,No,Pathology
+HAV AB IgM,NGPM0188,Hepatitis,No,Pathology
+CMV AB IgG,NGPM0189,Hepatitis,No,Pathology
+HBsAg,NGPM0190,STD Profile,Yes,Pathology
+HBsAb,NGPM0191,Hepatitis,Yes,Pathology
+HBcAb Total,NGPM0194,Hepatitis,No,Pathology
+Typhidot,NGPM0196,Bacterial Infections,No,Pathology
+WIDAL TEST (SLIDE METHOD),NGPM0197,Bacterial Infections,No,Pathology
+Helicobacter Antigen in Stool,NGPM0198,Bacterial Infections,No,Radiology
+Helicobacter Pylori Abs.(IgG),NGPM0199,Bacterial Infections,No,Radiology
+Helicobacter Pylori Abs.(IgM),NGPM0200,Bacterial Infections,No,Radiology
+Urea Breath Test,NGPM0201,Bacterial Infections,No,Pathology
+Gram Stain,NGPM0202,Bacterial Infections,No,Pathology
+VDRL,NGPM0204,STD Profile,Yes,Pathology
+HIV AB,NGPM0205,STD Profile,No,Pathology
+HIV Combo (Ag+Ab),NGPM0206,STD Profile,No,Pathology
+Herpes Semplex Virus II IgM,NGPM0207,STD Profile,No,Pathology
+Chlamydia IgM,NGPM0208,STD Profile,Yes,Pathology
+TPHA (TREPONEMA PALLIDUM),NGPM0209,STD Profile,No,Pathology
+Toxoplasma Ab IgG,NGPM0216,Infectious Diseases,No,Pathology
+Toxoplasma Ab IgM,NGPM0217,Infectious Diseases,No,Pathology
+Rubella Ab IgG,NGPM0218,Infectious Diseases,No,Pathology
+Stool Consistency,NGPM0220,Stool Analysis,No,Pathology
+Stool Odour,NGPM0221,Stool Analysis,No,Pathology
+Polymorphonuclear Leukocytes,NGPM0226,Blood Counts,No,Pathology
+Appearance,NGPM0236,Urinalysis,Yes,Pathology
+VOLUME,NGPM0237,Urinalysis,Yes,Pathology
+Sperm Count / ml,NGPM0240,Semen Analysis,No,Pathology
+Sperm Count / ejaculate,NGPM0241,Semen Analysis,No,Pathology
+RBC,NGPM0251,Urinalysis,No,Pathology
+Primary Smear of Semen,NGPM0252,Semen Culture and Sensitivity,No,Pathology
+IgE Total,NGPM0253,Immunity,Yes,Pathology
+IgM Level,NGPM0254,Immunity,No,Pathology
+CK-MB,NGPM0255,Cardiac Profile,No,Pathology
+Creatine-Kinase,NGPM0256,Liver Profile,Yes,Pathology
+Troponin I,NGPM0257,Cardiac Profile,Yes,Pathology
+Lupus Anticoagulant,NGPM0259,Autoimmune Disorders,No,Pathology
+Anti Cardiolipin IgM,NGPM0260,Autoimmune Disorders,No,Pathology
+Anti CCP,NGPM0261,Autoimmune Disorders,No,Pathology
+Anti DNA Abs.,NGPM0262,Autoimmune Disorders,No,Pathology
+Coombs Test (Indirect),NGPM0263,Autoimmune Disorders,No,Radiology
+Anti-Phospholipid (IgG),NGPM0264,Autoimmune Disorders,No,Pathology
+ANA-Titer,NGPM0265,Autoimmune Disorders,No,Pathology
+Anti-TPO,NGPM0266,Autoimmune Disorders,No,Pathology
+Anti-Tissue Transglutaminase IgA,NGPM0267,Autoimmune Disorders,No,Pathology
+Growth Hormone,NGPM0268,Hormones,No,Pathology
+Cortisol Serum (p.m),NGPM0269,Hormones,No,Pathology
+Alfa Feto Protein (AFP),NGPM0270,Tumour Marker Test,No,Pathology
+Lipase,NGPM0271,Pancreas,No,Pathology
+HbF,NGPM0272,Hemoglobin Electrophoresis,No,Pathology
+HbA,NGPM0273,Hemoglobin Electrophoresis,No,Pathology
+HbS,NGPM0274,Hemoglobin Electrophoresis,No,Pathology
+HbC,NGPM0275,Hemoglobin Electrophoresis,No,Pathology
+HbA2,NGPM0276,Hemoglobin Electrophoresis,No,Pathology
+IL6,NGPM0277,Inflammation,Yes,Pathology
+CRP,NGPM0278,Inflammation,Yes,Pathology
+ESR,NGPM0279,Blood Counts,Yes,Pathology
+Anti Nuclear Antibodies (ANA),NGPM0280,Blood Counts,No,Pathology
+Anti Cardiolipin IgG,NGPM0282,Autoimmune Disorders,No,Pathology
+Serum Folate,NGPM0286,Anemia Studies,Yes,Pathology
+HDW (Haemoglobin Distribution Width),NGPM0287,Blood Counts,Yes,Pathology
+Homocysteine,NGPM0288,Cardiac Profile,Yes,Pathology
+Serum Copper,NGPM0289,Electrolyte Profile,No,Pathology
+Aluminium,NGPM0290,Toxic elements,No,Pathology
+Antimony,NGPM0291,Toxic elements,No,Pathology
+Arsenic,NGPM0292,Toxic elements,No,Pathology
+Barium,NGPM0293,Toxic elements,No,Pathology
+Beryllium,NGPM0294,Toxic elements,No,Pathology
+Bismuth,NGPM0295,Toxic elements,No,Pathology
+Cadmium,NGPM0296,Toxic elements,No,Pathology
+Caesium,NGPM0297,Toxic elements,No,Pathology
+Chromium,NGPM0298,Toxic elements,No,Pathology
+Cobalt,NGPM0299,Toxic elements,No,Pathology
+Lead,NGPM0300,Toxic elements,No,Pathology
+Manganese,NGPM0301,Toxic elements,Yes,Pathology
+Mercury,NGPM0302,Toxic elements,No,Pathology
+Molybdenum,NGPM0303,Toxic elements,No,Pathology
+Nickel,NGPM0304,Toxic elements,No,Pathology
+Selenium,NGPM0305,Toxic elements,No,Pathology
+Silver,NGPM0306,Toxic elements,No,Pathology
+Strontium,NGPM0307,Toxic elements,No,Pathology
+Thallium,NGPM0308,Toxic elements,No,Pathology
+Tin,NGPM0309,Toxic elements,No,Pathology
+Uranium,NGPM0310,Toxic elements,No,Pathology
+Vanadium,NGPM0311,Toxic elements,No,Pathology
+Systolic,NGPM0313,BMI & BP,No,Pathology
+HBcAb IgM,NGPM0318,Hepatitis,No,Pathology
+CMV AB IgM,NGPM0319,Hepatitis,No,Pathology
+Herpes Semplex Virus I IgM,NGPM0320,STD Profile,No,Pathology
+Malaria (FALCIPARUM),NGPM0321,Viral Infections,No,Pathology
+Dengue IgM,NGPM0322,Viral Infections,No,Pathology
+HIV,NGPM0323,STD Profile,Yes,Pathology
+Covid-19 IgG,NGPM0324,COVID,No,Pathology
+COVID 19 IgM,NGPM0325,COVID,No,Pathology
+COVID Antibody,NGPM0326,COVID,No,Pathology
+COVID RT-PCR,NGPM0327,COVID,No,Pathology
+Cycle Threshold N-gene,NGPM0328,COVID,No,Pathology
+Cycle Threshold E-gene,NGPM0329,COVID,No,Pathology
+Cycle Threshold RDRP,NGPM0330,COVID,No,Pathology
+Cycle Threshold Orf 1a-gene,NGPM0331,COVID,No,Pathology
+Herpes Semplex Virus,NGPM0364,STD Profile,Yes,Pathology
+Thrombin Time,NGPM0365,Blood Clotting,No,Pathology
+ALLERGY INDIVIDUAL MARKER PEANUT,,Allergy Panel,No,Pathology
+"ALLERGY, INDIVIDUAL MARKER, BUCKWHEAT",,Allergy Panel,No,Pathology
+Allergen-ACTH,,Allergy Panel,No,Radiology
+Allergen-Gluten,,Allergy Panel,No,Pathology
+Allergy Acacia Spp (Acacia),,Allergy Panel,No,Pathology
+Allergy Acarus Siro (Flour Mite) By EIA,,Allergy Panel,No,Pathology
+Allergy Acetylcysteine,,Allergy Panel,No,Pathology
+Allergy Agrostis Stolonifera (Bentgrass) By EIA,,Allergy Panel,No,Pathology
+Allergy Amaranthus Retroflexus (Common Pigweed),,Allergy Panel,No,Pathology
+Allergy Ambroxol,,Allergy Panel,No,Pathology
+Allergy Anise,,Allergy Panel,No,Pathology
+Allergy Anthoxanthum Odoratum (Sweet Vernal Grass),,Allergy Panel,No,Pathology
+Allergy Apricot,,Allergy Panel,No,Pathology
+Allergy Ascaris Lumbricoides,,Allergy Panel,No,Pathology
+Allergy Aspirin,,Allergy Panel,No,Pathology
+Allergy Azithromycin,,Allergy Panel,No,Pathology
+Allergy Basil,,Allergy Panel,No,Pathology
+Allergy Beet,,Allergy Panel,No,Pathology
+Allergy Benzocaine,,Allergy Panel,No,Pathology
+Allergy Black,,Allergy Panel,No,Pathology
+Allergy Books Dust,,Allergy Panel,No,Pathology
+Allergy Brassica Napus (Rape),,Allergy Panel,No,Pathology
+Allergy Broccoli,,Allergy Panel,No,Pathology
+Allergy Bromhexine,,Allergy Panel,No,Pathology
+Allergy Budgerigar Dropping,,Allergy Panel,No,Pathology
+Allergy Budgerigar Feathers,,Allergy Panel,No,Pathology
+Allergy Budgerigar Serum Proteins,,Allergy Panel,No,Pathology
+Allergy Canarian Feathers,,Allergy Panel,No,Pathology
+Allergy Cardamon,,Allergy Panel,No,Pathology
+Allergy Cherry,,Allergy Panel,No,Pathology
+Allergy Chicken Droppings,,Allergy Panel,No,Pathology
+Allergy Chicken Feathers,,Allergy Panel,No,Pathology
+Allergy Chloramphenicol,,Allergy Panel,No,Pathology
+Allergy Clarithromycin,,Allergy Panel,No,Pathology
+Allergy Co-Trimoxazole,,Allergy Panel,No,Pathology
+Allergy Cobalamin,,Allergy Panel,No,Pathology
+Allergy Cranberry,,Allergy Panel,No,Pathology
+Allergy Curcuma,,Allergy Panel,No,Pathology
+Allergy Curry,,Allergy Panel,No,Pathology
+Allergy Dactylis Glomerata (Cocksfoot),,Allergy Panel,No,Radiology
+Allergy Date,,Allergy Panel,No,Pathology
+Allergy Drug Insulin Human By Immuno CAP,,Allergy Panel,No,Pathology
+Allergy Duck Feathers,,Allergy Panel,No,Pathology
+Allergy Duck Meat,,Allergy Panel,No,Pathology
+Allergy Euroglyphus Maynei (House Mite),,Allergy Panel,No,Pathology
+Allergy Fennel,,Allergy Panel,No,Pathology
+Allergy Festuca Elatior (Meadow Fescue),,Allergy Panel,No,Pathology
+Allergy Fig,,Allergy Panel,No,Pathology
+Allergy Flax Seed,,Allergy Panel,No,Pathology
+Allergy Flaxseed,,Allergy Panel,No,Pathology
+Allergy Gelatin,,Allergy Panel,No,Pathology
+Allergy Gentamycin,,Allergy Panel,No,Pathology
+Allergy Glycyphagus Domesticus (Store Mite),,Allergy Panel,No,Pathology
+Allergy Goose Feathers,,Allergy Panel,No,Pathology
+Allergy Helminthosporium Halodes,,Allergy Panel,No,Microbiology
+Allergy Henna,,Allergy Panel,No,Pathology
+Allergy Heterocera Mix (Moth),,Allergy Panel,No,Pathology
+Allergy Housefly Musca Domestica,,Allergy Panel,No,Pathology
+Allergy Ibuprofen,,Allergy Panel,No,Pathology
+Allergy Jute,,Allergy Panel,No,Pathology
+Allergy Ketoprofen,,Allergy Panel,No,Pathology
+Allergy Kiwi,,Allergy Panel,No,Pathology
+Allergy Lentil,,Allergy Panel,No,Pathology
+Allergy Lentil (Dal),,Allergy Panel,No,Pathology
+Allergy Lepidoglyphus Destructor (Hay Mite),,Allergy Panel,No,Radiology
+Allergy Lidocaine,,Allergy Panel,No,Pathology
+Allergy Lobster,,Allergy Panel,No,Pathology
+Allergy Lychee,,Allergy Panel,No,Pathology
+Allergy Mackerel,,Allergy Panel,No,Pathology
+Allergy Metronidazole,,Allergy Panel,No,Pathology
+Allergy Mint,,Allergy Panel,No,Pathology
+Allergy Morus Alba (Red Mulberry),,Allergy Panel,No,Pathology
+"Allergy Mouse (Epithelium, Serum, Urine, Protein)",,Allergy Panel,No,Pathology
+Allergy Mucor,,Allergy Panel,No,Microbiology
+Allergy Mucor Racemosus,,Allergy Panel,No,Microbiology
+Allergy Naproxen,,Allergy Panel,No,Pathology
+Allergy Nart V1 Artemisia Vulgaris (Mugwort),,Allergy Panel,No,Pathology
+Allergy Neomycin,,Allergy Panel,No,Pathology
+Allergy Olive,,Allergy Panel,No,Pathology
+Allergy Oregano,,Allergy Panel,No,Pathology
+Allergy Oxacillin,,Allergy Panel,No,Pathology
+Allergy P4 Anisakis,,Allergy Panel,No,Pathology
+Allergy Paracetamol,,Allergy Panel,No,Pathology
+Allergy Parsley,,Allergy Panel,No,Pathology
+Allergy Peach,,Allergy Panel,No,Pathology
+Allergy Pear,,Allergy Panel,No,Pathology
+Allergy Penicilloyl G,,Allergy Panel,No,Pathology
+Allergy Penicilloyl V,,Allergy Panel,No,Pathology
+Allergy Phleum Pratense (Timothy) By EIA,,Allergy Panel,No,Pathology
+Allergy Phoma Betae,,Allergy Panel,No,Pathology
+Allergy Phosphomycin,,Allergy Panel,No,Pathology
+Allergy Phragmites Communis (Common Reed) By EIA,,Allergy Panel,No,Pathology
+Allergy Pig Epithelium,,Allergy Panel,No,Pathology
+Allergy Pigeon Droppings,,Allergy Panel,No,Pathology
+Allergy Pigeon Feathers,,Allergy Panel,No,Pathology
+Allergy Plum,,Allergy Panel,No,Pathology
+Allergy Pomegranate,,Allergy Panel,No,Pathology
+Allergy Pork,,Allergy Panel,No,Pathology
+Allergy Prilocaine,,Allergy Panel,No,Pathology
+Allergy Prosopis Juliflora (Mesquite),,Allergy Panel,No,Pathology
+Allergy Pumpkin,,Allergy Panel,No,Pathology
+Allergy Pumpkin Seed,,Allergy Panel,No,Pathology
+Allergy Pyridoxine,,Allergy Panel,No,Pathology
+Allergy Rabbit Epithelium,,Allergy Panel,No,Pathology
+Allergy Raisin,,Allergy Panel,No,Pathology
+Allergy Rhizopus Nigricans,,Allergy Panel,No,Microbiology
+Allergy Rifampicin,,Allergy Panel,No,Pathology
+Allergy Rosemary,,Allergy Panel,No,Pathology
+Allergy Saffron,,Allergy Panel,No,Pathology
+Allergy Salix Caprea (Willow),,Allergy Panel,No,Pathology
+Allergy Salmon,,Allergy Panel,No,Pathology
+Allergy Sardine,,Allergy Panel,No,Pathology
+Allergy Semolina,,Allergy Panel,No,Pathology
+Allergy Sheep Epithelium,,Allergy Panel,No,Pathology
+Allergy Sorghum Halepense (Johnson Grass),,Allergy Panel,No,Pathology
+Allergy Tea,,Allergy Panel,No,Pathology
+Allergy Thiamine,,Allergy Panel,No,Pathology
+Allergy Thyme,,Allergy Panel,No,Pathology
+Allergy Toxocara Canis,,Allergy Panel,No,Pathology
+Allergy Trichoderma Viride,,Allergy Panel,No,Pathology
+Allergy Tuna,,Allergy Panel,No,Pathology
+Allergy Turkey,,Allergy Panel,No,Pathology
+Allergy Turkey Feathers,,Allergy Panel,No,Pathology
+Allergy Turnip,,Allergy Panel,No,Pathology
+Allergy Tyrophagus Putresentiae (Cheese Mite),,Allergy Panel,No,Pathology
+Allergy Vanilla,,Allergy Panel,No,Pathology
+Allergy Vespula Germanica (Common Wasp - Yellow Jacket),,Allergy Panel,No,Pathology
+Allergy Walnut,,Allergy Panel,No,Pathology
+Allergy White Bean,,Allergy Panel,No,Pathology
+Allergy Whole,,Allergy Panel,No,Pathology
+Allergy Xanthium Commune (Cocklebur),,Allergy Panel,No,Pathology
+Allergy Yogurt,,Allergy Panel,No,Pathology
+Allergy: Carp FISH,,Allergy Panel,No,Pathology
+Allergy: Cashew (Kaju) By ImmunoCAP,,Allergy Panel,No,Pathology
+Allergy: Food Basil By ImmunoCAP,,Allergy Panel,No,Pathology
+Allergy: Mulberry (Shahtoot) By ImmunoCAP,,Allergy Panel,No,Pathology
+Allergy: Olive By ImmunoCAP,,Allergy Panel,No,Pathology
+Allergy: Phadiatop (< 5 Years),,Allergy Panel,No,Pathology
+Allergy: Poppy,,Allergy Panel,No,Pathology
+Allergy: Ragweed,,Allergy Panel,No,Pathology
+Almond,,Allergy Panel,No,Pathology
+Alpha Feto Protein - CSF,,Allergy Panel,No,Pathology
+Alternaria Tenuis,,Allergy Panel,No,Pathology
+Amoxicillin,,Allergy Panel,No,Pathology
+Apple,,Allergy Panel,No,Pathology
+Aspergillus Niger,,Allergy Panel,No,Microbiology
+Baker's Yeast Allergy,,Allergy Panel,No,Pathology
+Banana Allergy,,Allergy Panel,No,Pathology
+Bananas,,Allergy Panel,No,Pathology
+Beans,,Allergy Panel,No,Pathology
+Beef,,Allergy Panel,No,Pathology
+Bermuda Grass,,Allergy Panel,No,Pathology
+Black Pepper,,Allergy Panel,No,Pathology
+Cabbage,,Allergy Panel,No,Pathology
+Carrot Allergy,,Allergy Panel,No,Pathology
+Cashewnut,,Allergy Panel,No,Pathology
+Cat Dander,,Allergy Panel,No,Pathology
+Cauliflowers,,Allergy Panel,No,Pathology
+Celery,,Allergy Panel,No,Pathology
+Cephalosporin,,Allergy Panel,No,Pathology
+Cheese,,Allergy Panel,No,Pathology
+Chenopodium Album,,Allergy Panel,No,Pathology
+Chicken Allergy,,Allergy Panel,No,Pathology
+Chocolate Allergy,,Allergy Panel,No,Pathology
+Cinnamons,,Allergy Panel,No,Pathology
+Cladosporium hebarum,,Allergy Panel,No,Pathology
+Cloves,,Allergy Panel,No,Pathology
+Cloxacillin,,Allergy Panel,No,Pathology
+Coconut,,Allergy Panel,No,Pathology
+Codfish Allergy,,Allergy Panel,No,Pathology
+Coffees,,Allergy Panel,No,Pathology
+Corianders,,Allergy Panel,No,Pathology
+Cotton Fibre,,Allergy Panel,No,Pathology
+Cow Dander,,Allergy Panel,No,Pathology
+Cow Milk Allergy,,Allergy Panel,No,Pathology
+Crab,,Allergy Panel,No,Pathology
+Cucumbers,,Allergy Panel,No,Pathology
+Curd,,Allergy Panel,No,Pathology
+Cynodon Dactylon,,Allergy Panel,No,Radiology
+Derm Farinae,,Allergy Panel,No,Pathology
+Diclofenac,,Allergy Panel,No,Pathology
+Dog Dander,,Allergy Panel,No,Pathology
+Doxycycline,,Allergy Panel,No,Pathology
+Egg White Allergy,,Allergy Panel,No,Pathology
+Egg Yolk Allergy,,Allergy Panel,No,Pathology
+Eggplant,,Allergy Panel,No,Pathology
+Erythromycin,,Allergy Panel,No,Pathology
+Eucalyptus,,Allergy Panel,No,Pathology
+Fish (cod),,Allergy Panel,No,Pathology
+Garlic,,Allergy Panel,No,Pathology
+Ginger,,Allergy Panel,No,Pathology
+Goat Dander,,Allergy Panel,No,Pathology
+Grapes,,Allergy Panel,No,Pathology
+Guavas,,Allergy Panel,No,Pathology
+HLA – ABACAVIR HYPERSENSTIVITY,,Allergy Panel,No,Pathology
+Hay Dust,,Allergy Panel,No,Pathology
+Honey Bee,,Allergy Panel,No,Pathology
+House Dust,,Allergy Panel,No,Pathology
+Lamb Allergy,,Allergy Panel,No,Pathology
+Latex,,Allergy Panel,No,Pathology
+Lemons,,Allergy Panel,No,Pathology
+Lettuce,,Allergy Panel,No,Pathology
+Maize,,Allergy Panel,No,Pathology
+Mango Allergy,,Allergy Panel,No,Pathology
+Melons,,Allergy Panel,No,Pathology
+Mosquito,,Allergy Panel,No,Pathology
+Mugwort Sagebrush,,Allergy Panel,No,Pathology
+Mushroom,,Allergy Panel,No,Pathology
+Mustard,,Allergy Panel,No,Pathology
+Mutton,,Allergy Panel,No,Pathology
+Nut Mix Allergy,,Allergy Panel,No,Pathology
+Nutmeg,,Allergy Panel,No,Pathology
+Oat,,Allergy Panel,No,Pathology
+Ofloxacin,,Allergy Panel,No,Pathology
+Onion Allergy,,Allergy Panel,No,Pathology
+Orange Allergy,,Allergy Panel,No,Pathology
+Papaya,,Allergy Panel,No,Pathology
+Pea,,Allergy Panel,No,Pathology
+Peanut Allergy,,Allergy Panel,No,Pathology
+Pearl Millet,,Allergy Panel,No,Pathology
+Penicillin,,Allergy Panel,No,Pathology
+Phadiatop,,Allergy Panel,No,Pathology
+Phadiatop Allergen screening -Adult,,Allergy Panel,No,Pathology
+Phinf  Top,,Allergy Panel,No,Pathology
+Pineapple,,Allergy Panel,No,Pathology
+Piroxicam,,Allergy Panel,No,Pathology
+Pistachio,,Allergy Panel,No,Pathology
+Potato,,Allergy Panel,No,Pathology
+Radishes,,Allergy Panel,No,Pathology
+Rice,,Allergy Panel,No,Pathology
+Rye Grass,,Allergy Panel,No,Pathology
+Sesame,,Allergy Panel,No,Pathology
+Sheep Wool,,Allergy Panel,No,Pathology
+Shrimp,,Allergy Panel,No,Pathology
+Shrimp/Prawn Allergy,,Allergy Panel,No,Pathology
+Silk,,Allergy Panel,No,Pathology
+Soy Bean Allergy,,Allergy Panel,No,Pathology
+Spinach,,Allergy Panel,No,Pathology
+Straw Berry,,Allergy Panel,No,Pathology
+Strawberry Allergy,,Allergy Panel,No,Pathology
+Streptomycin,,Allergy Panel,No,Pathology
+Sunflower,,Allergy Panel,No,Pathology
+Tobacco,,Allergy Panel,No,Pathology
+Tomato Allergy,,Allergy Panel,No,Pathology
+Walnut (Hazel),,Allergy Panel,No,Pathology
+Wheat Flour Allergy,,Allergy Panel,No,Pathology
+Wood Mix,,Allergy Panel,No,Pathology
+Yeast,,Allergy Panel,No,Pathology
+llergy: Pear (Nashpati) By ImmunoCAP,,Allergy Panel,No,Pathology
+Content Haemoglobin (CH),,Anemia Studies,Yes,Pathology
+Erythropoietin,,Anemia Studies,No,Pathology
+G6PD (Qualitative),,Anemia Studies,No,Pathology
+Glucose-6-Phosphate Dehydrogenase Enzyme Activity~G6PD Deficiency,,Anemia Studies,No,Radiology
+Methaemoglobin Estimation,,Anemia Studies,No,Pathology
+"Porphobilinogen (PBG) Quantitative, 24 Hrs Urine",,Anemia Studies,No,Pathology
+"Porphobilinogen (PBG) Quantitative, Spot Urine",,Anemia Studies,No,Pathology
+"Porphyrins Qualitative, Spot Urine",,Anemia Studies,No,Pathology
+RBC (Synovial Fluid),,Anemia Studies,No,Pathology
+"SICKLING, SCREENING TEST",,Anemia Studies,No,Pathology
+Soluble Transferrin Receptor( STFR),,Anemia Studies,No,Pathology
+Ionized Calcium,,Arthritis Screening,Yes,Pathology
+Non Ionized Calcium,,Arthritis Screening,Yes,Pathology
+RA factor (descriptive),,Arthritis Screening,Yes,Radiology
+ANA (Antinuclear Antibody)-Screen,,Autoimmune Disorders,No,Pathology
+ANTI CCP (CYCLIC CITRULLINATED PEPTIDE),,Autoimmune Disorders,No,Pathology
+ANTI SOLUBLE LIVER ANTIGEN (SLA),,Autoimmune Disorders,No,Pathology
+Anti Cardiolipin IgA,,Autoimmune Disorders,No,Pathology
+Anti Double Stranded DNA ( dsDNA-IgG),,Autoimmune Disorders,No,Pathology
+Anti Double Stranded DNA (DsDNA) BY IFA,,Autoimmune Disorders,No,Pathology
+Anti Epidermal (Pemphigus) Antibody By IF,,Autoimmune Disorders,No,Pathology
+Anti Nuclear Antibody by IFA,,Autoimmune Disorders,No,Pathology
+Anti-Phospholipid (IgM),,Autoimmune Disorders,No,Pathology
+Antimitochondrial M2 Antibody.,,Autoimmune Disorders,No,Pathology
+Bullous Pemphigoid 180,,Autoimmune Disorders,No,Pathology
+Bullous Pemphigoid 230,,Autoimmune Disorders,No,Pathology
+"C3 COMPLEMENT, SERUM",,Autoimmune Disorders,No,Pathology
+"C4 COMPLEMENT, SERUM",,Autoimmune Disorders,No,Pathology
+CENP-B,,Autoimmune Disorders,No,Pathology
+"CH-50Complement, total",,Autoimmune Disorders,No,Pathology
+Centromere Antibody IgG,,Autoimmune Disorders,No,Pathology
+Degeneration (Synovial Fluid),,Autoimmune Disorders,No,Pathology
+Desmoglein I Antibody,,Autoimmune Disorders,No,Pathology
+Desmoglein III Antibody,,Autoimmune Disorders,No,Pathology
+"GAD-65 (GLUTAMIC ACID DECARBOXYLASE- 65) ,SERUM",,Autoimmune Disorders,No,Pathology
+Glucose (Synovial Fluid),,Autoimmune Disorders,No,Pathology
+HLA B27 Detection,,Autoimmune Disorders,No,Radiology
+Histone Antibody,,Autoimmune Disorders,No,Pathology
+Histones,,Autoimmune Disorders,No,Pathology
+Jo - 1,,Autoimmune Disorders,No,Pathology
+Jo-1 Antibody IgG,,Autoimmune Disorders,No,Pathology
+Ku,,Autoimmune Disorders,No,Pathology
+LC-1 Antibody,,Autoimmune Disorders,No,Pathology
+M2-3E (BPO) Antibody.,,Autoimmune Disorders,No,Pathology
+MPO p-ANCA,,Autoimmune Disorders,No,Pathology
+Mi-2,,Autoimmune Disorders,No,Pathology
+Monocytes (Synovial Fluid),,Autoimmune Disorders,No,Pathology
+Nucleosomes,,Autoimmune Disorders,No,Pathology
+Ovarian Antibody,,Autoimmune Disorders,No,Pathology
+PCNA,,Autoimmune Disorders,No,Pathology
+PM-Scl,,Autoimmune Disorders,No,Pathology
+PML Antibody,,Autoimmune Disorders,No,Pathology
+PR3 by EIAc-ANCA,,Autoimmune Disorders,No,Pathology
+Rh Antibody Titre,,Autoimmune Disorders,No,Pathology
+"Rheumatoid Factors ,Qualitative",,Autoimmune Disorders,No,Radiology
+Rib- P Protein,,Autoimmune Disorders,No,Pathology
+Ro- 52,,Autoimmune Disorders,No,Pathology
+Ro-52 Antibody,,Autoimmune Disorders,No,Pathology
+SLA/LP Antibody,,Autoimmune Disorders,No,Pathology
+SS-A(RO),,Autoimmune Disorders,No,Pathology
+SS-B/La,,Autoimmune Disorders,No,Pathology
+SSA - A (Soluble Substance A) IgG,,Autoimmune Disorders,No,Pathology
+SSB - B Antibody,,Autoimmune Disorders,No,Pathology
+SSB - La (Soluble Substance B) IgG,,Autoimmune Disorders,No,Pathology
+Scl - 70,,Autoimmune Disorders,No,Pathology
+Scl - 70 Antibody IgG,,Autoimmune Disorders,No,Pathology
+Sm,,Autoimmune Disorders,No,Pathology
+Sm Antibody IgG,,Autoimmune Disorders,No,Pathology
+SnRNP  ANTIBODIES,,Autoimmune Disorders,No,Pathology
+Sp100 Antibody,,Autoimmune Disorders,No,Pathology
+Total Proteins (Synovial Fluid),,Autoimmune Disorders,No,Pathology
+U1-nRNP/Sm,,Autoimmune Disorders,No,Pathology
+Volume (Synovial Fluid),,Autoimmune Disorders,No,Pathology
+anti- liver-kidney microsomal IgG antibodies,,Autoimmune Disorders,No,Pathology
+anti- liver-kidney microsomal IgG antibodies.,,Autoimmune Disorders,No,Pathology
+anti-Glomerular Basement Membrane protein (GBM),,Autoimmune Disorders,No,Pathology
+c-ANCA,,Autoimmune Disorders,No,Pathology
+ds-DNA,,Autoimmune Disorders,No,Pathology
+gp210 Antibody,,Autoimmune Disorders,No,Pathology
+p-ANCA,,Autoimmune Disorders,No,Pathology
+APTT,,Blood Clotting,No,Pathology
+Anti Phospholipid IgA,,Blood Clotting,No,Pathology
+Anti Thrombin III Activity,,Blood Clotting,No,Radiology
+Beta-2-Glycoprotein 1 -IgG,,Blood Clotting,No,Pathology
+Beta-2-Glycoprotein 1 -IgM,,Blood Clotting,No,Pathology
+Beta-2-Glycoprotein IgM Antibody,,Blood Clotting,No,Pathology
+Cardiolipin Antibody ACL-IgA,,Blood Clotting,No,Pathology
+Control (MNAPTT),,Blood Clotting,No,Pathology
+DRVVT Screening,,Blood Clotting,No,Pathology
+FACTOR VII FUNCTIONAL,,Blood Clotting,No,Radiology
+FACTOR VIII FUNCTIONAL,,Blood Clotting,No,Radiology
+FACTOR X FUNCTIONAL,,Blood Clotting,No,Radiology
+"FIBRINOGEN DEGRADATION PRODUCTS (FDP), BLOOD",,Blood Clotting,No,Radiology
+Factor IX Functional,,Blood Clotting,No,Radiology
+Factor XI Activity,,Blood Clotting,No,Radiology
+Lupus DRVV Screen (Control),,Blood Clotting,No,Pathology
+Lupus DRVV Screen (Ratio),,Blood Clotting,No,Pathology
+Lupus DRVV Screen (Test),,Blood Clotting,No,Pathology
+Mixing Studies Inhibitors,,Blood Clotting,No,Pathology
+Phosphatidylserine IgM Antibody,,Blood Clotting,No,Pathology
+Protein C Activity,,Blood Clotting,No,Radiology
+Prothrombin Gene Mutation Analysis (Factor II),,Blood Clotting,No,Radiology
+Screen Ratio,,Blood Clotting,No,Pathology
+ABNORMAL CELLS,,Blood Counts,No,Pathology
+ABSOLUTE RETICULOCYTE COUNT,,Blood Counts,Yes,Pathology
+AMH2,,Blood Counts,Yes,Pathology
+Absolute Granulocytes count,,Blood Counts,No,Pathology
+Atypical Cell,,Blood Counts,No,Pathology
+Atypical Lymphoid Cell,,Blood Counts,No,Pathology
+Atypical Monocytoid cell,,Blood Counts,No,Pathology
+Atypical Plasma Cell,,Blood Counts,No,Pathology
+Band Cells,,Blood Counts,No,Pathology
+C-Peptide (Fasting),,Blood Counts,No,Pathology
+C-Peptide (Post prandial),,Blood Counts,No,Pathology
+CORRECTED RETICULOCYTE COUNT,,Blood Counts,Yes,Radiology
+Corrected TLC,,Blood Counts,No,Radiology
+Granulocytes,,Blood Counts,No,Pathology
+HEMOPARASITES,,Blood Counts,No,Microbiology
+IMMATURE PLATELET FRACTION,,Blood Counts,No,Radiology
+IgA,,Blood Counts,No,Pathology
+IgG,,Blood Counts,No,Pathology
+LIC#,,Blood Counts,No,Pathology
+LIC%,,Blood Counts,No,Pathology
+Lymphoblasts,,Blood Counts,No,Pathology
+Lymphocyte-Monocyte Ratio,,Blood Counts,No,Pathology
+MENTZER INDEX,,Blood Counts,No,Pathology
+MYELOBLAST,,Blood Counts,No,Pathology
+Mean Platelet Component (MPC),,Blood Counts,No,Pathology
+Mean Platelet Mass (MPM),,Blood Counts,No,Pathology
+Mixed Cells,,Blood Counts,No,Pathology
+Myelocytes,,Blood Counts,No,Pathology
+Neutrophil Lymphocyte Ratio,,Blood Counts,No,Pathology
+Neutrophil lymhocyte ratio,,Blood Counts,No,Pathology
+Other Leukocyte,,Blood Counts,No,Pathology
+P-LCC,,Blood Counts,No,Pathology
+PDW - SD,,Blood Counts,No,Pathology
+PERIPHERAL SMEAR,,Blood Counts,No,Pathology
+Plasma Cell,,Blood Counts,No,Pathology
+Platelate Morphology,,Blood Counts,No,Pathology
+Platelet Crit,,Blood Counts,No,Pathology
+Platelet(PBS),,Blood Counts,Yes,Pathology
+Platelet-Lymphocyte Ratio,,Blood Counts,No,Pathology
+Platelets Morphology,,Blood Counts,No,Pathology
+Polymorphs,,Blood Counts,No,Pathology
+Promonocytes,,Blood Counts,No,Pathology
+RBC Morphology,,Blood Counts,No,Pathology
+RBC(PBS),,Blood Counts,Yes,Pathology
+RBCs,,Blood Counts,No,Pathology
+RETICULOCYTE HEAMOGLOBIN EQUIVELENT,,Blood Counts,No,Pathology
+Reticulocyte Index,,Blood Counts,No,Pathology
+Segmented Neutrophils,,Blood Counts,No,Pathology
+Total Diff %,,Blood Counts,No,Pathology
+WBC Morphology,,Blood Counts,No,Pathology
+WBC(PBS),,Blood Counts,Yes,Pathology
+Activated Protein C Resistance (APCR),,Blood Disorder,No,Radiology
+Band forms,,Blood Disorder,No,Pathology
+Clotting Time,,Blood Disorder,No,Pathology
+Coagulum,,Blood Disorder,No,Pathology
+Haemoglobin C (HbC),,Blood Disorder,No,Pathology
+Haemoglobin D (HbD),,Blood Disorder,No,Pathology
+Haemoglobin E (HbE),,Blood Disorder,No,Pathology
+Haemoglobin S (HbS),,Blood Disorder,No,Pathology
+Heparin Induced Thrombocytopenia (HIT),,Blood Disorder,No,Pathology
+LUC - (Atypical cells),,Blood Disorder,No,Pathology
+Parietal Cell Antibody,,Blood Disorder,No,Pathology
+Prolymphocytes,,Blood Disorder,No,Pathology
+VANCOMYCIN,,Blood Disorder,No,Pathology
+Rh Factor Quantitative,,Blood Group,No,Radiology
+Blood Pressure,,BMI & BP,No,Pathology
+Blood pressure,,BMI & BP,No,Pathology
+Body Mass Index(BMI),,BMI & BP,No,Pathology
+Body Temperature,,BMI & BP,No,Pathology
+Diastolic,,BMI & BP,No,Pathology
+Height,,BMI & BP,No,Pathology
+Pulse,,BMI & BP,No,Pathology
+Weight,,BMI & BP,No,Pathology
+Alkaline Phosphatase with Bone Fraction Ostase,,Bone Health,No,Radiology
+Beta-2-Crosslaps C-Telopeptides (BCTX),,Bone Health,No,Radiology
+Fibroblast Growth Factor 23 (FGF 23),,Bone Health,No,Radiology
+"NTx N-Tellopeptide, 24 Hrs Urine",,Bone Health,No,Pathology
+Osteocalcin,,Bone Health,No,Pathology
+Total P1NP,,Bone Health,No,Pathology
+% fPSA,,Cancer Profile,No,Pathology
+Adrenaline (Epinephrine) level Urine,,Cancer Profile,No,Pathology
+Adrenaline (Epinephrine) level Urine 24 hrs,,Cancer Profile,No,Pathology
+BETA 2 MICROGLOBULIN,,Cancer Profile,No,Pathology
+"CA 72.4 (TAG-72) GASTRIC CANCER MARKER,SERUM",,Cancer Profile,No,Pathology
+CYFRA 21-1 (Lung Cancer Marker),,Cancer Profile,No,Pathology
+Calcitonin,,Cancer Profile,No,Pathology
+Carcinoembryonic Antigen (CEA) Fluid,,Cancer Profile,No,Pathology
+Chromogranin A,,Cancer Profile,No,Pathology
+DES-GAMMA CARBOXY PROTHROMBIN (DCP)/PIVKA II,,Cancer Profile,No,Pathology
+"HCG BETA, TOTAL, TUMOR MARKER",,Cancer Profile,No,Pathology
+"HE4 (HUMAN EPIDIDYMIS PROTEIN 4) , SERUM",,Cancer Profile,No,Pathology
+HOMOVANILLIC ACID (HVA),,Cancer Profile,No,Pathology
+"Nor Metanephrine Free, Plasma",,Cancer Profile,No,Pathology
+Nor-Adrenaline (Nor-epinephrine) Plasma,,Cancer Profile,No,Pathology
+ROMA (Post-menopausal),,Cancer Profile,No,Pathology
+ROMA (Pre-menopausal),,Cancer Profile,No,Pathology
+Serotonin-(5-Hydroxy Tryptamine),,Cancer Profile,No,Pathology
+TNF Alpha (Tumour Necrosis Factor),,Cancer Profile,No,Radiology
+Tumor marker test,,Cancer Profile,No,Pathology
+p2PSA,,Cancer Profile,No,Pathology
+phi (Prostate Health Index),,Cancer Profile,No,Pathology
+"BNP; B-TYPE NATRIURETIC PEPTIDE, PLASMA",,Cardiac Profile,No,Pathology
+CK-Total,,Cardiac Profile,No,Pathology
+Chylomicron Qualitative,,Cardiac Profile,No,Pathology
+Chylomicron Qualitative Urine,,Cardiac Profile,No,Pathology
+Homocysteine Qualitative,,Cardiac Profile,No,Pathology
+LDH:Lactate Dehydrogenase,,Cardiac Profile,No,Radiology
+Lipoprotein Associated Phospholipase A2 (Lp-PLA2),,Cardiac Profile,No,Pathology
+Myoglobin,,Cardiac Profile,No,Pathology
+"Myoglobin, Serum",,Cardiac Profile,No,Pathology
+NT-Pro-BNP,,Cardiac Profile,No,Pathology
+TROPONI - I,,Cardiac Profile,No,Pathology
+"TROPONIN-I,HIGH SENSITIVE",,Cardiac Profile,No,Pathology
+Troponin - T,,Cardiac Profile,No,Pathology
+Troponin-T High Sensitive,,Cardiac Profile,No,Pathology
+Covid-19 IgG Antibody (Qualitative),,COVID,No,Pathology
+N Gene CT Value,,Covid,No,Radiology
+Anti GAD-65 Antibody (Paraneoplastic Syndrome),,Diabetes Monitoring,No,Pathology
+Anti IA-2 (Insulinoma Associated Antigen),,Diabetes Monitoring,No,Pathology
+Average Glucose Value(Past 3 Months IFCC),,Diabetes Monitoring,No,Pathology
+Blood Glucose (1 Hour 30 Mins).,,Diabetes Monitoring,No,Pathology
+Blood Glucose (2 Hour 30 Mins),,Diabetes Monitoring,No,Pathology
+Blood Glucose (30 MIns),,Diabetes Monitoring,No,Pathology
+C - PEPTIDE (Fasting),,Diabetes Monitoring,No,Pathology
+C - PEPTIDE (PP),,Diabetes Monitoring,No,Pathology
+C Peptide Random,,Diabetes Monitoring,No,Pathology
+Diabetes Monitoring,,Diabetes Monitoring,No,Pathology
+Fructosamine,,Diabetes Monitoring,No,Radiology
+Glucose (Fluid),,Diabetes Monitoring,No,Pathology
+Glucose 2 Hour Post Load,,Diabetes Monitoring,No,Pathology
+Glucose Challenge Test (GCT),,Diabetes Monitoring,No,Radiology
+Glycosylated Haemoglobin(Hb A1c) IFCC,,Diabetes Monitoring,No,Pathology
+HOMA IR Index,,Diabetes Monitoring,No,Pathology
+HbA1c (mmol/mol),,Diabetes Monitoring,Yes,Pathology
+Insulin (Postprandial),,Diabetes Monitoring,Yes,Pathology
+KETONE BODY (BETA HYDROXYBUTYRATE),,Diabetes Monitoring,No,Pathology
+POST GLUCOSE (BLOOD SUGAR LEVELS),,Diabetes Monitoring,No,Pathology
+Total Galactose (TGAL)~Galactosemia (GAL),,Diabetes Monitoring,No,Radiology
+Urine Glucose (30 Mins),,Diabetes Monitoring,No,Pathology
+Urine sugar(2hr),,Diabetes Monitoring,No,Pathology
+Urine sugar(3hr),,Diabetes Monitoring,No,Pathology
+ZnT8 (ZINC TRANSPORTER 8) ANTIBODY,,Diabetes Monitoring,No,Pathology
+Bicarbonate,,Electrolyte Profile,No,Pathology
+Calcium Ionised,,Electrolyte Profile,No,Pathology
+"Calcium, Urine by Arsenazo III dye Method",,Electrolyte Profile,No,Pathology
+"Chloride, Urine",,Electrolyte Profile,No,Pathology
+Corrected Calcium,,Electrolyte Profile,No,Radiology
+Lactate,,Electrolyte Profile,No,Radiology
+MANGANESE URINE,,Electrolyte Profile,No,Pathology
+"Magnesium,Serum",,Electrolyte Profile,No,Pathology
+Osmolality serum,,Electrolyte Profile,No,Pathology
+Phosphate,,Electrolyte Profile,No,Pathology
+Phosphates/Urates,,Electrolyte Profile,No,Pathology
+"Phosphorus, Urine by Phosphomolybdate Method",,Electrolyte Profile,No,Pathology
+"Potassium, Urine",,Electrolyte Profile,No,Pathology
+"Potassium,Urine",,Electrolyte Profile,No,Pathology
+"Selenium, Serum by ICPMS",,Electrolyte Profile,No,Pathology
+Sodium 24 Hours Total Volume,,Electrolyte Profile,No,Pathology
+Sodium : Potassium ratio,,Electrolyte Profile,No,Pathology
+Sodium urine by ISE Method,,Electrolyte Profile,No,Pathology
+"Sodium,Urine",,Electrolyte Profile,No,Pathology
+Urinary Calcium level per day (Calculated),,Electrolyte Profile,No,Pathology
+Urine Potassium per Day(Calculation),,Electrolyte Profile,No,Pathology
+Urine Sodium Random,,Electrolyte Profile,No,Pathology
+Leutinizing Hormone,,Hormones,No,Pathology
+Oestradiol,,Hormones,Yes,Pathology
+SHBG,,Hormones,Yes,Pathology
+Testosterone(Free),,Hormones,Yes,Pathology
+Heart Assure (High Sensitive Troponin I),,Heart Assure,No,Pathology
+HbD,,Hemoglobin Electrophoresis,No,Pathology
+Unidentified,,Hemoglobin Electrophoresis,No,Pathology
+Anti Hbs Titre,,Hepatitis,No,Pathology
+HBeAg,,Hepatitis,No,Pathology
+HBsAg Test Value,,Hepatitis,No,Pathology
+"HCV, IgG",,Hepatitis,No,Pathology
+17-Hydroxy Progesterone,,Hormones,No,Pathology
+17-Hydroxy Progesterone (17-OHP)~Congenital Adrenal Hyperplasia (CAH),,Hormones,No,Pathology
+17-HydroxyProgesterone,,Hormones,No,Pathology
+ADH (Anti Diuretic Hormone),,Hormones,No,Pathology
+"ANTI MULLERIAN HORMONE; AMH,SERUM",,Hormones,No,Pathology
+"Aldosterone, Serum",,Hormones,No,Pathology
+"Aldosterone, Urine",,Hormones,No,Pathology
+Beta HCG,,Hormones,Yes,Pathology
+Cortisol (Random),,Hormones,No,Pathology
+Cortosol Random,,Hormones,Yes,Pathology
+DHEAS,,Hormones,No,Pathology
+DHT,,Hormones,No,Pathology
+Follicle Stimulating Hormone (FSH),,Hormones,No,Pathology
+Free Androgen Index,,Hormones,No,Pathology
+IGF BP3,,Hormones,No,Pathology
+IGF-1 (Somatomedin C),,Hormones,No,Pathology
+LH / FSH Ratio,,Hormones,No,Pathology
+"SEX HORMONE BINDING GLOBULIN (SHBG),SERUM",,Hormones,No,Pathology
+Serum for Beta HCG,,Hormones,Yes,Pathology
+TSH (Thyroid Stimulating Hormone)~Congenital Hypothyroidism (CH),,Hormones,No,Pathology
+Plasma Renin Direct,,Hypertension,No,Radiology
+CD3,,Immunity,No,Pathology
+CD3-/CD(16+56)++,,Immunity,No,Pathology
+CD4,,Immunity,No,Pathology
+CD4/CD8 ratio,,Immunity,No,Pathology
+CD8,,Immunity,No,Pathology
+"IMMUNOGLOBULIN IgA,Serum",,Immunity,No,Pathology
+"IMMUNOGLOBULIN IgG,Serum",,Immunity,No,Pathology
+"IMMUNOGLOBULIN IgM, SERUM",,Immunity,No,Pathology
+Natural Killer Cells,,Immunity,No,Pathology
+ANTI HEV IgG,,Infectious Diseases,No,Pathology
+ASCA IgA,,Infectious Diseases,No,Pathology
+ASCA IgG,,Infectious Diseases,No,Pathology
+ASO Qualitative,,Infectious Diseases,No,Pathology
+Adenosine Deaminase; ADA,,Infectious Diseases,No,Pathology
+Adenovirus IgG,,Infectious Diseases,No,Pathology
+Adenovirus IgM Antibody,,Infectious Diseases,No,Pathology
+Agglutination,,Infectious Diseases,No,Pathology
+Anti-HBc IgM,,Infectious Diseases,No,Pathology
+Anti-HBe,,Infectious Diseases,No,Pathology
+Anti-HBs,,Infectious Diseases,No,Pathology
+Anti-HCV,,Infectious Diseases,No,Pathology
+Anti-HDV,,Infectious Diseases,No,Pathology
+"Antistreptolysin-O ( ASO) Titre, Serum",,Infectious Diseases,No,Pathology
+Aspergillus Antigen,,Infectious Diseases,No,Microbiology
+Beta-D-Glucan,,Infectious Diseases,No,Pathology
+CMV IgG,,Infectious Diseases,No,Pathology
+CMV IgM,,Infectious Diseases,No,Pathology
+Chikungunya IgG,,Infectious Diseases,No,Pathology
+Chikungunya IgM,,Infectious Diseases,No,Pathology
+Chlamydia IgA,,Infectious Diseases,No,Pathology
+Chlamydia IgG,,Infectious Diseases,No,Pathology
+Chlamydia Trachomatis IgG,,Infectious Diseases,No,Pathology
+Coxiella IgG,,Infectious Diseases,No,Pathology
+Coxiella IgM,,Infectious Diseases,No,Pathology
+Coxsackie IgG Antibody,,Infectious Diseases,No,Pathology
+Coxsackie IgM Antibody,,Infectious Diseases,No,Pathology
+Cryptococcus Antigen,,Infectious Diseases,No,Pathology
+Cryptosporidium Antigen,,Infectious Diseases,No,Pathology
+Cyst (Stool routine),,Infectious Diseases,No,Pathology
+Cytomegalovirus Antibody-IgM,,Infectious Diseases,No,Pathology
+Diphtheria Antibogy IgG,,Infectious Diseases,No,Pathology
+Direct Microscopy (Saline and Iodine mount),,Infectious Diseases,No,Radiology
+E Gene CT Value,,Infectious Diseases,No,Radiology
+E. Coli Antigen,,Infectious Diseases,No,Pathology
+EBV EA IgG,,Infectious Diseases,No,Pathology
+EBV IgM,,Infectious Diseases,No,Pathology
+Echinococcus IgG,,Infectious Diseases,No,Pathology
+Entamoeba Antigen,,Infectious Diseases,No,Pathology
+Epstein-Barr VCA IgG,,Infectious Diseases,No,Pathology
+Estimated Titre,,Infectious Diseases,No,Pathology
+Factor V Functional / Activity,,Infectious Diseases,No,Radiology
+Filaria Antigen,,Infectious Diseases,No,Pathology
+Filaria IgG,,Infectious Diseases,No,Pathology
+Filaria IgM,,Infectious Diseases,No,Pathology
+Form & Consistency  (Stool routine),,Infectious Diseases,No,Pathology
+Giardia Antigen,,Infectious Diseases,No,Pathology
+Group B Strep,,Infectious Diseases,No,Pathology
+H. Influenzae B,,Infectious Diseases,No,Pathology
+HAV IgM,,Infectious Diseases,No,Pathology
+HCV Total,,Infectious Diseases,No,Pathology
+HDV IgM,,Infectious Diseases,No,Pathology
+"HEPATITIS B CORE ANTIBODY (Anti- HBc), TOTAL",,Infectious Diseases,No,Pathology
+HEV IgM,,Infectious Diseases,No,Pathology
+HIV 1&2,,Infectious Diseases,No,Pathology
+HMPV RNA Qualitative,,Infectious Diseases,No,Pathology
+HSV 1&2 IgM,,Infectious Diseases,No,Pathology
+HSV-1 IgG,,Infectious Diseases,No,Pathology
+HSV-2 IgG,,Infectious Diseases,No,Pathology
+HTLV I & II Total Antibody,,Infectious Diseases,No,Pathology
+Hepatitis A  Antibody (Anti-HAV)- IgG,,Infectious Diseases,No,Pathology
+Hepatitis B Envelope Antigen (HBeAg ),,Infectious Diseases,No,Pathology
+Hepatitis B surface antigen (HBs Ag),,Infectious Diseases,No,Pathology
+"Herpes simplex virus 1+2, IgG",,Infectious Diseases,No,Pathology
+"Herpes simplex virus 1+2, IgM",,Infectious Diseases,No,Pathology
+Induration in mm,,Infectious Diseases,No,Pathology
+Influenza A IgG,,Infectious Diseases,No,Pathology
+Influenza B IgM,,Infectious Diseases,No,Pathology
+Influenza IgG,,Infectious Diseases,No,Pathology
+"LEPTOSPIRA ANTIBODY, IgM,SERUM",,Infectious Diseases,No,Pathology
+"LEPTOSPIRA ANTIBODY,IgG,RAPID CARD",,Infectious Diseases,No,Pathology
+"LEPTOSPIRA ANTIBODY,IgM,RAPID CARD",,Infectious Diseases,No,Pathology
+Legionella Antigen,,Infectious Diseases,No,Pathology
+Legionella IgG,,Infectious Diseases,No,Pathology
+Legionella IgM,,Infectious Diseases,No,Pathology
+Leishmania IgG,,Infectious Diseases,No,Pathology
+Leptospira IgG,,Infectious Diseases,No,Pathology
+Lyme IgG,,Infectious Diseases,No,Pathology
+LymeBorrelia Burgdorferi IgM antibodies,,Infectious Diseases,No,Pathology
+Measles IgG,,Infectious Diseases,No,Pathology
+Measles IgM,,Infectious Diseases,No,Pathology
+Monospot,,Infectious Diseases,No,Pathology
+Mumps IgG,,Infectious Diseases,No,Pathology
+Mumps IgM,,Infectious Diseases,No,Pathology
+Mycobacterium tuberculosis complex (MTBC),,Infectious Diseases,No,Radiology
+Mycoplasma Pneumoniae IgG,,Infectious Diseases,No,Pathology
+Ova (Stool routine),,Infectious Diseases,No,Pathology
+Parvovirus (B19) IgM*,,Infectious Diseases,No,Pathology
+Pertussis IgG,,Infectious Diseases,No,Pathology
+Pneumococcal Antigen,,Infectious Diseases,No,Pathology
+Post Stool Concentration Microscopy (Saline and Iodine mount),,Infectious Diseases,No,Pathology
+"ROTAVIRUS ANTIGEN, STOOL",,Infectious Diseases,No,Pathology
+"RPR, Serum",,Infectious Diseases,No,Pathology
+RSV IgG,,Infectious Diseases,No,Pathology
+RSV IgM,,Infectious Diseases,No,Pathology
+Rabies antibody IgG,,Infectious Diseases,No,Pathology
+RdRp Gene CT Value,,Infectious Diseases,No,Radiology
+SARS CoV-2 RNA Qualitative,,Infectious Diseases,No,Pathology
+SARS-CoV-2 IgG,,Infectious Diseases,No,Pathology
+"SCRUB TYPHUS (TSUTSUGAMUSHI) ANTIBODY IgM, RAPID ASSAY",,Infectious Diseases,No,Pathology
+Salmonella Antigen,,Infectious Diseases,No,Pathology
+Salmonella H,,Infectious Diseases,No,Pathology
+Salmonella IgG,,Infectious Diseases,No,Pathology
+Salmonella IgM,,Infectious Diseases,No,Pathology
+Salmonella O,,Infectious Diseases,No,Pathology
+Salmonella Paratyphi B(H),,Infectious Diseases,No,Pathology
+Salmonella paratyphi A(H),,Infectious Diseases,No,Pathology
+Scrub Typhus IgG,,Infectious Diseases,No,Pathology
+Scrub Typhus IgM,,Infectious Diseases,No,Pathology
+Syphilis Antibodies,,Infectious Diseases,No,Pathology
+TB Antigen,,Infectious Diseases,No,Pathology
+TB Antigen-Nil,,Infectious Diseases,No,Pathology
+TB Nil,,Infectious Diseases,No,Pathology
+TB Resistance,,Infectious Diseases,No,Pathology
+TPHA,,Infectious Diseases,No,Pathology
+Tetanus IgG,,Infectious Diseases,No,Pathology
+Titre,,Infectious Diseases,No,Pathology
+Treponema Pallidium Haemagglutination (TPHA) TITRE,,Infectious Diseases,No,Pathology
+Trophozoites (Stool routine),,Infectious Diseases,No,Pathology
+Tuberculin Test,,Infectious Diseases,No,Pathology
+West Nile IgG,,Infectious Diseases,No,Pathology
+West Nile IgM,,Infectious Diseases,No,Pathology
+Worms (Adult/Segment) (Stool routine),,Infectious Diseases,No,Pathology
+ZN Stain,,Infectious Diseases,No,Pathology
+p24 antigen with HIV 1 & 2 Antibody,,Infectious Diseases,No,Pathology
+Amyloid A,,Inflammation,No,Pathology
+"C-reactive protein (CRP),Qualitative",,Inflammation,No,Radiology
+Fibrinogen level,,Inflammation,No,Pathology
+Mucus  (Stool routine),,Inflammation,No,Pathology
+WBC count (Synovial Fluid),,Inflammation,No,Pathology
+"17 Ketosteroids,urine",,Kidney Profile,No,Pathology
+24 Hours Total Volume(Urine),,Kidney Profile,No,Pathology
+24 Hrs total volume,,Kidney Profile,No,Pathology
+"ALBUMIN, FLUID",,Kidney Profile,No,Pathology
+"Albumin Qualitative, Urine",,Kidney Profile,No,Pathology
+Aminolevulinic acid 24Hrs Urine,,Kidney Profile,No,Pathology
+"Calcium, Urine,",,Kidney Profile,No,Pathology
+Creatinine Clearence (Calculated),,Kidney Profile,No,Pathology
+Creatinine Urine per day(Calculated),,Kidney Profile,No,Pathology
+"Creatinine, 24 hours urine (Calculated)",,Kidney Profile,No,Pathology
+"Creatinine, Fluid",,Kidney Profile,No,Pathology
+"Creatinine, Urine by Jaffe Method",,Kidney Profile,No,Pathology
+Cystatin C,,Kidney Profile,No,Pathology
+"Cystine Quantitative, Spot Urine",,Kidney Profile,No,Pathology
+Microalb / Creatinine Ratio,,Kidney Profile,No,Pathology
+Microalbumin : Creatinine ratio,,Kidney Profile,No,Pathology
+"Microalbumin, Urine per day",,Kidney Profile,No,Pathology
+"Nor-Epinephrine, 24 Hrs Urine",,Kidney Profile,No,Pathology
+Osmolality urine,,Kidney Profile,No,Pathology
+"Oxalate, Urine",,Kidney Profile,No,Pathology
+"Protein,urine 24 hours",,Kidney Profile,No,Pathology
+SERUM BICARBONATE(D),,Kidney Profile,No,Pathology
+Sodium urine per day (Calculated),,Kidney Profile,No,Pathology
+"Total Proteins (Fluid, Biochemical)",,Kidney Profile,No,Pathology
+Total urine volume in 24 hrs,,Kidney Profile,No,Pathology
+Urinary Phosphorus level per day (Calculated),,Kidney Profile,No,Pathology
+Urine volume in 24 hours,,Kidney Profile,No,Pathology
+Urine volume in 24 hours.,,Kidney Profile,No,Pathology
+APO A : APO B Ratio,,Lipid Profile,Yes,Pathology
+Bile Acid (Fasting),,Lipid Profile,No,Pathology
+Bile Acid (Postprandial),,Lipid Profile,No,Pathology
+Direct LDL Cholestrol,,Lipid Profile,Yes,Radiology
+HDL % of total,,Lipid Profile,Yes,Pathology
+HDL : LDL ratio,,Lipid Profile,No,Pathology
+HDL :Total Cholesterol ratio,,Lipid Profile,Yes,Pathology
+Lipoprotein (a) [Lp(a)],,Lipid Profile,No,Pathology
+TG : HDL Ratio,,Lipid Profile,No,Pathology
+TOTAL LIPID,,Lipid Profile,No,Pathology
+ALP - GGT RATIO,,Liver Profile,No,Pathology
+AST / ALT Ratio,,Liver Profile,Yes,Pathology
+Albumin / Creatinine ratio,,Liver Profile,No,Pathology
+Alpha 2 Macroglobulin,,Liver Profile,No,Pathology
+"Alpha Feto Protein (AFP),Serum",,Liver Profile,No,Pathology
+Bile Acids-Total,,Liver Profile,No,Pathology
+Bilirubin Total (Fluid),,Liver Profile,No,Pathology
+FIB-4 Score,,Liver Profile,No,Pathology
+Fatty liver Index(FLI),,Liver Profile,No,Pathology
+NAFLD Fibrosis score,,Liver Profile,No,Pathology
+Pre Albumin,,Liver Profile,No,Pathology
+"Pseudocholinesterase,Serum",,Liver Profile,No,Pathology
+SGPT (AST),,Liver Profile,Yes,Pathology
+Malaria Parasite,,Malaria Profile,No,Microbiology
+"ALUMINUM, SERUM",,Mineral Profile,No,Pathology
+Aluminum spot urine,,Mineral Profile,No,Pathology
+CADMIUM,,Mineral Profile,No,Pathology
+Cobalt Blood,,Mineral Profile,No,Pathology
+Copper,,Mineral Profile,No,Pathology
+Manganese ICPMS,,Mineral Profile,No,Pathology
+"Phosphorus, Spot Urine",,Mineral Profile,No,Pathology
+Thallium - Blood,,Mineral Profile,No,Pathology
+Thallium ICPMS Urine Spot,,Mineral Profile,No,Pathology
+Zinc Urine by ICPMS,,Mineral Profile,No,Pathology
+"ACTH, EDTA PLASMA",,Neurological Disorders,No,Radiology
+AChR- Acetyl Choline Receptor Antibodies,,Neurological Disorders,No,Pathology
+AMPA (Anti-glutamate receptor)-GluR1,,Neurological Disorders,No,Pathology
+AMPA (Anti-glutamate receptor)-GluR2,,Neurological Disorders,No,Pathology
+ANNA-1/Hu,,Neurological Disorders,No,Pathology
+ANNA-2/Ri,,Neurological Disorders,No,Pathology
+ASKA (Striated) Muscle Antibody,,Neurological Disorders,No,Pathology
+Albumin CSF,,Neurological Disorders,No,Pathology
+Amphiphysin,,Neurological Disorders,No,Pathology
+Amphiphysin Antibody,,Neurological Disorders,No,Pathology
+Angiotensin Converting Enzyme (ACE) CSF,,Neurological Disorders,No,Pathology
+Anti Hu Antibody,,Neurological Disorders,No,Pathology
+Anti Myelin Oligodendrocyte Glycoprotein (MOG),,Neurological Disorders,No,Pathology
+Anti Neuromyelitis Optica / Aquaporin 4 (NMO),,Neurological Disorders,No,Pathology
+Anti Phospholipase A2 Recepto,,Neurological Disorders,No,Pathology
+CASPR2 antibody (VGKC type),,Neurological Disorders,No,Pathology
+CSF Glucose,,Neurological Disorders,No,Pathology
+CSF Proteins,,Neurological Disorders,No,Pathology
+CV2.1,,Neurological Disorders,No,Pathology
+Carbamazepine (Tegretol),,Neurological Disorders,No,Pathology
+"Cryptococcus Antigen, CSF",,Neurological Disorders,No,Pathology
+GABA-B receptor antibody,,Neurological Disorders,No,Pathology
+GD1a,,Neurological Disorders,No,Pathology
+GD1b,,Neurological Disorders,No,Pathology
+GM1,,Neurological Disorders,No,Pathology
+GM2,,Neurological Disorders,No,Pathology
+GM3,,Neurological Disorders,No,Pathology
+GQ1b,,Neurological Disorders,No,Pathology
+GT1b,,Neurological Disorders,No,Pathology
+"Immunoglobulin G (IgG), CSF",,Neurological Disorders,No,Pathology
+Japanese Encephalitis Virus By PCR,,Neurological Disorders,No,Pathology
+Japanese Encephalitis Virus IgM Antibody,,Neurological Disorders,No,Pathology
+LGI-1 antibody (VGKC type),,Neurological Disorders,No,Pathology
+Lactate CSF,,Neurological Disorders,No,Radiology
+Levetiracetam,,Neurological Disorders,No,Pathology
+M2-3E (BPO) Antibody,,Neurological Disorders,No,Pathology
+MuSK ANTIBODY,,Neurological Disorders,No,Pathology
+Myelin Associated Glycoprotein (MAG),,Neurological Disorders,No,Pathology
+NMDA (Anti-glutamate receptor against NR1 subunit),,Neurological Disorders,No,Pathology
+Neuron Specific Enolase (NSE),,Neurological Disorders,No,Pathology
+PCA-1/Yo,,Neurological Disorders,No,Pathology
+"PHENYTOIN, SERUM",,Neurological Disorders,No,Pathology
+PNMA2 (Ma2/Ta),,Neurological Disorders,No,Pathology
+Phenobarbitone (Gardinal),,Neurological Disorders,No,Pathology
+Protein Total CSF,,Neurological Disorders,No,Pathology
+"VALPROIC ACID, SERUM",,Neurological Disorders,No,Pathology
+VDRL CSF,,Neurological Disorders,No,Pathology
+Yo Antibody,,Neurological Disorders,No,Pathology
+"Amylase, Fluid",,Pancreas,No,Pathology
+Canine Pancreatic Lipase Immunoreactivity,,Pancreas,No,Radiology
+Feline Pancreatic Lipase Immunoreactivity,,Pancreas,No,Radiology
+Lipase Fluid,,Pancreas,No,Pathology
+Trypsin-Like Immunoractivity,,Pancreas,No,Radiology
+Alpha-fetoprotein (AFP),,Hormones,No,Pathology
+"ESTRIOL, UNCONJUGATED / FREE (uE3), SERUM",,Hormones,No,Pathology
+"HCG Beta Subunit, Urine Spot",,Hormones,No,Pathology
+"INHIBIN A, REPRODUCTIVE MARKER , SERUM",,Hormones,No,Radiology
+Inhibin,,Hormones,No,Pathology
+Inhibin A,,Hormones,No,Pathology
+PAPP-A (Pregnancy Associated Plasma Protein),,Hormones,No,Pathology
+PAPPa (Pregnancy Associated Plasma Protein),,Hormones,No,Pathology
+PlGF (Placental Growth Factor),,Hormones,No,Radiology
+Placental growth factor (PlGF),,Hormones,No,Radiology
+Pregnancy Associated Plasma Protein(PAPP-A),,Hormones,No,Pathology
+"uE3, unconjugated Estriol",,Hormones,No,Pathology
+Abnormal Form,,Semen Analysis,No,Pathology
+Abnormal Forms,,Semen Analysis,No,Pathology
+Abnormal Head,,Semen Analysis,No,Pathology
+Abnormal Neck 8 midpiece,,Semen Analysis,No,Pathology
+Abnormal Tail,,Semen Analysis,No,Pathology
+Abstinence Period,,Semen Analysis,No,Pathology
+Alive Spermatozoa %,,Semen Analysis,No,Pathology
+Analysis Time,,Semen Analysis,No,Pathology
+Appearance (Semen),,Semen Analysis,No,Pathology
+Appearance of Semen,,Semen Analysis,No,Pathology
+Collection Time,,Semen Analysis,Yes,Radiology
+Days Of Abstinence,,Semen Analysis,No,Pathology
+Dead Spermatozoa %,,Semen Analysis,No,Pathology
+Immotile,,Semen Analysis,No,Pathology
+Immotile (IM %),,Semen Analysis,No,Pathology
+Leukocyte (Semen),,Semen Analysis,No,Pathology
+Liquefaction,,Semen Analysis,No,Radiology
+Liquefaction Time (Semen),,Semen Analysis,No,Radiology
+Microscopic Examination (Microscopy) Vitality,,Semen Analysis,No,Pathology
+Morphology Abnormal,,Semen Analysis,No,Pathology
+Morphology Head Defects,,Semen Analysis,No,Radiology
+Morphology Mid Picce Defects,,Semen Analysis,No,Radiology
+Morphology Normal,,Semen Analysis,No,Pathology
+Morphology Tail Defects,,Semen Analysis,No,Radiology
+Motile,,Semen Analysis,No,Pathology
+Motility Assessment(After Liquefaction),,Semen Analysis,No,Radiology
+Non Progressive,,Semen Analysis,No,Pathology
+"Non Progressive (NP, %)",,Semen Analysis,No,Pathology
+Normal Form,,Semen Analysis,No,Pathology
+Progressive,,Semen Analysis,No,Pathology
+"Progressive (PR, %)",,Semen Analysis,No,Pathology
+Semen Fructose,,Semen Analysis,No,Radiology
+Sperm Antibody (ASAB) -Total,,Semen Analysis,No,Pathology
+"Total Motility (PR+NP, %)",,Semen Analysis,No,Pathology
+Volume of Semen,,Semen Analysis,No,Pathology
+WBCs,,Semen Analysis,No,Pathology
+pH of Semen,,Semen Analysis,No,Pathology
+Amikacin,,Semen Culture and Sensitivity,No,Pathology
+Amoxycillin,,Semen Culture and Sensitivity,No,Pathology
+Amoxycillin + Clavulanic Acid,,Semen Culture and Sensitivity,No,Pathology
+Ampicillin,,Semen Culture and Sensitivity,No,Pathology
+Ampicillin + Salbactum,,Semen Culture and Sensitivity,No,Radiology
+Aztreonam,,Semen Culture and Sensitivity,No,Pathology
+Cefazolin,,Semen Culture and Sensitivity,No,Pathology
+Cefepime,,Semen Culture and Sensitivity,No,Pathology
+Cefitriaxone,,Semen Culture and Sensitivity,No,Pathology
+Cefoperazone + Sulbactum,,Semen Culture and Sensitivity,No,Radiology
+Cefotaxime,,Semen Culture and Sensitivity,No,Pathology
+Cefoxitin,,Semen Culture and Sensitivity,No,Pathology
+Ceftazidime,,Semen Culture and Sensitivity,No,Pathology
+Cefuroxime,,Semen Culture and Sensitivity,No,Pathology
+Ciprofloxacin,,Semen Culture and Sensitivity,No,Pathology
+Cotrimoxazole,,Semen Culture and Sensitivity,No,Pathology
+Gentamicin,,Semen Culture and Sensitivity,No,Pathology
+Imipenem,,Semen Culture and Sensitivity,No,Pathology
+Levofloxacine,,Semen Culture and Sensitivity,No,Pathology
+Meropenem,,Semen Culture and Sensitivity,No,Pathology
+Norfloxacin,,Semen Culture and Sensitivity,No,Pathology
+Oflaxacine,,Semen Culture and Sensitivity,No,Pathology
+Piperacillin,,Semen Culture and Sensitivity,No,Pathology
+Piperacillin + Tazobactum,,Semen Culture and Sensitivity,No,Radiology
+Tetracycline,,Semen Culture and Sensitivity,No,Pathology
+Ticarcillin,,Semen Culture and Sensitivity,No,Pathology
+Ticarcillin + Clavulanic Acid,,Semen Culture and Sensitivity,No,Pathology
+Gonorrhoea Ag,,STD Profile,No,Pathology
+HCV,,STD Profile,Yes,Pathology
+HPV,,STD Profile,Yes,Pathology
+Hepatitis B,,STD Profile,Yes,Pathology
+High Vaginal Swab,,STD Profile,No,Pathology
+"RAPID TP(SYPHILIS), VDRL",,STD Profile,Yes,Pathology
+Rapid Plasma Reagin,,STD Profile,Yes,Pathology
+Adult Parasite,,Stool Analysis,No,Microbiology
+Blood (Stool routine),,Stool Analysis,No,Pathology
+Cysts,,Stool Analysis,No,Pathology
+Epithelial Cells (Stool routine),,Stool Analysis,No,Pathology
+Fat (Stool routine),,Stool Analysis,No,Pathology
+OVA,,Stool Analysis,No,Pathology
+Occult Blood in Stool,,Stool Analysis,No,Pathology
+Organism Isolated,,Stool Analysis,No,Pathology
+Pus Cells (WBCs) (Stool routine),,Stool Analysis,No,Pathology
+Pus Cells in Stool,,Stool Analysis,No,Pathology
+Reaction (Stool routine),,Stool Analysis,No,Radiology
+Red Blood Cell,,Stool Analysis,No,Pathology
+Red blood Cells (Stool routine),,Stool Analysis,No,Pathology
+Stool Color,,Stool Analysis,No,Pathology
+Stool Mucus,,Stool Analysis,No,Pathology
+Stool Specimen Type,,Stool Analysis,No,Pathology
+Trophozoites,,Stool Analysis,No,Pathology
+Undigested Food,,Stool Analysis,No,Pathology
+Undigestive Material (Stool routine),,Stool Analysis,No,Pathology
+Visible Blood,,Stool Analysis,No,Pathology
+AMA- M2,,Thyroid Profile,No,Pathology
+"ANTI THYROID PEROXIDASE ANTIBODY;(ANTI TPO), SERUM",,Thyroid Profile,No,Pathology
+Antimitochondrial M2 Antibody,,Thyroid Profile,No,Pathology
+Microsomal (TPO) Antibody,,Thyroid Profile,No,Pathology
+Mitochondrial (M2) Antibody,,Thyroid Profile,No,Pathology
+Parathyroid Hormone (PTH),,Thyroid Profile,No,Pathology
+THYROGLOBULIN,,Thyroid Profile,No,Pathology
+TSH 3RD GENERATION,,Thyroid Profile,Yes,Pathology
+"TSH RECEPTOR ANTIBODY, SERUM",,Thyroid Profile,No,Pathology
+Thyroxine Binding Globulin (TBG),,Thyroid Profile,No,Pathology
+Ultra TSH,,Thyroid Profile,Yes,Pathology
+Arsenic in 24 hrs Urine,,Toxic elements,No,Pathology
+"Arsenic, Urine",,Toxic elements,No,Pathology
+"Copper, Urine Spot",,Toxic elements,No,Pathology
+Lead Urine Spot by ICPMS,,Toxic elements,No,Pathology
+"Lead, Blood",,Toxic elements,No,Pathology
+"METHADONE SCREEN, URINE",,Toxic elements,No,Pathology
+"METHAMPHETAMINE SCREEN, URINE",,Toxic elements,No,Pathology
+Mercury Serum by ICPMS,,Toxic elements,No,Pathology
+Nickel Serum,,Toxic elements,No,Pathology
+Nicotine - Cotinine Urine,,Toxic elements,No,Pathology
+"Nicotine Metabolite, Urine",,Toxic elements,No,Pathology
+Phenol Urine,,Toxic elements,No,Pathology
+"Albumin, Urine",,Urinalysis,No,Pathology
+Chemical Examination,,Urinalysis,No,Pathology
+Frank blood,,Urinalysis,No,Pathology
+Ketones in Urine,,Urinalysis,No,Pathology
+Leukocyte Esterase,,Urinalysis,No,Pathology
+Leukocyte esterase,,Urinalysis,No,Pathology
+Microorganism,,Urinalysis,No,Pathology
+Microscopic Examination,,Urinalysis,No,Pathology
+Protein urine,,Urinalysis,No,Pathology
+Protozoa,,Urinalysis,No,Pathology
+Reducing Substances,,Urinalysis,No,Pathology
+Sediment,,Urinalysis,No,Pathology
+Sugar in Urine,,Urinalysis,Yes,Pathology
+Trichomonas Vaginalis,,Urinalysis,No,Pathology
+Urinary Albumin,,Urinalysis,No,Pathology
+Urinary Creatinine,,Urinalysis,Yes,Pathology
+Urinary Sodium,,Urinalysis,No,Pathology
+Urine Clarity,,Urinalysis,No,Pathology
+Urine Ketones (1 Hour 30 Mins),,Urinalysis,No,Pathology
+Urine Ketones (2 Hour),,Urinalysis,No,Pathology
+Urine Ketones (30 Mins),,Urinalysis,No,Pathology
+Urine Odour,,Urinalysis,No,Pathology
+Urine Spot Microalbumin,,Urinalysis,No,Pathology
+Yeast cells,,Urinalysis,No,Pathology
+Dengue IgG,,Viral Infections,No,Pathology
+S.Typhi AH,,Viral Infections,No,Pathology
+S.Typhi BH,,Viral Infections,No,Pathology
+S.Typhi H Antibody,,Viral Infections,No,Pathology
+S.Typhi O Antibody,,Viral Infections,No,Pathology
+Typhoid (Widal Test),,Viral Infections,Yes,Pathology
+"1,25-Dihydroxy vitamin D",,Vitamin Profile,No,Pathology
+Biotin,,Vitamin Profile,No,Pathology
+Ceruloplasmin,,Vitamin Profile,No,Pathology
+Fat Burner,,Vitamin Profile,No,Pathology
+Folate (Folic Acid) *,,Vitamin Profile,No,Pathology
+Glutathione,,Vitamin Profile,No,Pathology
+Holotranscobalamin (Active Vitamin B12),,Vitamin Profile,No,Radiology
+Vitamin B-Complex,,Vitamin Profile,No,Pathology
+Vitamin B3,,Vitamin Profile,No,Pathology
+Vitamin B3 (Niacin),,Vitamin Profile,No,Pathology
+Vitamin B7 (BIOTIN),,Vitamin Profile,No,Pathology
+Vitamin E,,Vitamin Profile,No,Pathology
+Vitamin K1 (Phylloquinone),,Vitamin Profile,No,Pathology

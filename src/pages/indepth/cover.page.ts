@@ -19,8 +19,6 @@ export const inDepthCoverPage: ReportPage = {
   generate(ctx: PageRenderContext): string {
     const report = ctx.data as NormalizedReport;
     const branding = ctx.branding;
-    const viewerQrSvg = ctx.viewerQrSvg;
-    const viewerUrl = ctx.viewerUrl;
 
     // Use distinct cover color if configured, otherwise primary
     const brandColor = branding.coverColor ?? branding.primaryColor;
@@ -422,11 +420,8 @@ export const inDepthCoverPage: ReportPage = {
             <div class="cv-pid">Patient ID: <span>${report.patientId}</span></div>
           </div>
           <div class="cv-qr-col">
-   ${viewerUrl ? `<a href="${viewerUrl}" target="_blank" style="text-decoration:none;color:inherit;display:flex;flex-direction:column;align-items:center;gap:4px;">` : ''}
             <div class="cv-qr-box" style="width:66px;height:66px;display:flex;align-items:center;justify-content:center;overflow:hidden;">
-               ${viewerQrSvg
-                 ? viewerQrSvg.replace(/<svg /, '<svg width="58" height="58" ')
-                 : `<svg width="58" height="58" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+               <svg width="58" height="58" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
                   <rect x="2" y="2" width="20" height="20" rx="3" stroke="#0f172a" stroke-width="2.5" fill="none"/>
                   <rect x="7" y="7" width="10" height="10" rx="1.5" fill="#0f172a"/>
                   <rect x="42" y="2" width="20" height="20" rx="3" stroke="#0f172a" stroke-width="2.5" fill="none"/>
@@ -439,11 +434,9 @@ export const inDepthCoverPage: ReportPage = {
                   <rect x="50" y="42" width="4" height="4" fill="#0f172a"/>
                   <rect x="30" y="38" width="4" height="4" fill="#0f172a"/>
                   <rect x="42" y="50" width="4" height="4" fill="#0f172a"/>
-                </svg>`
-               }
+                </svg>
             </div>
-            <div class="cv-qr-label">${viewerQrSvg ? 'SCAN TO VIEW' : 'SCAN TO VERIFY'}</div>
-   ${viewerUrl ? '</a>' : ''}
+            <div class="cv-qr-label">SCAN TO VERIFY</div>
           </div>
         </div>
 

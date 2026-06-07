@@ -2,15 +2,9 @@ import Fastify, { type FastifyError } from 'fastify';
 import sensible from '@fastify/sensible';
 import cors from '@fastify/cors';
 import { config } from './core/config/config.service';
-import { healthRoutes } from './modules/health/health.route';
 import { tenantRoutes } from './modules/tenants/tenant.route';
 import { reportRoutes } from './modules/reports/report.route';
-import { fhirRoutes } from './integrations/fhir/fhir.route';
-import { hl7Routes } from './integrations/hl7/hl7.route';
 import { errorResponse } from './shared/utils/response.utils';
-import { rateLimiter, RATE_LIMIT_MAX_REQUESTS } from './core/rate-limit/rate-limit.service';
-import { metricsRoutes } from './metrics/metrics.route';
-import { viewerRoutes } from './viewer/viewer.route';
 import { randomUUID } from 'node:crypto';
 
 /* ---------------------------------------------------------------
@@ -19,13 +13,6 @@ import { randomUUID } from 'node:crypto';
 
 /** Maximum request body size in bytes (5 MB). */
 const MAX_BODY_SIZE = 5 * 1024 * 1024;
-
-/** Routes that require rate limiting (report-generation endpoints). */
-const RATE_LIMITED_ROUTES = new Set([
-  '/reports/generate',
-  '/ingest/fhir',
-  '/ingest/hl7',
-]);
 
 /* ---------------------------------------------------------------
    App factory
@@ -40,66 +27,15 @@ export function buildApp() {
           ? { target: 'pino-pretty', options: { colorize: true } }
           : undefined,
     },
-    /** Fastify's built-in body size limit — rejects before parsing. */
     bodyLimit: MAX_BODY_SIZE,
   });
 
   app.register(sensible);
-
-  /* ---- CORS: allow browser requests from frontend origin ---- */
-  const allowedOrigins = config.corsOrigin
-    ? config.corsOrigin.split(',').map((o) => o.trim()).filter(Boolean)
-    : [
-        'http://localhost:3000',
-        'http://127.0.0.1:3000',
-      ];
-  app.register(cors, {
-    origin: allowedOrigins.length > 0 ? allowedOrigins : true,
-    methods: ['GET', 'POST', 'OPTIONS'],
-    allowedHeaders: ['Content-Type', 'Accept', 'X-Request-ID'],
-  });
+  app.register(cors, { origin: true });
 
   /* ---- Request ID injection ---- */
   app.addHook('onRequest', async (request) => {
     (request as any).requestId = request.headers['x-request-id'] ?? randomUUID();
-  });
-
-  /* ---- Payload size guard (belt-and-suspenders with bodyLimit) ---- */
-  app.addHook('onRequest', async (request, reply) => {
-    const contentLength = Number(request.headers['content-length'] ?? 0);
-    if (contentLength > MAX_BODY_SIZE) {
-      return reply.code(413).send(
-        errorResponse(
-          'PAYLOAD_TOO_LARGE',
-          `Request body exceeds the maximum allowed size of ${MAX_BODY_SIZE / (1024 * 1024)} MB.`,
-        ),
-      );
-    }
-  });
-
-  /* ---- Per-tenant rate limiting ---- */
-  app.addHook('preHandler', async (request, reply) => {
-    if (!RATE_LIMITED_ROUTES.has(request.url)) return;
-
-    const body = request.body as Record<string, unknown> | undefined;
-    const tenantId =
-      typeof body?.tenantId === 'string' ? body.tenantId : 'unknown';
-
-    const result = rateLimiter.check(tenantId);
-
-    // Always set rate-limit headers
-    reply.header('X-RateLimit-Limit', String(RATE_LIMIT_MAX_REQUESTS));
-    reply.header('X-RateLimit-Remaining', String(result.remaining));
-    reply.header('X-RateLimit-Reset', String(Math.ceil(result.resetsAt / 1000)));
-
-    if (!result.allowed) {
-      return reply.code(429).send(
-        errorResponse(
-          'RATE_LIMIT_EXCEEDED',
-          `Tenant "${tenantId}" has exceeded the rate limit. Please try again later.`,
-        ),
-      );
-    }
   });
 
   /* ---- Error handlers ---- */
@@ -124,13 +60,8 @@ export function buildApp() {
   });
 
   /* ---- Routes ---- */
-  app.register(healthRoutes);
   app.register(tenantRoutes);
   app.register(reportRoutes);
-  app.register(fhirRoutes);
-  app.register(hl7Routes);
-  app.register(metricsRoutes);
-  app.register(viewerRoutes);
 
   return app;
 }

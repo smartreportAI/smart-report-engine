@@ -18,16 +18,6 @@ export interface PageRenderContext<T = unknown> {
   strategy: ReportStrategy;
   /** Direct access to the tenant's exact brand config. */
   branding: TenantBrandingConfig;
-  /**
-   * Real scannable QR code SVG string (generated from the viewer URL + token).
-   * Undefined when VIEWER_BASE_URL is not configured — pages fall back to placeholder.
-   */
-  viewerQrSvg?: string;
-  /**
-   * Full viewer URL for this report (e.g. https://host/view/<token>).
-   * Used to make QR codes clickable links in the PDF.
-   */
-  viewerUrl?: string;
 }
 
 /**
