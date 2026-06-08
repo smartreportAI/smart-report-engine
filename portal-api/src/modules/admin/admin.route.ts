@@ -31,6 +31,7 @@
 
 import type { FastifyInstance } from 'fastify';
 import { requireAuth, requireRole } from '../auth/auth.middleware';
+import { hashPassword } from '../auth/auth.service';
 import { getDb } from '../../database/connection';
 import { COLLECTIONS } from '../../database/collections';
 import { successResponse, errorResponse } from '../../shared/utils/response.utils';
@@ -71,6 +72,11 @@ const OnboardClientSchema = z.object({
   trialCredits: z.number().int().min(0).optional(),
   // Auto-renew
   autoRenew: z.boolean().default(false),
+  // Login credentials for the client's primary user (created together)
+  userEmail: z.string().email('Valid email required for client login'),
+  userPassword: z.string().min(8, 'Password must be at least 8 characters'),
+  userName: z.string().min(1).max(100),
+  userPhone: z.string().optional(),
 });
 
 const UpdateClientSchema = z.object({
@@ -363,19 +369,52 @@ export async function adminRoutes(app: FastifyInstance): Promise<void> {
 
     await collection.insertOne(clientDoc);
 
+    // ── Create user account for this client (single-step onboarding) ──
+    const users = db.collection(COLLECTIONS.USERS);
+    const existingUser = await users.findOne({ email: data.userEmail.toLowerCase().trim() });
+    if (existingUser) {
+      // Client was created but user email conflicts — rollback client
+      await collection.deleteOne({ tenantId: data.tenantId });
+      return reply.code(409).send(
+        errorResponse('EMAIL_EXISTS', `A user with email "${data.userEmail}" already exists. Client was not created.`),
+      );
+    }
+
+    const hashedPwd = await hashPassword(data.userPassword);
+    await users.insertOne({
+      email: data.userEmail.toLowerCase().trim(),
+      password: hashedPwd,
+      name: data.userName,
+      phone: data.userPhone,
+      role: 'client',
+      tenantId: data.tenantId,
+      isActive: true,
+      createdBy: request.user!.userId,
+      createdAt: now,
+      updatedAt: now,
+    });
+
     // Audit log
     await db.collection(COLLECTIONS.AUDIT_LOGS).insertOne({
       userId: request.user!.userId,
       userEmail: request.user!.email,
       userRole: request.user!.role,
       action: 'client.create',
-      description: `Onboarded new client: ${data.labName} (${data.tenantId})`,
-      details: { tenantId: data.tenantId, plan: data.plan, credits: data.initialCredits },
+      description: `Onboarded new client: ${data.labName} (${data.tenantId}) with user ${data.userEmail}`,
+      details: { tenantId: data.tenantId, plan: data.plan, credits: data.initialCredits, userEmail: data.userEmail },
       targetTenantId: data.tenantId,
       createdAt: now,
     });
 
-    return reply.code(201).send(successResponse({ tenantId: data.tenantId, labName: data.labName }));
+    return reply.code(201).send(successResponse({
+      tenantId: data.tenantId,
+      labName: data.labName,
+      user: {
+        email: data.userEmail.toLowerCase().trim(),
+        name: data.userName,
+        role: 'client',
+      },
+    }));
   });
 
   /* ==============================================================
