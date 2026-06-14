@@ -76,11 +76,7 @@ function normalizeParameter(raw: RawParameterInput): ParameterResult {
 
 function deriveProfileSeverity(abnormalCount: number, total: number, hasCritical: boolean): ProfileSeverity {
   if (total === 0) return 'healthy';
-  if (hasCritical) return 'attention';
-
-  const abnormalRatio = abnormalCount / total;
-  if (abnormalRatio >= 0.4) return 'attention';
-  if (abnormalRatio >= 0.15) return 'monitor';
+  if (abnormalCount > 0) return 'attention';
   return 'healthy';
 }
 
@@ -145,7 +141,9 @@ function deriveOverallSeverity(profiles: ProfileResult[]): OverallSeverity {
  * The function is pure — it produces no side effects and returns a new object.
  */
 export function normalizeReport(raw: RawReportInput): NormalizedReport {
-  const profiles = raw.profiles.map(normalizeProfile);
+  const profiles = raw.profiles
+    .map(normalizeProfile)
+    .filter(p => p.parameters.length > 0);
 
   const overallScore = raw.aiAssessment?.healthScore ?? (
     profiles.length > 0

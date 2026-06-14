@@ -5,45 +5,9 @@
  */
 
 import { getDb } from './connection';
+import type { ReportDocument } from '@smart-report/shared-types';
 
 const COLLECTION = 'reports';
-
-export interface ReportDocument {
-  labNo: string;
-  tenantId: string;
-  org: string;
-  centre: string;
-  patientName: string;
-  age: number;
-  gender: string;
-  packageName?: string;
-  referredBy?: string;
-
-  // Mapping results
-  totalParameters: number;
-  mappedCount: number;
-  unmappedCount: number;
-  unmappedParameters: string[];
-  normalCount: number;
-  abnormalCount: number;
-  abnormalParameters: {
-    name: string;
-    value: number | string;
-    min?: number;
-    max?: number;
-    unit?: string;
-    profile: string;
-  }[];
-
-  // Output
-  pdfUrl?: string;
-  pdfSize?: number;
-  status: 'completed' | 'failed';
-  errorMessage?: string;
-
-  // Time
-  createdAt: Date;
-}
 
 /**
  * Save a report document after successful generation.

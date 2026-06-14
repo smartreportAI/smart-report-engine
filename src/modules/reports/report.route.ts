@@ -144,7 +144,7 @@ export async function reportRoutes(app: FastifyInstance): Promise<void> {
           const pdfBuffer = await generateMultipassPdf(result, tenant);
 
           // Save report to MongoDB (fire and forget — don't block response)
-          saveReportToDb(normalized, labMetadata, mappingPipelineResult, pdfBuffer.length, tenantId)
+          saveReportToDb(normalized, labMetadata, mappingPipelineResult, pdfBuffer.length, tenantId, result)
             .catch(err => app.log.error({ err }, 'Failed to save report to DB'));
 
           // Decrement credits (fire and forget)
@@ -222,6 +222,7 @@ async function saveReportToDb(
   mappingResult: MappingPipelineResult | undefined,
   pdfSize: number,
   tenantId: string,
+  result: { overallScore: number; overallSeverity: string },
 ): Promise<void> {
   // Collect abnormal parameters across all profiles
   const abnormalParameters = normalized.profiles.flatMap(profile =>
@@ -257,6 +258,9 @@ async function saveReportToDb(
     normalCount,
     abnormalCount,
     abnormalParameters,
+    overallScore: result.overallScore,
+    overallSeverity: result.overallSeverity,
+    patientId: normalized.patientId,
     pdfSize,
     status: 'completed',
     createdAt: new Date(),

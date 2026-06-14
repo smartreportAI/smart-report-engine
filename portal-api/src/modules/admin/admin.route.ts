@@ -39,8 +39,7 @@ import { parsePagination, buildPaginationMeta } from '../../shared/utils/paginat
 import { getToday, daysAgo, getMonthStart, getWeekStart, buildDateFilter } from '../../shared/utils/date.utils';
 import { ObjectId } from 'mongodb';
 import { z } from 'zod';
-import type { ClientDocument, ClientStatus } from '../../database/schemas/client.schema';
-import type { ReportDocument } from '../../database/schemas/report.schema';
+import type { ClientDocument, ClientStatus, ReportDocument } from '@smart-report/shared-types';
 import type { UserDocument } from '../../database/schemas/user.schema';
 
 /* ---------------------------------------------------------------

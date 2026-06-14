@@ -9,63 +9,9 @@
  */
 
 import { getDb } from './connection';
+import type { ClientDocument } from '@smart-report/shared-types';
 
 const COLLECTION = 'clients';
-
-export interface ClientDocument {
-  tenantId: string;
-  labName: string;
-  contactEmail?: string;
-  contactPhone?: string;
-
-  // Status
-  isLive: boolean;
-  liveDate?: Date;
-  expiryDate?: Date;
-
-  // Credits
-  totalCredits: number;
-  usedCredits: number;
-  remainingCredits: number;
-  payments?: {
-    date: Date;
-    amount: number;
-    credits: number;
-    note?: string;
-  }[];
-
-  // Report config
-  reportConfig?: {
-    reportType: string;
-    pageOrder: string[];
-    showCoverPage: boolean;
-    showBackPage: boolean;
-    showRecommendations: boolean;
-    showSummary: boolean;
-    primaryColor: string;
-    fontFamily: string;
-    fontSize: string;
-    headingColor: string;
-    headerBase64: string;
-    footerBase64: string;
-    headerHeight: string;
-    footerHeight: string;
-    coverPageLink: string;
-    backPageLink: string;
-    logoUrl: string;
-    footerText: string;
-    showPoweredBy: boolean;
-    idMappingOverrides: Record<string, string>;
-    profileMappingOverrides: Record<string, string>;
-  };
-
-  // Stats
-  totalReports: number;
-
-  createdAt: Date;
-  updatedAt: Date;
-}
-
 /**
  * Get client by tenantId. Returns null if not found.
  */

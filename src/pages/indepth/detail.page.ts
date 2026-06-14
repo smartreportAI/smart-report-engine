@@ -33,6 +33,7 @@ import {
   getStatusStyle, getSeverityStyle,
   safeValue, safeUnit, formatRange,
 } from '../shared/index';
+import { renderProfileIconImg } from '../../shared/profile-icons';
 
 /* ─────────────────────────────────────────────────────────────────
    1. PROFILE HERO
@@ -75,13 +76,16 @@ function renderProfileHero(profile: ProfileResult): string {
   <div class="det-hero__inner">
     <div class="det-hero__info" style="display: flex; justify-content: space-between; align-items: center; gap: 20px; width: 100%;">
       
-      <!-- Left: Title & Badge -->
-      <div style="display: flex; flex-direction: column; align-items: flex-start; gap: 8px; flex: 1; min-width: 0;">
-        <h2 class="det-hero__name" style="font-size: 24px; word-wrap: break-word; overflow-wrap: break-word; margin: 0; line-height: 1.2;">${profile.name}</h2>
-        <span class="det-hero__sev-badge"
-              style="color:${sevColor};background:${sevBg};border:1px solid ${sevBorder};">
-          ${sevLabel}
-        </span>
+      <!-- Left: Icon + Title & Badge -->
+      <div style="display: flex; align-items: center; gap: 14px; flex: 1; min-width: 0;">
+        ${renderProfileIconImg(profile.name, 'profile-icon profile-icon--hero')}
+        <div style="display: flex; flex-direction: column; align-items: flex-start; gap: 8px; min-width: 0;">
+          <h2 class="det-hero__name" style="font-size: 24px; word-wrap: break-word; overflow-wrap: break-word; margin: 0; line-height: 1.2;">${profile.name}</h2>
+          <span class="det-hero__sev-badge"
+                style="color:${sevColor};background:${sevBg};border:1px solid ${sevBorder};">
+            ${sevLabel}
+          </span>
+        </div>
       </div>
 
       <!-- Right: Stat pills -->

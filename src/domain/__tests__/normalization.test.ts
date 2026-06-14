@@ -98,8 +98,8 @@ describe('severity derivation', () => {
         expect(report.overallScore).toBe(100);
     });
 
-    it('returns monitor severity when 15–39% of params are abnormal', () => {
-        // 5 params, 1 abnormal = 20% → profile severity = monitor
+    it('returns critical severity when any param is abnormal', () => {
+        // 5 params, 1 abnormal → profile severity = attention → overall = critical
         const report = normalizeReport(
             makeReport([{
                 name: 'Panel',
@@ -112,11 +112,11 @@ describe('severity derivation', () => {
                 ],
             }]),
         );
-        expect(report.overallSeverity).toBe('monitor');
+        expect(report.overallSeverity).toBe('critical');
     });
 
-    it('returns critical severity when >= 40% of params are abnormal', () => {
-        // 5 params, 2 abnormal = 40% → profile severity = attention → overall = critical
+    it('returns critical severity when multiple params are abnormal', () => {
+        // 5 params, 2 abnormal → profile severity = attention → overall = critical
         const report = normalizeReport(
             makeReport([{
                 name: 'Panel',

@@ -16,37 +16,7 @@ import type { ReportPage, PageRenderContext } from '../../core/page-registry/pag
 
 /* ------------------------------------------------------------------ */
 
-/** Placeholder QR code SVG (replace with real QR generation if needed) */
-function renderQrPlaceholder(primaryColor: string): string {
-  return `
-<svg class="back-qr" width="90" height="90" viewBox="0 0 90 90"
-     xmlns="http://www.w3.org/2000/svg" aria-label="QR Code placeholder">
-  <!-- Outer border -->
-  <rect x="1" y="1" width="88" height="88" rx="6" fill="none"
-        stroke="${primaryColor}" stroke-width="2"/>
-  <!-- Top-left finder -->
-  <rect x="8"  y="8"  width="24" height="24" rx="3" fill="${primaryColor}"/>
-  <rect x="13" y="13" width="14" height="14" rx="1" fill="white"/>
-  <rect x="17" y="17" width="6"  height="6"  rx="1" fill="${primaryColor}"/>
-  <!-- Top-right finder -->
-  <rect x="58" y="8"  width="24" height="24" rx="3" fill="${primaryColor}"/>
-  <rect x="63" y="13" width="14" height="14" rx="1" fill="white"/>
-  <rect x="67" y="17" width="6"  height="6"  rx="1" fill="${primaryColor}"/>
-  <!-- Bottom-left finder -->
-  <rect x="8"  y="58" width="24" height="24" rx="3" fill="${primaryColor}"/>
-  <rect x="13" y="63" width="14" height="14" rx="1" fill="white"/>
-  <rect x="17" y="67" width="6"  height="6"  rx="1" fill="${primaryColor}"/>
-  <!-- Data dots (decorative) -->
-  <rect x="40" y="8"  width="5" height="5" rx="1" fill="${primaryColor}"/>
-  <rect x="48" y="8"  width="5" height="5" rx="1" fill="${primaryColor}"/>
-  <rect x="40" y="16" width="5" height="5" rx="1" fill="${primaryColor}"/>
-  <rect x="40" y="40" width="5" height="5" rx="1" fill="${primaryColor}"/>
-  <rect x="48" y="48" width="5" height="5" rx="1" fill="${primaryColor}"/>
-  <rect x="56" y="40" width="5" height="5" rx="1" fill="${primaryColor}"/>
-  <rect x="56" y="56" width="5" height="5" rx="1" fill="${primaryColor}"/>
-  <rect x="40" y="56" width="5" height="5" rx="1" fill="${primaryColor}"/>
-</svg>`;
-}
+
 
 /* ------------------------------------------------------------------ */
 
@@ -58,8 +28,6 @@ export const inDepthBackPage: ReportPage = {
 
     // Use actual CSS variable so it responds dynamically to the tenant's primary UI color
     const primaryColor = 'var(--color-primary)';
-    const qr = renderQrPlaceholder(primaryColor);
-    const qrLabel = 'Scan to verify';
 
     const poweredBy = strategy.allowRecommendations
       ? `<div class="back-powered-by">Powered by <strong>Smart Health Engine</strong></div>`
@@ -140,7 +108,7 @@ export const inDepthBackPage: ReportPage = {
 
 .back-footer-grid {
   display: grid;
-  grid-template-columns: 1fr auto;
+  grid-template-columns: 1fr;
   gap: 30px;
   align-items: end;
 }
@@ -165,29 +133,7 @@ export const inDepthBackPage: ReportPage = {
   letter-spacing: 0.5px;
 }
 
-.back-qr-card {
-  background: #ffffff;
-  padding: 16px 20px;
-  border-radius: 8px;
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
-  text-align: center;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-}
 
-.back-qr-card svg {
-  margin-bottom: 12px;
-}
-
-.back-qr-label {
-  font-size: 10px;
-  color: #6b7280;
-  text-transform: uppercase;
-  letter-spacing: 1px;
-  font-weight: 600;
-}
 
 .back-contact-info h3 {
   font-size: 14px;
@@ -257,10 +203,7 @@ export const inDepthBackPage: ReportPage = {
         <p>For queries about this report, please reach out directly to the issuing laboratory.</p>
       </div>
       
-      <div class="back-qr-card">
-        ${qr}
-        <div class="back-qr-label">${qrLabel}</div>
-      </div>
+
     </div>
     
     <div class="back-footer-bottom">

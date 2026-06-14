@@ -19,6 +19,7 @@
   "dependencies": {
     "@fastify/cors": "^11.2.0",
     "@fastify/sensible": "^6.0.4",
+    "@smart-report/shared-types": "file:shared",
     "dotenv": "^17.3.1",
     "fastify": "^5.7.4",
     "mongodb": "^7.2.0",

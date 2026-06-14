@@ -263,12 +263,6 @@ export const inDepthCoverPage: ReportPage = {
 .cv-pname       { font-size: 18pt; font-weight: 800; color: #0f172a; line-height: 1.1; letter-spacing: -0.02em; }
 .cv-pid         { font-size: 7.5pt; color: #64748b; margin-top: 3px; letter-spacing: 0.06em; }
 .cv-pid span    { color: var(--brand); font-weight: 700; }
-.cv-qr-col      { display: flex; flex-direction: column; align-items: center; gap: 4px; }
-.cv-qr-box {
-  padding: 6px; border-radius: 8px;
-  border: 1px solid rgb(var(--brand-rgb) / 0.15); background: white;
-}
-.cv-qr-label    { font-size: 5.5pt; color: #94a3b8; letter-spacing: 0.12em; font-weight: 600; }
 
 .cv-card-divider {
   height: 1px; margin-bottom: 10px; margin-left: 4px;
@@ -419,26 +413,8 @@ export const inDepthCoverPage: ReportPage = {
             <div class="cv-pname">${report.patientName || 'Confidential Patient'}</div>
             <div class="cv-pid">Patient ID: <span>${report.patientId}</span></div>
           </div>
-          <div class="cv-qr-col">
-            <div class="cv-qr-box" style="width:66px;height:66px;display:flex;align-items:center;justify-content:center;overflow:hidden;">
-               <svg width="58" height="58" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <rect x="2" y="2" width="20" height="20" rx="3" stroke="#0f172a" stroke-width="2.5" fill="none"/>
-                  <rect x="7" y="7" width="10" height="10" rx="1.5" fill="#0f172a"/>
-                  <rect x="42" y="2" width="20" height="20" rx="3" stroke="#0f172a" stroke-width="2.5" fill="none"/>
-                  <rect x="47" y="7" width="10" height="10" rx="1.5" fill="#0f172a"/>
-                  <rect x="2" y="42" width="20" height="20" rx="3" stroke="#0f172a" stroke-width="2.5" fill="none"/>
-                  <rect x="7" y="47" width="10" height="10" rx="1.5" fill="#0f172a"/>
-                  <rect x="26" y="26" width="4" height="4" fill="#0f172a"/>
-                  <rect x="34" y="26" width="4" height="4" fill="#0f172a"/>
-                  <rect x="42" y="34" width="4" height="4" fill="#0f172a"/>
-                  <rect x="50" y="42" width="4" height="4" fill="#0f172a"/>
-                  <rect x="30" y="38" width="4" height="4" fill="#0f172a"/>
-                  <rect x="42" y="50" width="4" height="4" fill="#0f172a"/>
-                </svg>
-            </div>
-            <div class="cv-qr-label">SCAN TO VERIFY</div>
-          </div>
         </div>
+
 
         <div class="cv-card-divider"></div>
 

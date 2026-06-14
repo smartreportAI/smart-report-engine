@@ -14,6 +14,7 @@ import type { ParameterResult } from '../../domain/models/parameter.model';
 import type { ProfileResult } from '../../domain/models/profile.model';
 
 import { renderScoreGauge, getSeverityStyle as getSharedSeverityStyle } from '../shared/index';
+import { renderProfileIconImg } from '../../shared/profile-icons';
 
 /* ────────────────────────────────────────────────────────────────── */
 /*  Pre-computed report statistics (single pass)                      */
@@ -211,8 +212,8 @@ function renderReportSummary(report: NormalizedReport): string {
         <div class="rs-block-body">
           <div class="rs-block-header" style="background:${accent.headerBg ?? '#f8fafc'}">
             <div class="rs-block-header-left">
+              ${renderProfileIconImg(p.name, 'rs-profile-icon')}
               <span class="rs-profile-name">${p.name}</span>
-              <span class="rs-severity-badge" style="background:${accent.badgeBg}; color:${accent.badgeColor}">${accent.label}</span>
             </div>
             <div class="rs-block-header-right">
               ${abnChip}
@@ -369,10 +370,7 @@ export const inDepthSummaryPage: ReportPage = {
     <!-- REPORT SUMMARY (profiles + parameters with status) -->
     ${renderReportSummary(report)}
 
-    <div class="summary-divider" style="margin-top: 6px; margin-bottom: 6px;"></div>
 
-    <!-- KEY CLINICAL OBSERVATIONS -->
-    ${renderClinicalObservations(stats)}
 
     <!-- AI CLINICAL RECOMMENDATIONS (if present) -->
     ${renderAiRecommendations(report)}

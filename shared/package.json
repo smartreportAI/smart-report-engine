@@ -1,0 +1,7 @@
+{
+  "name": "@smart-report/shared-types",
+  "version": "1.0.0",
+  "main": "types/database/index.ts",
+  "types": "types/database/index.ts",
+  "private": true
+}

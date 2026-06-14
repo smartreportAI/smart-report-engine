@@ -523,6 +523,22 @@ body {
     color: var(--color-surface);
 }
 
+/* --- Profile Icon (beside profile name) --- */
+.profile-icon {
+    width: 28px;
+    height: 28px;
+    object-fit: contain;
+    flex-shrink: 0;
+    border-radius: 6px;
+}
+
+/* Larger variant for indepth hero cards */
+.profile-icon--hero {
+    width: 42px;
+    height: 42px;
+    border-radius: 8px;
+}
+
 /* --- Parameter Cards Grid --- */
 .param-cards-grid {
     display: grid;
@@ -1945,8 +1961,8 @@ body {
 /* ── Profile Hero ─────────────────────────────────────────────── */
 .det-hero {
     position: relative;
-    margin: 0 20px 14px;
-    padding: 18px 22px;
+    margin: 0 0 14px;
+    padding: 12px 20px;
     border-radius: 16px;
     background: linear-gradient(135deg, #EBF5FF 0%, #F4F8FF 60%, #E8F4FF 100%);
     border: 1px solid rgba(45, 74, 154, 0.10);
@@ -2055,7 +2071,7 @@ body {
 
 /* ── Analytics Strip ──────────────────────────────────────────── */
 .det-analytics-strip {
-    margin: 0 20px 14px;
+    margin: 0 0 14px;
     padding: 10px 16px;
     border-radius: 12px;
     background: linear-gradient(135deg, #F8FAFF 0%, #F0F6FF 100%);
@@ -2112,7 +2128,7 @@ body {
     display: flex;
     align-items: center;
     gap: 8px;
-    margin: 12px 20px 8px;
+    margin: 12px 0 8px;
 }
 
 .det-section-heading--flagged {
@@ -2137,7 +2153,7 @@ body {
 
 /* ── Flagged Parameter Cards ──────────────────────────────────── */
 .det-flagged-list {
-    margin: 0 20px;
+    margin: 0 0;
     display: flex;
     flex-direction: column;
     gap: 10px;
@@ -2365,7 +2381,7 @@ body {
     display: flex;
     flex-wrap: wrap;
     gap: 8px;
-    margin: 0 20px;
+    margin: 0 0;
 }
 
 .det-normal-row {
@@ -2439,7 +2455,7 @@ body {
 
 /* ── All-normal Banner ────────────────────────────────────────── */
 .det-all-normal-banner {
-    margin: 8px 20px 12px;
+    margin: 8px 0 12px;
     padding: 10px 16px;
     border-radius: 10px;
     background: #F0FDF4;
@@ -2904,6 +2920,13 @@ body {
     gap: 10px;
     min-width: 0;
     flex: 1;
+}
+
+.rs-profile-icon {
+    width: 20px;
+    height: 20px;
+    object-fit: contain;
+    flex-shrink: 0;
 }
 
 .rs-profile-name {

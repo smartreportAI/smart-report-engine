@@ -21,8 +21,7 @@ import { successResponse, errorResponse } from '../../shared/utils/response.util
 import { parsePagination, buildPaginationMeta } from '../../shared/utils/pagination.utils';
 import { getToday, daysAgo, getMonthStart, buildDateFilter } from '../../shared/utils/date.utils';
 import { z } from 'zod';
-import type { ClientDocument } from '../../database/schemas/client.schema';
-import type { ReportDocument } from '../../database/schemas/report.schema';
+import type { ClientDocument, ReportDocument } from '@smart-report/shared-types';
 
 /* ---------------------------------------------------------------
    Validation

@@ -5,6 +5,7 @@ import type {
   ParameterStatus,
 } from '../domain/models/parameter.model';
 import type { ReportStrategy } from '../rendering/strategies/report-strategy.types';
+import { renderProfileIconImg } from '../shared/profile-icons';
 
 /** Threshold: if more than this many params, fall back to compact table */
 const CARD_LAYOUT_THRESHOLD = 20;
@@ -193,9 +194,12 @@ export const profileDetailPage: ReportPage = {
         </div>`
       : renderFallbackTable(profile.parameters);
 
+    const iconHtml = renderProfileIconImg(profile.name);
+
     return `
 <section class="profile-detail">
   <div class="profile-heading">
+    ${iconHtml}
     <h2>${profile.name}</h2>
     <span class="detail-score">Score: ${profile.profileScore}/100</span>
     <span class="detail-badge ${severityBadgeClass(profile.severity)}">${profile.severity}</span>

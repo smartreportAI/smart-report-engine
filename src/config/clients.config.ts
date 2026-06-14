@@ -166,7 +166,7 @@ const DEMO_CONFIG: TenantConfig = {
   ...DEFAULT_FLAGS,
   branding: {
     ...DEFAULT_BRANDING,
-    primaryColor:  '#f97407',
+    primaryColor:  '#16A34A',
     labName:      'Sai Health Labs',
     logoUrl:      'https://cdn.example.com/demo/logo.png',
     footerText:   'Smart Health Labs — Intelligent Diagnostics',

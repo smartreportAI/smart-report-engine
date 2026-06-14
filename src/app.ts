@@ -2,7 +2,6 @@ import Fastify, { type FastifyError } from 'fastify';
 import sensible from '@fastify/sensible';
 import cors from '@fastify/cors';
 import { config } from './core/config/config.service';
-import { tenantRoutes } from './modules/tenants/tenant.route';
 import { reportRoutes } from './modules/reports/report.route';
 import { errorResponse } from './shared/utils/response.utils';
 import { randomUUID } from 'node:crypto';
@@ -60,7 +59,6 @@ export function buildApp() {
   });
 
   /* ---- Routes ---- */
-  app.register(tenantRoutes);
   app.register(reportRoutes);
 
   return app;
