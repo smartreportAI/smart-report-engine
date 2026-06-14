@@ -19,7 +19,21 @@ const DB_NAME = 'smart_report_engine';
 export async function getDb(): Promise<Db> {
   if (db) return db;
 
-  client = new MongoClient(config.mongodbUri);
+  /**
+   * In development, some local networks (corporate firewalls, antivirus
+   * with TLS inspection, certain VPNs) intercept the MongoDB Atlas TLS
+   * handshake and present their own certificate, causing ECONNRESET.
+   * Relaxing cert validation locally works around this. This is NEVER
+   * applied in production.
+   */
+  const devTlsWorkaround = config.nodeEnv === 'development'
+    ? { tls: true, tlsAllowInvalidCertificates: true }
+    : {};
+
+  client = new MongoClient(config.mongodbUri, {
+    serverSelectionTimeoutMS: 30000,
+    ...devTlsWorkaround,
+  });
   await client.connect();
   db = client.db(DB_NAME);
 
