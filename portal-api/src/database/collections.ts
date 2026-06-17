@@ -11,4 +11,8 @@ export const COLLECTIONS = {
   REPORTS: 'reports',
   AUDIT_LOGS: 'audit_logs',
   NOTIFICATIONS: 'notifications',
+  // Mapping collections — shared with Smart Report Engine (same DB, same names)
+  GLOBAL_MAPPINGS: 'global_test_mappings',
+  CLIENT_MAPPINGS: 'client_test_mappings',
+  UNMAPPED_LOG: 'unmapped_log',
 } as const;

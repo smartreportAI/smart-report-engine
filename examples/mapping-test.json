@@ -1,0 +1,148 @@
+{
+  "tenantId": "demo",
+  "output": "html",
+  "labData": {
+    "org": "demo-lab",
+    "Centre": "Test Centre",
+    "LabNo": "TEST-MAP-001",
+    "PName": "Mapping Test Patient",
+    "Gender": "M",
+    "Age": "40",
+    "ReferredBy": "Dr. Test",
+    "results": [
+      {
+        "Package_name": "Full Mapping Test",
+        "investigation": [
+          {
+            "test_name": "BM ID Resolution Tests",
+            "barcodeNo": "TEST001",
+            "SampleCollDate": "14-Jun-2026 08:00AM",
+            "ApprovalDate": "14-Jun-2026",
+            "observations": [
+              {
+                "name": "Total Cholesterol",
+                "id": "BM0106",
+                "value": "210",
+                "MinValue": "",
+                "MaxValue": "200",
+                "unit": "mg/dL"
+              },
+              {
+                "name": "HbA1c (Glycosylated Haemoglobin)",
+                "id": "BM0047",
+                "value": "6.1",
+                "MinValue": "4",
+                "MaxValue": "5.7",
+                "unit": "%"
+              },
+              {
+                "name": "TSH",
+                "id": "BM0016",
+                "value": "2.5",
+                "MinValue": "0.4",
+                "MaxValue": "4.0",
+                "unit": "mIU/L"
+              }
+            ]
+          },
+          {
+            "test_name": "Portal Mode Tests (id === name, AI-parsed)",
+            "barcodeNo": "TEST002",
+            "SampleCollDate": "14-Jun-2026 08:00AM",
+            "ApprovalDate": "14-Jun-2026",
+            "observations": [
+              {
+                "name": "FBS",
+                "id": "FBS",
+                "value": "95",
+                "MinValue": "70",
+                "MaxValue": "100",
+                "unit": "mg/dL"
+              },
+              {
+                "name": "hba1c",
+                "id": "hba1c",
+                "value": "5.8",
+                "MinValue": "4",
+                "MaxValue": "5.7",
+                "unit": "%"
+              },
+              {
+                "name": "Hemoglobin",
+                "id": "Hemoglobin",
+                "value": "13.5",
+                "MinValue": "12",
+                "MaxValue": "17",
+                "unit": "g/dL"
+              },
+              {
+                "name": "LDL-C",
+                "id": "LDL-C",
+                "value": "130",
+                "MinValue": "",
+                "MaxValue": "100",
+                "unit": "mg/dL"
+              },
+              {
+                "name": "Vitamin D",
+                "id": "Vitamin D",
+                "value": "18.5",
+                "MinValue": "30",
+                "MaxValue": "100",
+                "unit": "ng/mL"
+              },
+              {
+                "name": "serum ferritin",
+                "id": "serum ferritin",
+                "value": "12",
+                "MinValue": "15",
+                "MaxValue": "200",
+                "unit": "ng/mL"
+              }
+            ]
+          },
+          {
+            "test_name": "Name Exact Match Tests (id different, name is standard)",
+            "barcodeNo": "TEST003",
+            "SampleCollDate": "14-Jun-2026 08:00AM",
+            "ApprovalDate": "14-Jun-2026",
+            "observations": [
+              {
+                "name": "Serum Creatinine",
+                "id": "WRONGID_CREA",
+                "value": "1.1",
+                "MinValue": "0.7",
+                "MaxValue": "1.3",
+                "unit": "mg/dL"
+              },
+              {
+                "name": "TSH",
+                "id": "CLIENT_TSH_CODE",
+                "value": "3.2",
+                "MinValue": "0.4",
+                "MaxValue": "4.0",
+                "unit": "mIU/L"
+              }
+            ]
+          },
+          {
+            "test_name": "Unmapped Test (should go to Ungrouped)",
+            "barcodeNo": "TEST004",
+            "SampleCollDate": "14-Jun-2026 08:00AM",
+            "ApprovalDate": "14-Jun-2026",
+            "observations": [
+              {
+                "name": "Some Unknown Lab Test XYZ",
+                "id": "UNKNOWN_ID_999",
+                "value": "42",
+                "MinValue": "",
+                "MaxValue": "50",
+                "unit": "units"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}

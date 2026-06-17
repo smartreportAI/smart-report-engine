@@ -11,7 +11,8 @@
     "test": "npm run generate examples/mixed-report.json -- --pdf",
     "test:unit": "vitest run --exclude src/integration-tests/**",
     "generate": "tsx src/cli/generate.ts",
-    "onboard": "tsx src/cli/onboard-client.ts"
+    "onboard": "tsx src/cli/onboard-client.ts",
+    "seed:mappings": "tsx src/scripts/seed-global-mappings.ts"
   },
   "keywords": [],
   "author": "",

@@ -13,6 +13,7 @@
 
 import { getClient } from '../database';
 import type { ClientDocument } from '../database';
+import { buildClientIdOverrides, buildClientProfileOverrides } from '../database/mapping.service';
 import { CLIENT_REGISTRY } from '../config/clients.config';
 import type { TenantConfig } from '../modules/tenants/tenant.types';
 
@@ -31,9 +32,7 @@ export interface ResolvedClientConfig {
  * Resolves tenant config for a given tenantId.
  *
  * Priority: DB config > Code config
- * If DB has reportConfig, it overrides the code-level config.
- * If DB doesn't have the client, code config is used.
- * If neither has the client, returns null.
+ * DB client mapping overrides (client_test_mappings) are merged in on top.
  */
 export async function resolveClientConfig(tenantId: string): Promise<ResolvedClientConfig | null> {
   const codeConfig = CLIENT_REGISTRY[tenantId];
@@ -44,30 +43,53 @@ export async function resolveClientConfig(tenantId: string): Promise<ResolvedCli
     return null;
   }
 
-  // Case 2: Not in DB, only in code → use code config
+  // Load DB-stored client mapping overrides (from client_test_mappings collection)
+  // These supplement/override both code-level and DB reportConfig overrides
+  let dbIdOverrides: Record<string, string> = {};
+  let dbProfileOverrides: Record<string, string> = {};
+  try {
+    dbIdOverrides = await buildClientIdOverrides(tenantId);
+    dbProfileOverrides = await buildClientProfileOverrides(tenantId);
+  } catch {
+    // DB may not be available (CLI mode) — fall back to code/reportConfig overrides
+  }
+
+  // Case 2: Not in DB, only in code → use code config + DB mapping overrides
   if (!dbClient && codeConfig) {
     return {
-      tenantConfig: codeConfig,
+      tenantConfig: {
+        ...codeConfig,
+        idMappingOverrides: { ...codeConfig.idMappingOverrides, ...dbIdOverrides },
+        profileMappingOverrides: { ...codeConfig.profileMappingOverrides, ...dbProfileOverrides },
+      },
       source: 'code',
     };
   }
 
-  // Case 3: In DB but no code config → build config from DB
+  // Case 3: In DB but no code config → build from DB
   if (dbClient && !codeConfig) {
     const tenantConfig = buildTenantConfigFromDb(dbClient);
     return {
-      tenantConfig,
+      tenantConfig: {
+        ...tenantConfig,
+        idMappingOverrides: { ...(tenantConfig.idMappingOverrides || {}), ...dbIdOverrides },
+        profileMappingOverrides: { ...(tenantConfig.profileMappingOverrides || {}), ...dbProfileOverrides },
+      },
       source: 'db',
       webhookUrl: (dbClient as any).webhookUrl,
       webhookFormat: (dbClient as any).webhookFormat,
     };
   }
 
-  // Case 4: Both exist → merge (DB overrides code)
+  // Case 4: Both exist → merge (DB overrides code), then layer DB mapping overrides on top
   if (dbClient && codeConfig) {
     const tenantConfig = mergeTenantConfig(codeConfig, dbClient);
     return {
-      tenantConfig,
+      tenantConfig: {
+        ...tenantConfig,
+        idMappingOverrides: { ...(tenantConfig.idMappingOverrides || {}), ...dbIdOverrides },
+        profileMappingOverrides: { ...(tenantConfig.profileMappingOverrides || {}), ...dbProfileOverrides },
+      },
       source: 'merged',
       webhookUrl: (dbClient as any).webhookUrl,
       webhookFormat: (dbClient as any).webhookFormat,

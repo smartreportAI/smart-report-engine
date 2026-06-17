@@ -12,6 +12,7 @@ import cors from '@fastify/cors';
 import { config } from './config/env.config';
 import { authRoutes } from './modules/auth/auth.route';
 import { adminRoutes } from './modules/admin/admin.route';
+import { mappingAdminRoutes } from './modules/admin/mapping.route';
 import { clientRoutes } from './modules/client/client.route';
 import { errorResponse } from './shared/utils/response.utils';
 import { pingDb } from './database/connection';
@@ -53,6 +54,7 @@ export function buildApp() {
   /* ---- Routes ---- */
   app.register(authRoutes, { prefix: '' });
   app.register(adminRoutes, { prefix: '' });
+  app.register(mappingAdminRoutes, { prefix: '' });
   app.register(clientRoutes, { prefix: '' });
 
   /* ---- Error Handlers ---- */

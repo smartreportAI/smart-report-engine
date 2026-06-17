@@ -56,6 +56,10 @@ async function main(): Promise<void> {
     const body = parsed as Record<string, unknown>;
     const isLabFormat = 'labData' in body;
 
+    // Resolve tenantId early (needed for mapping overrides)
+    const earlyTenantId = (body.tenantId as string) || '';
+    const tenantForOverrides = earlyTenantId ? CLIENT_REGISTRY[earlyTenantId] : undefined;
+
     let tenantId: string;
     let rawReportInput: RawReportInput;
 
@@ -79,20 +83,32 @@ async function main(): Promise<void> {
             console.log(`  ⚠ Skipped ${skippedObservations.length} invalid observations`);
         }
 
-        // Run mapping pipeline (ID + name → profile assignment)
-        const mappingResult = runMappingPipeline(reportInput);
+        // Run mapping pipeline (priority: client ID override → BM ID → name exact → alias → ungrouped)
+        const mappingResult = runMappingPipeline(reportInput, {
+            idMappingOverrides: tenantForOverrides?.idMappingOverrides,
+            profileMappingOverrides: tenantForOverrides?.profileMappingOverrides,
+        });
         rawReportInput = mappingResult.report;
+
+        // Count resolution methods for logging
+        const byVia = mappingResult.resolutionLog.reduce((acc, e) => {
+            acc[e.resolvedVia] = (acc[e.resolvedVia] || 0) + 1;
+            return acc;
+        }, {} as Record<string, number>);
 
         console.log('');
         console.log('📋 Mapping Pipeline');
-        console.log(`  Total:    ${mappingResult.totalParameters} parameters`);
-        console.log(`  Mapped:   ${mappingResult.mappedParameters}`);
-        console.log(`  Unmapped: ${mappingResult.unmappedParameters.length}`);
+        console.log(`  Total:         ${mappingResult.totalParameters} parameters`);
+        console.log(`  Mapped:        ${mappingResult.mappedParameters}`);
+        console.log(`  Unmapped:      ${mappingResult.unmappedParameters.length}`);
+        if (byVia['client-id-override']) console.log(`  Client ID:     ${byVia['client-id-override']}`);
+        if (byVia['global-bm-id'])      console.log(`  BM ID:         ${byVia['global-bm-id']}`);
+        if (byVia['name-exact'])        console.log(`  Name Match:    ${byVia['name-exact']}`);
+        if (byVia['alias'])             console.log(`  Alias Match:   ${byVia['alias']}`);
         if (mappingResult.unmappedParameters.length > 0) {
-            console.log(`  Names:    ${mappingResult.unmappedParameters.join(', ')}`);
+            console.log(`  Unmapped:      ${mappingResult.unmappedParameters.join(', ')}`);
         }
-
-        console.log(`  Patient:  ${metadata.org} / ${metadata.labNo}`);
+        console.log(`  Patient:       ${metadata.org} / ${metadata.labNo}`);
     } else {
         // Pre-mapped format
         const validated = GenerateReportBodySchema.safeParse(body);

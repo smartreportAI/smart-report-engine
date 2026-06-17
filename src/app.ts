@@ -3,6 +3,7 @@ import sensible from '@fastify/sensible';
 import cors from '@fastify/cors';
 import { config } from './core/config/config.service';
 import { reportRoutes } from './modules/reports/report.route';
+
 import { errorResponse } from './shared/utils/response.utils';
 import { randomUUID } from 'node:crypto';
 
