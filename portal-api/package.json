@@ -8,12 +8,16 @@
     "build": "tsc",
     "start": "node dist/server.js",
     "typecheck": "tsc --noEmit",
-    "seed": "tsx src/scripts/seed.ts"
+    "seed": "tsx src/scripts/seed.ts",
+    "bundle:lambda": "node scripts/bundle-lambda.mjs"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@aws-sdk/client-s3": "^3.1071.0",
+    "@aws-sdk/s3-request-presigner": "^3.1071.0",
+    "@fastify/aws-lambda": "^6.4.0",
     "@fastify/cors": "^11.2.0",
     "@fastify/sensible": "^6.0.4",
     "@smart-report/shared-types": "file:../shared",
@@ -29,6 +33,7 @@
   },
   "devDependencies": {
     "@types/bcryptjs": "^2.4.6",
-    "@types/jsonwebtoken": "^9.0.9"
+    "@types/jsonwebtoken": "^9.0.9",
+    "esbuild": "^0.28.1"
   }
 }

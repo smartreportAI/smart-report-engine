@@ -61,7 +61,7 @@ export function DayDistributionChart({ data }: { data: ChartDataPoint[] }) {
                 boxShadow: "0 4px 16px rgba(0,0,0,0.08)",
                 padding: "8px 14px",
               }}
-              formatter={(value: number) => [`${value} reports`, ""]}
+              formatter={(value) => [`${value} reports`, ""]}
               labelFormatter={(label) => `${label}`}
             />
             <Bar dataKey="count" radius={[8, 8, 4, 4]} animationDuration={800} maxBarSize={40}>

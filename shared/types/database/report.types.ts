@@ -48,6 +48,10 @@ export interface ReportDocument {
   // Output
   pdfUrl?: string;
   pdfSize?: number;
+  /** S3 object key for the stored PDF (e.g. clients/apollo-labs/reports/2026/06/DL002.pdf) */
+  s3PdfKey?: string;
+  /** S3 object key for the stored input JSON */
+  s3InputKey?: string;
 
   // Status
   status: ReportStatus;

@@ -98,9 +98,15 @@ export async function apiClient<T = any>(
   if (!accessToken) loadTokens();
 
   const headers: Record<string, string> = {
-    "Content-Type": "application/json",
     ...((options.headers as Record<string, string>) || {}),
   };
+
+  // Only declare a JSON content-type when we are actually sending a body.
+  // Fastify rejects requests that set content-type: application/json with an
+  // empty body (e.g. POSTs with no payload like /toggle or /notify).
+  if (options.body != null && headers["Content-Type"] === undefined) {
+    headers["Content-Type"] = "application/json";
+  }
 
   if (accessToken) {
     headers["Authorization"] = `Bearer ${accessToken}`;

@@ -3,13 +3,14 @@
 import { useQuery } from "@tanstack/react-query";
 import { apiClient } from "@/lib/api/client";
 import { motion } from "framer-motion";
-import { FileText, Search } from "lucide-react";
+import { FileText, Search, Eye } from "lucide-react";
 import { useState } from "react";
 import Link from "next/link";
 import { PageHeader } from "@/components/shared/page-header";
 import { StatusBadge } from "@/components/shared/status-badge";
 import { EmptyState } from "@/components/shared/empty-state";
 import { TableSkeleton } from "@/components/shared/table-skeleton";
+import { Pagination } from "@/components/shared/pagination";
 
 export default function ReportsPage() {
   const [search, setSearch] = useState("");
@@ -17,12 +18,13 @@ export default function ReportsPage() {
   const [sourceFilter, setSourceFilter] = useState("");
   const [fromDate, setFromDate] = useState("");
   const [toDate, setToDate] = useState("");
+  const [page, setPage] = useState(1);
 
   const { data, isLoading } = useQuery({
-    queryKey: ["admin", "reports", search, statusFilter, sourceFilter, fromDate, toDate],
+    queryKey: ["admin", "reports", search, statusFilter, sourceFilter, fromDate, toDate, page],
     queryFn: () =>
       apiClient(
-        `/admin/reports?page=1&limit=50` +
+        `/admin/reports?page=${page}&limit=20` +
         (search ? `&search=${search}` : "") +
         (statusFilter ? `&status=${statusFilter}` : "") +
         (sourceFilter ? `&source=${sourceFilter}` : "") +
@@ -32,6 +34,7 @@ export default function ReportsPage() {
   });
 
   const reports = data?.data || [];
+  const meta = data?.meta;
 
   return (
     <div className="space-y-6">
@@ -45,17 +48,17 @@ export default function ReportsPage() {
             type="text"
             placeholder="Search by lab no or patient..."
             value={search}
-            onChange={(e) => setSearch(e.target.value)}
+            onChange={(e) => { setSearch(e.target.value); setPage(1); }}
             className="w-full pl-9 pr-4 py-2 border border-slate-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-600/20 focus:border-blue-600"
           />
         </div>
-        <select value={statusFilter} onChange={(e) => setStatusFilter(e.target.value)}
+        <select value={statusFilter} onChange={(e) => { setStatusFilter(e.target.value); setPage(1); }}
           className="px-3 py-2 border border-slate-300 rounded-lg text-sm text-slate-700 focus:outline-none focus:ring-2 focus:ring-blue-600/20 focus:border-blue-600">
           <option value="">All Status</option>
           <option value="completed">Completed</option>
           <option value="failed">Failed</option>
         </select>
-        <select value={sourceFilter} onChange={(e) => setSourceFilter(e.target.value)}
+        <select value={sourceFilter} onChange={(e) => { setSourceFilter(e.target.value); setPage(1); }}
           className="px-3 py-2 border border-slate-300 rounded-lg text-sm text-slate-700 focus:outline-none focus:ring-2 focus:ring-blue-600/20 focus:border-blue-600">
           <option value="">All Sources</option>
           <option value="json">JSON</option>
@@ -63,14 +66,14 @@ export default function ReportsPage() {
           <option value="hl7">HL7</option>
         </select>
         <div className="flex items-center gap-1.5">
-          <input type="date" value={fromDate} onChange={(e) => setFromDate(e.target.value)} title="From date"
+          <input type="date" value={fromDate} onChange={(e) => { setFromDate(e.target.value); setPage(1); }} title="From date"
             className="px-3 py-2 border border-slate-300 rounded-lg text-sm text-slate-700 focus:outline-none focus:ring-2 focus:ring-blue-600/20 focus:border-blue-600" />
           <span className="text-slate-400 text-sm">to</span>
-          <input type="date" value={toDate} onChange={(e) => setToDate(e.target.value)} title="To date"
+          <input type="date" value={toDate} onChange={(e) => { setToDate(e.target.value); setPage(1); }} title="To date"
             className="px-3 py-2 border border-slate-300 rounded-lg text-sm text-slate-700 focus:outline-none focus:ring-2 focus:ring-blue-600/20 focus:border-blue-600" />
         </div>
         {(search || statusFilter || sourceFilter || fromDate || toDate) && (
-          <button onClick={() => { setSearch(""); setStatusFilter(""); setSourceFilter(""); setFromDate(""); setToDate(""); }}
+          <button onClick={() => { setSearch(""); setStatusFilter(""); setSourceFilter(""); setFromDate(""); setToDate(""); setPage(1); }}
             className="text-sm text-slate-500 hover:text-blue-600 px-2">Clear</button>
         )}
       </div>
@@ -97,6 +100,7 @@ export default function ReportsPage() {
                   <th className="text-left px-4 py-3 font-medium text-slate-600">Status</th>
                   <th className="text-right px-4 py-3 font-medium text-slate-600">Abnormals</th>
                   <th className="text-right px-4 py-3 font-medium text-slate-600">Date</th>
+                  <th className="text-right px-4 py-3 font-medium text-slate-600">Action</th>
                 </tr>
               </thead>
               <tbody>
@@ -126,12 +130,18 @@ export default function ReportsPage() {
                     <td className="px-4 py-3 text-right text-slate-500">
                       {new Date(r.createdAt).toLocaleDateString("en-IN", { day: "2-digit", month: "short", year: "numeric" })}
                     </td>
+                    <td className="px-4 py-3 text-right">
+                      <Link href={`/admin/reports/${r._id}`} className="inline-flex items-center gap-1 text-blue-600 hover:text-blue-700 text-xs font-medium">
+                        <Eye className="w-3.5 h-3.5" /> View
+                      </Link>
+                    </td>
                   </motion.tr>
                 ))}
               </tbody>
             </table>
           </div>
         )}
+        {meta && <Pagination page={meta.page} totalPages={meta.totalPages} total={meta.total} noun="report" onPageChange={setPage} />}
       </motion.div>
     </div>
   );

@@ -101,6 +101,10 @@ const UpdateClientSchema = z.object({
   reportConfig: z.object({
     reportType: z.enum(['inDepth', 'essential']).optional(),
     pageOrder: z.array(z.string()).optional(),
+    showCoverPage: z.boolean().optional(),
+    showBackPage: z.boolean().optional(),
+    showRecommendations: z.boolean().optional(),
+    showSummary: z.boolean().optional(),
     profileContinuation: z.boolean().optional(),
     strictMapping: z.boolean().optional(),
     webViewer: z.boolean().optional(),

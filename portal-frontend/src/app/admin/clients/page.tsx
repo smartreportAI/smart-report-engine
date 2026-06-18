@@ -10,21 +10,24 @@ import { PageHeader } from "@/components/shared/page-header";
 import { StatusBadge } from "@/components/shared/status-badge";
 import { EmptyState } from "@/components/shared/empty-state";
 import { TableSkeleton } from "@/components/shared/table-skeleton";
+import { Pagination } from "@/components/shared/pagination";
 
 export default function ClientsPage() {
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState("");
   const [planFilter, setPlanFilter] = useState("");
+  const [page, setPage] = useState(1);
 
   const { data, isLoading } = useQuery({
-    queryKey: ["admin", "clients", search, statusFilter, planFilter],
+    queryKey: ["admin", "clients", search, statusFilter, planFilter, page],
     queryFn: () =>
       apiClient(
-        `/admin/clients?page=1&limit=50${search ? `&search=${search}` : ""}${statusFilter ? `&status=${statusFilter}` : ""}${planFilter ? `&plan=${planFilter}` : ""}`
+        `/admin/clients?page=${page}&limit=20${search ? `&search=${search}` : ""}${statusFilter ? `&status=${statusFilter}` : ""}${planFilter ? `&plan=${planFilter}` : ""}`
       ),
   });
 
   const clients = data?.data || [];
+  const meta = data?.meta;
 
   // Compute quick stats
   const totalCredits = clients.reduce((sum: number, c: any) => sum + (c.remainingCredits || 0), 0);
@@ -64,16 +67,16 @@ export default function ClientsPage() {
       <div className="flex flex-wrap items-center gap-3">
         <div className="relative flex-1 min-w-[200px] max-w-sm">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
-          <input type="text" placeholder="Search by name or tenant ID..." value={search} onChange={(e) => setSearch(e.target.value)}
+          <input type="text" placeholder="Search by name or tenant ID..." value={search} onChange={(e) => { setSearch(e.target.value); setPage(1); }}
             className="w-full pl-9 pr-4 py-2 border border-slate-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-600/20 focus:border-blue-600" />
         </div>
-        <select value={statusFilter} onChange={(e) => setStatusFilter(e.target.value)}
+        <select value={statusFilter} onChange={(e) => { setStatusFilter(e.target.value); setPage(1); }}
           className="px-3 py-2 border border-slate-300 rounded-lg text-sm text-slate-700 focus:outline-none focus:ring-2 focus:ring-blue-600/20 focus:border-blue-600">
           <option value="">All Status</option>
           <option value="live">Active</option>
           <option value="inactive">Inactive</option>
         </select>
-        <select value={planFilter} onChange={(e) => setPlanFilter(e.target.value)}
+        <select value={planFilter} onChange={(e) => { setPlanFilter(e.target.value); setPage(1); }}
           className="px-3 py-2 border border-slate-300 rounded-lg text-sm text-slate-700 focus:outline-none focus:ring-2 focus:ring-blue-600/20 focus:border-blue-600">
           <option value="">All Plans</option>
           <option value="free">Free</option>
@@ -127,6 +130,7 @@ export default function ClientsPage() {
             </table>
           </div>
         )}
+        {meta && <Pagination page={meta.page} totalPages={meta.totalPages} total={meta.total} noun="client" onPageChange={setPage} />}
       </motion.div>
     </div>
   );

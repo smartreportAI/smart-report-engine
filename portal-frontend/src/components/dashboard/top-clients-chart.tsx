@@ -53,7 +53,7 @@ export function TopClientsChart({ clients }: TopClientsChartProps) {
                 boxShadow: "0 4px 16px rgba(0,0,0,0.08)",
                 padding: "8px 14px",
               }}
-              formatter={(value: number) => [`${value.toLocaleString()} reports`, ""]}
+              formatter={(value) => [`${Number(value).toLocaleString()} reports`, ""]}
               labelFormatter={(label) => `${label}`}
             />
             <Bar dataKey="reports" radius={[0, 6, 6, 0]} animationDuration={800} maxBarSize={28}>

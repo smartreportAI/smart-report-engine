@@ -13,9 +13,10 @@ import { config } from './config/env.config';
 import { authRoutes } from './modules/auth/auth.route';
 import { adminRoutes } from './modules/admin/admin.route';
 import { mappingAdminRoutes } from './modules/admin/mapping.route';
+import { storageRoutes } from './modules/admin/storage.route';
 import { clientRoutes } from './modules/client/client.route';
 import { errorResponse } from './shared/utils/response.utils';
-import { pingDb } from './database/connection';
+import { pingDb, isDbConnected } from './database/connection';
 
 export function buildApp() {
   const app = Fastify({
@@ -34,6 +35,23 @@ export function buildApp() {
     methods: ['GET', 'POST', 'PATCH', 'DELETE', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization', 'X-Request-ID'],
     credentials: true,
+  });
+
+  /* ---- Readiness Guard ----
+   * Every route except /health needs the database. When the DB is not yet
+   * connected (e.g. server just started, or a transient Atlas outage), return
+   * a clear 503 instead of letting a Mongo timeout surface as a generic 500.
+   */
+  app.addHook('onRequest', async (request, reply) => {
+    if (request.url === '/health' || request.method === 'OPTIONS') return;
+    if (!isDbConnected()) {
+      return reply.code(503).send(
+        errorResponse(
+          'DATABASE_UNAVAILABLE',
+          'The service is starting up or the database is temporarily unreachable. Please try again in a moment.',
+        ),
+      );
+    }
   });
 
   /* ---- Health Check ---- */
@@ -55,6 +73,7 @@ export function buildApp() {
   app.register(authRoutes, { prefix: '' });
   app.register(adminRoutes, { prefix: '' });
   app.register(mappingAdminRoutes, { prefix: '' });
+  app.register(storageRoutes, { prefix: '' });
   app.register(clientRoutes, { prefix: '' });
 
   /* ---- Error Handlers ---- */

@@ -8,6 +8,7 @@ import {
   Building2,
   ChevronsUpDown,
   CreditCard,
+  Database,
   FileText,
   LayoutDashboard,
   LogOut,
@@ -77,8 +78,10 @@ const adminNav: NavItem[] = [
   { href: "/admin/dashboard", label: "Dashboard", icon: LayoutDashboard, match: "dashboard" },
   { href: "/admin/clients", label: "Clients", icon: Building2, match: "clients" },
   { href: "/admin/reports", label: "Reports", icon: FileText, match: "reports" },
+  { href: "/admin/mappings", label: "Mappings", icon: Database, match: "mappings" },
   { href: "/admin/users", label: "Users", icon: Users, match: "users" },
   { href: "/admin/audit", label: "Audit Log", icon: ScrollText, match: "audit" },
+  { href: "/admin/settings", label: "Settings", icon: Settings, match: "settings" },
 ];
 
 const clientNav: NavItem[] = [
@@ -194,8 +197,10 @@ export function SessionNavBar({ role = "admin" }: { role?: "admin" | "client" })
                       </div>
                     </div>
                     <DropdownMenuSeparator />
-                    <DropdownMenuItem className="flex items-center gap-2 text-slate-600">
-                      <UserCircle className="h-4 w-4" /> Profile
+                    <DropdownMenuItem className="flex items-center gap-2 text-slate-600" asChild>
+                      <Link href={role === "admin" ? "/admin/settings" : "/client/settings"}>
+                        <UserCircle className="h-4 w-4" /> Profile
+                      </Link>
                     </DropdownMenuItem>
                     <DropdownMenuItem
                       onClick={logout}

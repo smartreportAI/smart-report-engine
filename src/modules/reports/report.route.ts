@@ -13,6 +13,7 @@ import { generateMultipassPdf } from '../../rendering/pdf/pdf-multipass';
 import { saveReport, saveFailedReport, validateClient, decrementCredits } from '../../database';
 import { resolveClientConfig } from '../../services/client-config.service';
 import { dispatchToWebhook, updateReportDispatchStatus } from '../../services/webhook.service';
+import { uploadInputJson, uploadReportPdf } from '../../services/s3.service';
 import type { RawReportInput } from '../../domain/types/input.types';
 import type { LabInput } from '../../domain/types/lab-input.types';
 import type { NormalizedReport } from '../../domain/models/report.model';
@@ -142,10 +143,24 @@ export async function reportRoutes(app: FastifyInstance): Promise<void> {
       if (output === 'pdf') {
         try {
           const pdfBuffer = await generateMultipassPdf(result, tenant);
+          const labNo = labMetadata?.labNo || normalized.patientId;
 
-          // Save report to MongoDB (fire and forget — don't block response)
-          saveReportToDb(normalized, labMetadata, mappingPipelineResult, pdfBuffer.length, tenantId, result)
-            .catch(err => app.log.error({ err }, 'Failed to save report to DB'));
+          // Upload to S3 (fire and forget — don't block response)
+          const s3Upload = Promise.all([
+            uploadInputJson(tenantId, labNo, body).catch(err => {
+              app.log.error({ err }, 'Failed to upload input JSON to S3');
+              return undefined;
+            }),
+            uploadReportPdf(tenantId, labNo, pdfBuffer).catch(err => {
+              app.log.error({ err }, 'Failed to upload PDF to S3');
+              return undefined;
+            }),
+          ]);
+
+          // Save report to MongoDB with S3 keys (fire and forget — don't block response)
+          s3Upload.then(([s3InputKey, s3PdfKey]) => {
+            return saveReportToDb(normalized, labMetadata, mappingPipelineResult, pdfBuffer.length, tenantId, result, s3InputKey, s3PdfKey);
+          }).catch(err => app.log.error({ err }, 'Failed to save report to DB'));
 
           // Decrement credits (fire and forget)
           decrementCredits(tenantId)
@@ -223,6 +238,8 @@ async function saveReportToDb(
   pdfSize: number,
   tenantId: string,
   result: { overallScore: number; overallSeverity: string },
+  s3InputKey?: string,
+  s3PdfKey?: string,
 ): Promise<void> {
   // Collect abnormal parameters across all profiles
   const abnormalParameters = normalized.profiles.flatMap(profile =>
@@ -234,6 +251,7 @@ async function saveReportToDb(
         min: p.range?.min,
         max: p.range?.max,
         unit: p.unit,
+        status: p.status,
         profile: profile.name,
       })),
   );
@@ -262,6 +280,8 @@ async function saveReportToDb(
     overallSeverity: result.overallSeverity,
     patientId: normalized.patientId,
     pdfSize,
+    s3PdfKey,
+    s3InputKey,
     status: 'completed',
     createdAt: new Date(),
   });

@@ -4,19 +4,19 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { apiClient } from "@/lib/api/client";
 import { useParams } from "next/navigation";
 import { motion } from "framer-motion";
-import { Building2, CreditCard, FileText, Calendar, ArrowLeft, Plus, Power, Edit, History } from "lucide-react";
+import { Building2, CreditCard, FileText, Calendar, ArrowLeft, Plus, Power, Edit, History, Database } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
 import { toast } from "sonner";
 import { StatusBadge } from "@/components/shared/status-badge";
 import { AddCreditsModal } from "@/components/clients/add-credits-modal";
-import { EditClientModal } from "@/components/clients/edit-client-modal";
+import { ConfirmDialog } from "@/components/shared/confirm-dialog";
 
 export default function ClientDetailPage() {
   const { tenantId } = useParams<{ tenantId: string }>();
   const queryClient = useQueryClient();
   const [creditsOpen, setCreditsOpen] = useState(false);
-  const [editOpen, setEditOpen] = useState(false);
+  const [confirmOpen, setConfirmOpen] = useState(false);
   const [toggling, setToggling] = useState(false);
 
   const { data, isLoading } = useQuery({
@@ -34,6 +34,8 @@ export default function ClientDetailPage() {
       const res = await apiClient<{ data: { isLive: boolean } }>(`/admin/clients/${tenantId}/toggle`, { method: "POST" });
       toast.success(`Client ${res.data.isLive ? "enabled" : "disabled"}`);
       queryClient.invalidateQueries({ queryKey: ["admin", "clients", tenantId] });
+      queryClient.invalidateQueries({ queryKey: ["admin", "clients"] });
+      setConfirmOpen(false);
     } catch (err: any) {
       toast.error(err.message || "Failed to toggle");
     } finally {
@@ -78,10 +80,14 @@ export default function ClientDetailPage() {
             <button onClick={() => setCreditsOpen(true)} className="flex items-center gap-1.5 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium px-3.5 py-2 rounded-lg transition-colors">
               <Plus className="w-4 h-4" /> Add Credits
             </button>
-            <button onClick={() => setEditOpen(true)} className="flex items-center gap-1.5 bg-white border border-slate-300 hover:bg-slate-50 text-slate-700 text-sm font-medium px-3.5 py-2 rounded-lg transition-colors">
+            <Link href={`/admin/mappings?tab=clients&tenant=${client.tenantId}`}
+              className="flex items-center gap-1.5 bg-white border border-slate-300 hover:bg-slate-50 text-slate-700 text-sm font-medium px-3.5 py-2 rounded-lg transition-colors">
+              <Database className="w-4 h-4" /> Mappings
+            </Link>
+            <Link href={`/admin/clients/${client.tenantId}/edit`} className="flex items-center gap-1.5 bg-white border border-slate-300 hover:bg-slate-50 text-slate-700 text-sm font-medium px-3.5 py-2 rounded-lg transition-colors">
               <Edit className="w-4 h-4" /> Edit
-            </button>
-            <button onClick={handleToggle} disabled={toggling}
+            </Link>
+            <button onClick={() => setConfirmOpen(true)} disabled={toggling}
               className={`flex items-center gap-1.5 text-sm font-medium px-3.5 py-2 rounded-lg transition-colors border ${
                 client.isLive ? "bg-white border-red-200 text-red-600 hover:bg-red-50" : "bg-white border-emerald-200 text-emerald-600 hover:bg-emerald-50"
               }`}>
@@ -212,7 +218,25 @@ export default function ClientDetailPage() {
 
       {/* Modals */}
       <AddCreditsModal open={creditsOpen} onClose={() => setCreditsOpen(false)} tenantId={client.tenantId} labName={client.labName} />
-      <EditClientModal open={editOpen} onClose={() => setEditOpen(false)} client={client} />
+      <ConfirmDialog
+        open={confirmOpen}
+        onClose={() => setConfirmOpen(false)}
+        onConfirm={handleToggle}
+        loading={toggling}
+        variant={client.isLive ? "danger" : "default"}
+        title={client.isLive ? `Disable ${client.labName}?` : `Enable ${client.labName}?`}
+        confirmLabel={client.isLive ? "Disable Client" : "Enable Client"}
+        message={
+          client.isLive ? (
+            <>
+              This client will be taken offline. They will <strong>no longer be able to generate reports</strong> until
+              re-enabled. Existing data and credits are kept. You can re-enable them anytime.
+            </>
+          ) : (
+            <>This client will be brought back online and can generate reports again.</>
+          )
+        }
+      />
     </div>
   );
 }

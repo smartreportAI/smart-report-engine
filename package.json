@@ -18,20 +18,26 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@aws-sdk/client-s3": "^3.1071.0",
+    "@aws-sdk/s3-request-presigner": "^3.1071.0",
+    "@fastify/aws-lambda": "^6.4.0",
     "@fastify/cors": "^11.2.0",
     "@fastify/sensible": "^6.0.4",
     "@smart-report/shared-types": "file:shared",
+    "@sparticuz/chromium": "^147.0.0",
     "dotenv": "^17.3.1",
     "fastify": "^5.7.4",
     "mongodb": "^7.2.0",
     "pdf-lib": "^1.17.1",
     "pino-pretty": "^13.1.3",
     "puppeteer": "^24.37.5",
+    "puppeteer-core": "^22.15.0",
     "tsx": "^4.21.0",
     "typescript": "^5.9.3",
     "zod": "^4.3.6"
   },
   "devDependencies": {
+    "esbuild": "^0.28.1",
     "vitest": "^3.2.4"
   }
 }
