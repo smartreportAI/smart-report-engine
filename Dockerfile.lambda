@@ -1,0 +1,47 @@
+# ─────────────────────────────────────────────────────────────────────
+# Pragnya Smart Report Engine — Lambda Container Image
+#
+# Uses the official AWS Lambda Node.js 20 base image with Chromium
+# for PDF generation. The application code is bundled by esbuild into
+# a single ~2.6 MB file; Chromium is installed via @sparticuz/chromium.
+#
+# Build:  docker build -f Dockerfile.lambda -t pragnya-report-engine .
+# Test:   docker run -p 9000:8080 pragnya-report-engine
+#         curl -X POST http://localhost:9000/2015-03-31/functions/function/invocations -d @test-event.json
+# ─────────────────────────────────────────────────────────────────────
+
+FROM public.ecr.aws/lambda/nodejs:20
+
+# Install Chromium system dependencies
+RUN dnf install -y \
+    atk \
+    at-spi2-atk \
+    cups-libs \
+    libdrm \
+    libXcomposite \
+    libXdamage \
+    libXrandr \
+    mesa-libgbm \
+    pango \
+    alsa-lib \
+    nss \
+    libxkbcommon \
+    && dnf clean all
+
+# Copy the bundled application code and runtime assets
+COPY dist/lambda/index.mjs ${LAMBDA_TASK_ROOT}/
+# design-system.css is read at runtime via readFileSync(resolve(__dirname, '...'))
+# __dirname in the ESM bundle resolves to /var/task, so the file must live there.
+COPY src/rendering/design-system.css ${LAMBDA_TASK_ROOT}/
+# Profile icons: profile-icons.ts uses resolve(__dirname, '../../profile-icons')
+# In Lambda __dirname=/var/task, so ../../profile-icons resolves to /profile-icons.
+COPY profile-icons/ /profile-icons/
+
+# Install only the runtime dependencies that were externalized from the bundle
+# (chromium binary + puppeteer-core to drive it)
+WORKDIR ${LAMBDA_TASK_ROOT}
+COPY package-lambda.json ./package.json
+RUN npm install --omit=dev && rm package.json
+
+# Set the handler
+CMD ["index.handler"]

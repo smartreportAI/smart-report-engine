@@ -10,11 +10,12 @@ import { mapUnmappedToClient } from "@/lib/api/mappings";
 interface MapToClientModalProps {
   open: boolean;
   onClose: () => void;
-  testName: string;
+  /** The unmapped test names being resolved (supports bulk). */
+  testNames: string[];
   tenantId: string;
 }
 
-export function MapToClientModal({ open, onClose, testName, tenantId }: MapToClientModalProps) {
+export function MapToClientModal({ open, onClose, testNames, tenantId }: MapToClientModalProps) {
   const queryClient = useQueryClient();
   const [internalStandardName, setInternalStandardName] = useState("");
   const [submitting, setSubmitting] = useState(false);
@@ -24,7 +25,7 @@ export function MapToClientModal({ open, onClose, testName, tenantId }: MapToCli
     if (!open) return;
     setInternalStandardName("");
     setError(null);
-  }, [open, testName]);
+  }, [open, testNames]);
 
   async function handleSubmit(e: FormEvent) {
     e.preventDefault();
@@ -35,10 +36,20 @@ export function MapToClientModal({ open, onClose, testName, tenantId }: MapToCli
     setSubmitting(true);
     setError(null);
     try {
-      await mapUnmappedToClient(tenantId, testName, {
-        internalStandardName: internalStandardName.trim(),
-      });
-      toast.success(`"${testName}" mapped for ${tenantId}`);
+      await Promise.all(
+        testNames.map(testName => 
+          mapUnmappedToClient(tenantId, testName, {
+            internalStandardName: internalStandardName.trim(),
+          })
+        )
+      );
+
+      toast.success(
+        testNames.length > 1 
+          ? `Successfully mapped ${testNames.length} tests for ${tenantId}`
+          : `"${testNames[0]}" mapped for ${tenantId}`
+      );
+      
       queryClient.invalidateQueries({ queryKey: ["mappings", "unmapped"] });
       queryClient.invalidateQueries({ queryKey: ["mappings", "client", tenantId] });
       onClose();
@@ -54,8 +65,12 @@ export function MapToClientModal({ open, onClose, testName, tenantId }: MapToCli
     <Modal
       open={open}
       onClose={onClose}
-      title="Map to Client"
-      description={`Override "${testName}" for ${tenantId}`}
+      title={testNames.length > 1 ? "Bulk Map to Client" : "Map to Client"}
+      description={
+        testNames.length > 1
+          ? `Override ${testNames.length} selected tests for ${tenantId}`
+          : `Override "${testNames[0]}" for ${tenantId}`
+      }
       maxWidth="max-w-lg"
     >
       <form onSubmit={handleSubmit} className="space-y-4">
@@ -65,7 +80,9 @@ export function MapToClientModal({ open, onClose, testName, tenantId }: MapToCli
           </label>
           <StandardNameCombobox value={internalStandardName} onChange={setInternalStandardName} />
           <p className="text-xs text-slate-400 mt-1">
-            Maps this client&apos;s code <span className="font-mono">{testName}</span> to an existing standard test.
+            {testNames.length > 1
+              ? `Maps the ${testNames.length} selected client codes to an existing standard test.`
+              : `Maps this client's code "${testNames[0]}" to an existing standard test.`}
           </p>
         </div>
 
@@ -78,7 +95,7 @@ export function MapToClientModal({ open, onClose, testName, tenantId }: MapToCli
           </button>
           <button type="submit" disabled={submitting}
             className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded-lg shadow-sm shadow-blue-600/20 transition-colors disabled:opacity-60">
-            {submitting ? "Mapping..." : "Map to Client"}
+            {submitting ? "Mapping..." : (testNames.length > 1 ? `Map ${testNames.length} Tests` : "Map to Client")}
           </button>
         </div>
       </form>

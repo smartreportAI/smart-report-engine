@@ -1,6 +1,32 @@
-import { browserPool } from './browser-pool';
-import type { Browser } from 'puppeteer';
 import { config } from '../../core/config/config.service';
+import type { Browser } from 'puppeteer-core';
+
+/* ---------------------------------------------------------------
+   Browser abstraction — routes to browser-lambda (Lambda) or
+   browser-pool (local dev) based on the runtime environment.
+   Using dynamic imports ensures esbuild does NOT statically pull
+   'puppeteer' into the Lambda bundle at module-load time.
+   --------------------------------------------------------------- */
+
+const IS_LAMBDA = !!process.env.AWS_LAMBDA_FUNCTION_NAME;
+
+async function getBrowser(): Promise<Browser> {
+  if (IS_LAMBDA) {
+    const { launchBrowser } = await import('./browser-lambda');
+    return launchBrowser();
+  }
+  const { browserPool } = await import('./browser-pool');
+  return browserPool.getBrowser() as unknown as Browser;
+}
+
+async function releaseBrowser(browser: Browser): Promise<void> {
+  if (IS_LAMBDA) {
+    const { releaseBrowser: release } = await import('./browser-lambda');
+    return release(browser);
+  }
+  const { browserPool } = await import('./browser-pool');
+  return browserPool.releaseBrowser(browser as any);
+}
 
 /* ---------------------------------------------------------------
    PDF Generation Options
@@ -75,9 +101,10 @@ const DEFAULT_TIMEOUT_MS = config.pdfTimeoutMs ?? 90_000; // 90s default — Rai
  *  - printBackground: true — preserves colors, SVG fills, sliders
  *  - setContent with networkidle0 — waits for all web fonts / images
  *  - Does NOT write to disk; caller decides what to do with the buffer
- *  - Uses BrowserPool for warm browser reuse (no cold start per request)
- *  - Wrapped in Promise.race with configurable timeout (default 30s)
- *  - Browser is always released back to pool, even on error/timeout
+ *  - On Lambda: launches a fresh browser per invocation via browser-lambda
+ *  - Locally: uses BrowserPool for warm browser reuse (no cold start per request)
+ *  - Wrapped in Promise.race with configurable timeout (default 90s)
+ *  - Browser is always released after use, even on error/timeout
  *  - displayHeaderFooter: Puppeteer prints the header/footer on
  *    every physical page automatically (even when content overflows)
  */
@@ -90,9 +117,9 @@ export async function generatePdfFromHtml(
     const timeoutMs = options.timeoutMs ?? DEFAULT_TIMEOUT_MS;
 
     const startMs = Date.now();
-    if (debug) console.log('[pdf] Acquiring browser from pool...');
+    if (debug) console.log(`[pdf] Acquiring browser (lambda=${IS_LAMBDA})...`);
 
-    const browser = await browserPool.getBrowser();
+    const browser = await getBrowser();
 
     try {
         const pdfPromise = generateWithBrowser(
@@ -119,15 +146,19 @@ export async function generatePdfFromHtml(
             throw err;
         }
     } finally {
-        await browserPool.releaseBrowser(browser);
+        await releaseBrowser(browser);
     }
 }
 
 /**
- * Graceful pool shutdown — call when server is stopping.
+ * Graceful pool shutdown — call when the local server is stopping.
+ * On Lambda this is a no-op (containers are discarded by AWS).
  */
 export async function shutdownPdfService(): Promise<void> {
-    await browserPool.shutdown();
+    if (!IS_LAMBDA) {
+        const { browserPool } = await import('./browser-pool');
+        await browserPool.shutdown();
+    }
 }
 
 /* ---------------------------------------------------------------

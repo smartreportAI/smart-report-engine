@@ -11,13 +11,13 @@ import { mapUnmappedToGlobal, PLACEHOLDER_TENANT } from "@/lib/api/mappings";
 interface MapToGlobalModalProps {
   open: boolean;
   onClose: () => void;
-  /** The unmapped test name being resolved. */
-  testName: string;
+  /** The unmapped test names being resolved (supports bulk). */
+  testNames: string[];
   /** Tenant the entry belongs to; omitted/null when resolving from the all-clients summary. */
   tenantId?: string | null;
 }
 
-export function MapToGlobalModal({ open, onClose, testName, tenantId }: MapToGlobalModalProps) {
+export function MapToGlobalModal({ open, onClose, testNames, tenantId }: MapToGlobalModalProps) {
   const queryClient = useQueryClient();
   const [standardName, setStandardName] = useState("");
   const [profileName, setProfileName] = useState("");
@@ -26,13 +26,16 @@ export function MapToGlobalModal({ open, onClose, testName, tenantId }: MapToGlo
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    if (!open) return;
-    // Pre-seed: suggest the raw test name as the standard name + first alias.
-    setStandardName(testName);
+    if (!open || testNames.length === 0) return;
+    
+    // If only 1 test, suggest it as the standard name. Otherwise, leave blank.
+    setStandardName(testNames.length === 1 ? testNames[0] : "");
     setProfileName("");
-    setAliases(testName ? [testName.toLowerCase()] : []);
+    
+    // Auto-fill aliases with all the selected raw test names so future reports match them.
+    setAliases(testNames.map(t => t.toLowerCase()));
     setError(null);
-  }, [open, testName]);
+  }, [open, testNames]);
 
   async function handleSubmit(e: FormEvent) {
     e.preventDefault();
@@ -44,12 +47,23 @@ export function MapToGlobalModal({ open, onClose, testName, tenantId }: MapToGlo
     setSubmitting(true);
     setError(null);
     try {
-      await mapUnmappedToGlobal(effectiveTenant, testName, {
-        standardName: standardName.trim(),
-        profileName: profileName.trim(),
-        aliases,
-      });
-      toast.success(`"${testName}" mapped to global standard`);
+      // Process all selected test names concurrently
+      await Promise.all(
+        testNames.map(testName => 
+          mapUnmappedToGlobal(effectiveTenant, testName, {
+            standardName: standardName.trim(),
+            profileName: profileName.trim(),
+            aliases,
+          })
+        )
+      );
+
+      toast.success(
+        testNames.length > 1 
+          ? `Successfully mapped ${testNames.length} tests to global standard`
+          : `"${testNames[0]}" mapped to global standard`
+      );
+      
       queryClient.invalidateQueries({ queryKey: ["mappings", "unmapped"] });
       queryClient.invalidateQueries({ queryKey: ["mappings", "global"] });
       onClose();
@@ -65,8 +79,12 @@ export function MapToGlobalModal({ open, onClose, testName, tenantId }: MapToGlo
     <Modal
       open={open}
       onClose={onClose}
-      title="Map to Global"
-      description={`Create a system-wide standard for "${testName}"`}
+      title={testNames.length > 1 ? "Bulk Map to Global" : "Map to Global"}
+      description={
+        testNames.length > 1
+          ? `Create a system-wide standard for ${testNames.length} selected tests`
+          : `Create a system-wide standard for "${testNames[0]}"`
+      }
       maxWidth="max-w-lg"
     >
       <form onSubmit={handleSubmit} className="space-y-4">
@@ -91,7 +109,11 @@ export function MapToGlobalModal({ open, onClose, testName, tenantId }: MapToGlo
         <div>
           <label className="block text-sm font-medium text-slate-700 mb-1">Aliases</label>
           <AliasesInput value={aliases} onChange={setAliases} placeholder="Type an alias and press Enter" />
-          <p className="text-xs text-slate-400 mt-1">The original test name is pre-added so future reports match.</p>
+          <p className="text-xs text-slate-400 mt-1">
+            {testNames.length > 1 
+              ? "All selected test names have been pre-added as aliases." 
+              : "The original test name is pre-added so future reports match."}
+          </p>
         </div>
 
         {error && <p className="text-sm text-red-500">{error}</p>}
@@ -103,7 +125,7 @@ export function MapToGlobalModal({ open, onClose, testName, tenantId }: MapToGlo
           </button>
           <button type="submit" disabled={submitting}
             className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded-lg shadow-sm shadow-blue-600/20 transition-colors disabled:opacity-60">
-            {submitting ? "Mapping..." : "Map to Global"}
+            {submitting ? "Mapping..." : (testNames.length > 1 ? `Map ${testNames.length} Tests` : "Map to Global")}
           </button>
         </div>
       </form>

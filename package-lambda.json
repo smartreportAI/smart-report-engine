@@ -1,0 +1,9 @@
+{
+  "name": "pragnya-report-engine-lambda",
+  "version": "1.0.0",
+  "private": true,
+  "dependencies": {
+    "@sparticuz/chromium": "^133.0.0",
+    "puppeteer-core": "^22.15.0"
+  }
+}

@@ -7,6 +7,8 @@ import { Modal } from "@/components/shared/modal";
 import { AliasesInput } from "@/components/mappings/aliases-input";
 import { ProfileCombobox } from "@/components/mappings/profile-combobox";
 import { upsertGlobalMapping, type GlobalMappingRow, type GlobalMappingInput } from "@/lib/api/mappings";
+import { cn } from "@/lib/utils";
+import { motion } from "framer-motion";
 
 interface GlobalMappingModalProps {
   open: boolean;
@@ -107,18 +109,22 @@ export function GlobalMappingModal({ open, onClose, editing }: GlobalMappingModa
     }
   }
 
+  const inputClasses = "w-full px-3 py-2 bg-white border border-slate-300 rounded-lg text-[14px] text-slate-900 placeholder:text-slate-400 focus:outline-none focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 transition-all shadow-sm disabled:bg-slate-50 disabled:text-slate-500 disabled:cursor-not-allowed";
+  const labelClasses = "block text-[13px] font-medium text-slate-700 mb-1.5";
+
   return (
     <Modal
       open={open}
       onClose={onClose}
       title={isEdit ? "Edit Global Mapping" : "Add Global Mapping"}
       description="Standard test definition shared across all clients"
-      maxWidth="max-w-lg"
+      maxWidth="max-w-xl"
     >
-      <form onSubmit={handleSubmit} className="space-y-4">
-        <div className="grid grid-cols-2 gap-4">
-          <div className="col-span-2">
-            <label className="block text-sm font-medium text-slate-700 mb-1">
+      <form onSubmit={handleSubmit} className="space-y-5">
+        
+        <div className="space-y-4">
+          <div>
+            <label className={labelClasses}>
               Standard Name <span className="text-red-500">*</span>
             </label>
             <input
@@ -127,115 +133,122 @@ export function GlobalMappingModal({ open, onClose, editing }: GlobalMappingModa
               onChange={(e) => update("standardName", e.target.value)}
               disabled={isEdit}
               placeholder="e.g. Blood Sugar (Fasting)"
-              className="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-600/20 focus:border-blue-600 disabled:bg-slate-50 disabled:text-slate-500"
+              className={inputClasses}
             />
             {isEdit && (
-              <p className="text-xs text-slate-400 mt-1">
+              <p className="text-[12px] text-slate-500 mt-1.5">
                 Standard name is the unique key and cannot be changed.
               </p>
             )}
             {errors.standardName && (
-              <p className="text-xs text-red-500 mt-1">{errors.standardName[0]}</p>
+              <p className="text-[12px] text-red-500 mt-1.5">{errors.standardName[0]}</p>
             )}
           </div>
 
-          <div>
-            <label className="block text-sm font-medium text-slate-700 mb-1">
-              Profile <span className="text-red-500">*</span>
-            </label>
-            <ProfileCombobox
-              value={form.profileName}
-              onChange={(v) => update("profileName", v)}
-              placeholder="Select a profile..."
-            />
-            {errors.profileName && (
-              <p className="text-xs text-red-500 mt-1">{errors.profileName[0]}</p>
-            )}
-          </div>
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className={labelClasses}>
+                Profile <span className="text-red-500">*</span>
+              </label>
+              <ProfileCombobox
+                value={form.profileName}
+                onChange={(v) => update("profileName", v)}
+                placeholder="Select a profile..."
+              />
+              {errors.profileName && (
+                <p className="text-[12px] text-red-500 mt-1.5">{errors.profileName[0]}</p>
+              )}
+            </div>
 
-          <div>
-            <label className="block text-sm font-medium text-slate-700 mb-1">Biomarker ID</label>
-            <input
-              type="text"
-              value={form.biomarkerId ?? ""}
-              onChange={(e) => update("biomarkerId", e.target.value)}
-              placeholder="e.g. BM0042"
-              className="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm font-mono focus:outline-none focus:ring-2 focus:ring-blue-600/20 focus:border-blue-600"
-            />
+            <div>
+              <label className={labelClasses}>Biomarker ID</label>
+              <input
+                type="text"
+                value={form.biomarkerId ?? ""}
+                onChange={(e) => update("biomarkerId", e.target.value)}
+                placeholder="e.g. BM0042"
+                className={cn(inputClasses, "font-mono")}
+              />
+            </div>
           </div>
         </div>
 
-        <div>
-          <label className="block text-sm font-medium text-slate-700 mb-1">Aliases</label>
+        <div className="border-t border-slate-100 pt-5">
+          <label className={labelClasses}>Aliases</label>
           <AliasesInput
             value={form.aliases}
             onChange={(next) => update("aliases", next)}
             placeholder="Type an alias and press Enter"
           />
-          <p className="text-xs text-slate-400 mt-1">
+          <p className="text-[12px] text-slate-500 mt-1.5">
             Alternative names / abbreviations used for matching. Stored lowercase.
           </p>
         </div>
 
-        <div className="grid grid-cols-3 gap-4">
+        <div className="grid grid-cols-3 gap-4 pt-1">
           <div>
-            <label className="block text-sm font-medium text-slate-700 mb-1">Default Unit</label>
+            <label className={labelClasses}>Default Unit</label>
             <input
               type="text"
               value={form.defaultUnit ?? ""}
               onChange={(e) => update("defaultUnit", e.target.value)}
               placeholder="mg/dL"
-              className="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-600/20 focus:border-blue-600"
+              className={inputClasses}
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-slate-700 mb-1">Range Min</label>
+            <label className={labelClasses}>Range Min</label>
             <input
               type="number"
               step="any"
               value={rangeMin}
               onChange={(e) => setRangeMin(e.target.value)}
               placeholder="70"
-              className="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-600/20 focus:border-blue-600"
+              className={inputClasses}
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-slate-700 mb-1">Range Max</label>
+            <label className={labelClasses}>Range Max</label>
             <input
               type="number"
               step="any"
               value={rangeMax}
               onChange={(e) => setRangeMax(e.target.value)}
               placeholder="100"
-              className="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-600/20 focus:border-blue-600"
+              className={inputClasses}
             />
           </div>
         </div>
 
-        <label className="flex items-center gap-2 cursor-pointer">
-          <input
-            type="checkbox"
-            checked={form.isActive}
-            onChange={(e) => update("isActive", e.target.checked)}
-            className="w-4 h-4 rounded border-slate-300 text-blue-600 focus:ring-blue-600/20"
-          />
-          <span className="text-sm text-slate-700">Active (included in the mapping pipeline)</span>
-        </label>
+        <div className="pt-2 border-t border-slate-100 mt-2">
+          <label className="flex items-center gap-3 cursor-pointer group">
+            <div className={cn("w-10 h-6 rounded-full transition-colors relative", form.isActive ? "bg-blue-600" : "bg-slate-300")}>
+              <div className={cn("absolute top-1 w-4 h-4 bg-white rounded-full transition-transform", form.isActive ? "left-5" : "left-1")} />
+            </div>
+            <input type="checkbox" checked={form.isActive} onChange={(e) => update("isActive", e.target.checked)} className="sr-only" />
+            <div>
+              <span className="text-[14px] font-medium text-slate-900 block group-hover:text-blue-700 transition-colors">Active Pipeline Status</span>
+              <span className="text-[12px] text-slate-500">Include this mapping in the real-time processing pipeline.</span>
+            </div>
+          </label>
+        </div>
 
-        <div className="flex items-center justify-end gap-2 pt-2 border-t border-slate-100">
+        <div className="flex items-center justify-end gap-3 pt-6 border-t border-slate-100">
           <button
             type="button"
             onClick={onClose}
-            className="px-4 py-2 text-sm font-medium text-slate-600 hover:bg-slate-100 rounded-lg transition-colors"
+            className="px-4 py-2 text-[14px] font-medium text-slate-600 hover:bg-slate-100 rounded-lg transition-colors"
           >
             Cancel
           </button>
           <button
             type="submit"
             disabled={submitting}
-            className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded-lg shadow-sm shadow-blue-600/20 transition-colors disabled:opacity-60"
+            className="px-5 py-2 bg-slate-900 hover:bg-slate-800 text-white text-[14px] font-medium rounded-lg shadow-sm shadow-slate-900/10 transition-all disabled:opacity-60 disabled:hover:bg-slate-900 flex items-center justify-center min-w-[140px]"
           >
-            {submitting ? "Saving..." : isEdit ? "Save Changes" : "Create Mapping"}
+            {submitting ? (
+              <motion.div className="h-4 w-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+            ) : isEdit ? "Save Changes" : "Create Mapping"}
           </button>
         </div>
       </form>

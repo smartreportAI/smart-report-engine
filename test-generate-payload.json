@@ -1,0 +1,14 @@
+{
+  "version": "2.0",
+  "routeKey": "POST /reports/generate",
+  "rawPath": "/reports/generate",
+  "rawQueryString": "",
+  "headers": { "content-type": "application/json" },
+  "requestContext": {
+    "http": { "method": "POST", "path": "/reports/generate" },
+    "routeKey": "POST /reports/generate",
+    "stage": "$default"
+  },
+  "body": "{\"tenantId\":\"tenant-beta\",\"output\":\"html\",\"reportData\":{\"patientId\":\"PAT-2026-001\",\"age\":38,\"gender\":\"male\",\"profiles\":[{\"profileName\":\"Complete Blood Count\",\"parameters\":[{\"testName\":\"Hemoglobin\",\"value\":11.2,\"unit\":\"g/dL\",\"referenceRange\":{\"min\":13.5,\"max\":17.5}},{\"testName\":\"WBC Count\",\"value\":9800,\"unit\":\"cells/uL\",\"referenceRange\":{\"min\":4500,\"max\":11000}}]},{\"profileName\":\"Lipid Panel\",\"parameters\":[{\"testName\":\"Total Cholesterol\",\"value\":210,\"unit\":\"mg/dL\",\"referenceRange\":{\"min\":0,\"max\":200}}]}]}}",
+  "isBase64Encoded": false
+}

@@ -4,7 +4,7 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { apiClient } from "@/lib/api/client";
 import { useParams } from "next/navigation";
 import { motion } from "framer-motion";
-import { Building2, CreditCard, FileText, Calendar, ArrowLeft, Plus, Power, Edit, History, Database } from "lucide-react";
+import { Building2, CreditCard, FileText, Calendar, ArrowLeft, Plus, Power, Edit, History, Database, CheckCircle2, AlertCircle, MapPin, Mail, Phone, Clock } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
 import { toast } from "sonner";
@@ -26,7 +26,6 @@ export default function ClientDetailPage() {
 
   const client = data?.data?.client;
   const recentReports = data?.data?.recentReports || [];
-  const stats = data?.data?.stats;
 
   async function handleToggle() {
     setToggling(true);
@@ -48,173 +47,255 @@ export default function ClientDetailPage() {
   }
 
   if (!client) {
-    return <div className="text-center py-20 text-slate-500">Client not found</div>;
+    return <div className="text-center py-20 text-slate-500 font-medium">Network not found</div>;
   }
 
   const daysRemaining = client.subscriptionEndDate
     ? Math.max(0, Math.ceil((new Date(client.subscriptionEndDate).getTime() - Date.now()) / (1000 * 60 * 60 * 24)))
     : null;
   const creditsPercent = client.totalCredits > 0 ? Math.round((client.remainingCredits / client.totalCredits) * 100) : 0;
+  
+  // Donut chart logic
+  const radius = 38;
+  const circumference = 2 * Math.PI * radius;
+  const dashoffset = circumference - (creditsPercent / 100) * circumference;
+
+  // Timeline logic
+  const startDate = client.subscriptionStartDate ? new Date(client.subscriptionStartDate).getTime() : 0;
+  const endDate = client.subscriptionEndDate ? new Date(client.subscriptionEndDate).getTime() : 0;
+  const totalDuration = endDate > startDate ? endDate - startDate : 1;
+  const elapsed = Math.max(0, Date.now() - startDate);
+  const subPercent = endDate > startDate ? Math.max(0, Math.min(100, (elapsed / totalDuration) * 100)) : 0;
 
   return (
-    <div className="space-y-6">
-      {/* Back + Header + Actions */}
+    <div className="space-y-6 pb-10">
+      
+      {/* Back Link */}
       <motion.div initial={{ opacity: 0, y: -8 }} animate={{ opacity: 1, y: 0 }}>
-        <Link href="/admin/clients" className="inline-flex items-center gap-1 text-sm text-slate-500 hover:text-blue-600 mb-3">
-          <ArrowLeft className="w-4 h-4" /> Back to Clients
+        <Link href="/admin/clients" className="inline-flex items-center gap-1.5 text-[13px] font-bold text-slate-400 hover:text-slate-800 transition-colors">
+          <ArrowLeft className="w-4 h-4" /> Directory
         </Link>
-        <div className="flex items-center justify-between flex-wrap gap-3">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 bg-blue-50 rounded-lg flex items-center justify-center border border-blue-100">
-              <Building2 className="w-5 h-5 text-blue-600" />
+      </motion.div>
+
+      {/* Hero Profile Card */}
+      <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
+        className="relative bg-slate-950 rounded-3xl p-8 overflow-hidden shadow-[0_20px_40px_rgba(15,23,42,0.15)] flex flex-col lg:flex-row lg:items-center justify-between gap-6 border border-slate-900">
+        <div className="absolute inset-0 bg-[linear-gradient(to_right,#ffffff0a_1px,transparent_1px),linear-gradient(to_bottom,#ffffff0a_1px,transparent_1px)] bg-[size:24px_24px] opacity-30"></div>
+        <div className="absolute inset-0 bg-gradient-to-r from-blue-600/10 to-transparent mix-blend-overlay"></div>
+        
+        <div className="relative z-10 flex items-center gap-5">
+          <div className="w-16 h-16 bg-white rounded-2xl flex items-center justify-center shadow-[0_0_20px_rgba(255,255,255,0.1)] text-slate-950 text-3xl font-black tracking-tighter">
+            {client.labName.charAt(0).toUpperCase()}
+          </div>
+          <div>
+            <div className="flex items-center gap-3">
+              <h1 className="text-3xl font-bold text-white tracking-tight">{client.labName}</h1>
+              <div className={`px-2.5 py-1 rounded-md text-[10px] font-black uppercase tracking-widest border ${client.isLive ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20' : 'bg-slate-800 text-slate-400 border-slate-700'}`}>
+                {client.isLive ? 'Live Active' : 'Inactive'}
+              </div>
+            </div>
+            <p className="text-slate-400 font-mono text-sm mt-1.5">{client.tenantId}</p>
+          </div>
+        </div>
+
+        {/* Action Buttons */}
+        <div className="relative z-10 flex flex-wrap items-center gap-2">
+          <button onClick={() => setCreditsOpen(true)} className="flex items-center gap-1.5 bg-blue-600 hover:bg-blue-500 text-white text-[13px] font-bold px-4 py-2.5 rounded-xl transition-all shadow-[0_0_15px_rgba(37,99,235,0.4)]">
+            <Plus className="w-4 h-4" /> Credits
+          </button>
+          <Link href={`/admin/mappings?tab=clients&tenant=${client.tenantId}`}
+            className="flex items-center gap-1.5 bg-white/10 hover:bg-white/20 text-white backdrop-blur-md border border-white/10 text-[13px] font-bold px-4 py-2.5 rounded-xl transition-all">
+            <Database className="w-4 h-4" /> Map
+          </Link>
+          <Link href={`/admin/clients/${client.tenantId}/edit`} 
+            className="flex items-center gap-1.5 bg-white/10 hover:bg-white/20 text-white backdrop-blur-md border border-white/10 text-[13px] font-bold px-4 py-2.5 rounded-xl transition-all">
+            <Edit className="w-4 h-4" /> Config
+          </Link>
+          <button onClick={() => setConfirmOpen(true)} disabled={toggling}
+            className={`flex items-center gap-1.5 text-[13px] font-bold px-4 py-2.5 rounded-xl transition-all backdrop-blur-md border ${
+              client.isLive ? "bg-red-500/10 border-red-500/20 text-red-400 hover:bg-red-500/20" : "bg-emerald-500/10 border-emerald-500/20 text-emerald-400 hover:bg-emerald-500/20"
+            }`}>
+            <Power className="w-4 h-4" /> {client.isLive ? "Halt" : "Start"}
+          </button>
+        </div>
+      </motion.div>
+
+      {/* Info Bento Grid */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        
+        {/* Credits */}
+        <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }}
+          className="bg-white rounded-3xl border border-slate-200 p-8 shadow-sm flex flex-col justify-between">
+          <div className="flex items-center justify-between mb-8">
+            <div className="flex items-center gap-2"><CreditCard className="w-5 h-5 text-violet-600" /><span className="text-xs font-bold text-slate-500 uppercase tracking-wider">Credits</span></div>
+            <div className="px-3 py-1 bg-violet-50 text-violet-700 rounded-full text-[11px] font-black uppercase tracking-widest">{creditsPercent}% Left</div>
+          </div>
+          
+          <div>
+            <div className="flex items-baseline gap-3 mb-2">
+              <h2 className="text-3xl font-black text-slate-900 tracking-tighter">{client.remainingCredits?.toLocaleString()}</h2>
+              <span className="text-sm font-bold text-slate-400 uppercase tracking-wider">Available</span>
+            </div>
+            <div className="w-full h-3 bg-slate-100 rounded-full overflow-hidden mt-6 mb-3">
+              <motion.div initial={{ width: 0 }} animate={{ width: `${creditsPercent}%` }} transition={{ duration: 1, delay: 0.2 }} className="h-full bg-violet-500 rounded-full" />
+            </div>
+            <div className="flex justify-between items-center text-xs font-bold text-slate-500">
+              <span>{client.usedCredits?.toLocaleString()} Used</span>
+              <span>{client.totalCredits?.toLocaleString()} Total</span>
+            </div>
+          </div>
+        </motion.div>
+
+        {/* Subscription */}
+        <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.15 }}
+          className="bg-white rounded-3xl border border-slate-200 p-8 shadow-sm flex flex-col justify-between">
+          <div className="flex items-center justify-between mb-8">
+            <div className="flex items-center gap-2"><Calendar className="w-5 h-5 text-blue-600" /><span className="text-xs font-bold text-slate-500 uppercase tracking-wider">Subscription</span></div>
+            <div className="px-3 py-1 bg-blue-50 text-blue-700 rounded-full text-[11px] font-black uppercase tracking-widest">{client.plan || "Starter"}</div>
+          </div>
+          
+          <div>
+            <div className="flex items-baseline gap-3 mb-2">
+              <h2 className="text-3xl font-black text-slate-900 tracking-tighter">{daysRemaining ?? "—"}</h2>
+              {daysRemaining !== null && <span className="text-sm font-bold text-slate-400 uppercase tracking-wider">Days Left</span>}
+            </div>
+            
+            <div className="flex items-center gap-6 mt-6">
+              <div className="flex-1">
+                <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">Start Date</p>
+                <p className="text-sm font-bold text-slate-800">{client.subscriptionStartDate ? new Date(client.subscriptionStartDate).toLocaleDateString("en-IN", { month: "short", day: "numeric", year: "numeric" }) : "—"}</p>
+              </div>
+              <div className="w-px h-8 bg-slate-200"></div>
+              <div className="flex-1">
+                <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">End Date</p>
+                <p className="text-sm font-bold text-slate-800">{client.subscriptionEndDate ? new Date(client.subscriptionEndDate).toLocaleDateString("en-IN", { month: "short", day: "numeric", year: "numeric" }) : "—"}</p>
+              </div>
+              <div className="w-px h-8 bg-slate-200"></div>
+              <div className="flex-1">
+                <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">Auto-Renew</p>
+                <p className={`text-sm font-bold ${client.autoRenew ? 'text-emerald-600' : 'text-slate-400'}`}>{client.autoRenew ? "Enabled" : "Disabled"}</p>
+              </div>
+            </div>
+          </div>
+        </motion.div>
+
+        {/* Contact info Bento (Full Width Row) */}
+        <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}
+          className="lg:col-span-2 bg-slate-50/80 rounded-3xl border border-slate-200 p-8 shadow-sm">
+          <div className="flex items-center gap-2 mb-8"><Building2 className="w-5 h-5 text-slate-500" /><span className="text-xs font-bold text-slate-600 uppercase tracking-wider">Contact & Location</span></div>
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+            <div>
+              <div className="flex items-center gap-2 mb-2">
+                <CheckCircle2 className="w-4 h-4 text-slate-400" />
+                <p className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Primary Contact</p>
+              </div>
+              <p className="font-bold text-slate-900 text-sm">{client.contactPerson || "—"}</p>
             </div>
             <div>
-              <h1 className="text-2xl font-bold text-slate-900">{client.labName}</h1>
-              <p className="text-sm text-slate-500 font-mono">{client.tenantId}</p>
+              <div className="flex items-center gap-2 mb-2">
+                <Mail className="w-4 h-4 text-slate-400" />
+                <p className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Email Address</p>
+              </div>
+              <p className="font-bold text-slate-900 text-sm">{client.contactEmail || "—"}</p>
             </div>
-            <span className="ml-2"><StatusBadge status={client.status || (client.isLive ? "active" : "inactive")} /></span>
-          </div>
-
-          {/* Action Buttons */}
-          <div className="flex items-center gap-2">
-            <button onClick={() => setCreditsOpen(true)} className="flex items-center gap-1.5 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium px-3.5 py-2 rounded-lg transition-colors">
-              <Plus className="w-4 h-4" /> Add Credits
-            </button>
-            <Link href={`/admin/mappings?tab=clients&tenant=${client.tenantId}`}
-              className="flex items-center gap-1.5 bg-white border border-slate-300 hover:bg-slate-50 text-slate-700 text-sm font-medium px-3.5 py-2 rounded-lg transition-colors">
-              <Database className="w-4 h-4" /> Mappings
-            </Link>
-            <Link href={`/admin/clients/${client.tenantId}/edit`} className="flex items-center gap-1.5 bg-white border border-slate-300 hover:bg-slate-50 text-slate-700 text-sm font-medium px-3.5 py-2 rounded-lg transition-colors">
-              <Edit className="w-4 h-4" /> Edit
-            </Link>
-            <button onClick={() => setConfirmOpen(true)} disabled={toggling}
-              className={`flex items-center gap-1.5 text-sm font-medium px-3.5 py-2 rounded-lg transition-colors border ${
-                client.isLive ? "bg-white border-red-200 text-red-600 hover:bg-red-50" : "bg-white border-emerald-200 text-emerald-600 hover:bg-emerald-50"
-              }`}>
-              <Power className="w-4 h-4" /> {client.isLive ? "Disable" : "Enable"}
-            </button>
-          </div>
-        </div>
-      </motion.div>
-
-      {/* Info Cards Row */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }}
-          className="bg-white rounded-xl border border-slate-200 p-5 shadow-sm">
-          <div className="flex items-center gap-2 mb-3"><CreditCard className="w-4 h-4 text-violet-600" /><span className="text-sm font-medium text-slate-600">Credits</span></div>
-          <p className="text-3xl font-bold text-slate-900">{client.remainingCredits?.toLocaleString()}</p>
-          <div className="mt-2 w-full h-2 bg-slate-100 rounded-full overflow-hidden">
-            <motion.div initial={{ width: 0 }} animate={{ width: `${creditsPercent}%` }} transition={{ duration: 0.8, delay: 0.3 }} className="h-full bg-violet-500 rounded-full" />
-          </div>
-          <p className="text-xs text-slate-400 mt-1">{client.usedCredits} used of {client.totalCredits} total</p>
-        </motion.div>
-
-        <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.15 }}
-          className="bg-white rounded-xl border border-slate-200 p-5 shadow-sm">
-          <div className="flex items-center gap-2 mb-3"><Calendar className="w-4 h-4 text-blue-600" /><span className="text-sm font-medium text-slate-600">Subscription</span></div>
-          <p className="text-3xl font-bold text-slate-900">{daysRemaining ?? "—"}</p>
-          <p className="text-sm text-slate-500">days remaining</p>
-          {client.subscriptionEndDate && <p className="text-xs text-slate-400 mt-1">Expires {new Date(client.subscriptionEndDate).toLocaleDateString("en-IN", { day: "2-digit", month: "short", year: "numeric" })}</p>}
-        </motion.div>
-
-        <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}
-          className="bg-white rounded-xl border border-slate-200 p-5 shadow-sm">
-          <div className="flex items-center gap-2 mb-3"><FileText className="w-4 h-4 text-emerald-600" /><span className="text-sm font-medium text-slate-600">Reports</span></div>
-          <p className="text-3xl font-bold text-slate-900">{stats?.totalReports ?? 0}</p>
-          <p className="text-sm text-slate-500">total generated</p>
-          <p className="text-xs text-slate-400 mt-1">{stats?.failures ?? 0} failures</p>
-        </motion.div>
-      </div>
-
-      {/* Contact + Subscription Details */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.25 }}
-          className="bg-white rounded-xl border border-slate-200 p-5 shadow-sm">
-          <h2 className="text-base font-semibold text-slate-900 mb-3">Contact Information</h2>
-          <div className="space-y-2.5 text-sm">
-            <div className="flex justify-between"><span className="text-slate-500">Email</span><span className="text-slate-900">{client.contactEmail || "—"}</span></div>
-            <div className="flex justify-between"><span className="text-slate-500">Phone</span><span className="text-slate-900">{client.contactPhone || "—"}</span></div>
-            <div className="flex justify-between"><span className="text-slate-500">Contact Person</span><span className="text-slate-900">{client.contactPerson || "—"}</span></div>
-            <div className="flex justify-between"><span className="text-slate-500">City</span><span className="text-slate-900">{client.city || "—"}</span></div>
-            <div className="flex justify-between"><span className="text-slate-500">State</span><span className="text-slate-900">{client.state || "—"}</span></div>
-            <div className="flex justify-between"><span className="text-slate-500">Plan</span><span className="text-slate-900 capitalize">{client.plan || "—"}</span></div>
-          </div>
-        </motion.div>
-
-        <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }}
-          className="bg-white rounded-xl border border-slate-200 p-5 shadow-sm">
-          <h2 className="text-base font-semibold text-slate-900 mb-3">Subscription Details</h2>
-          <div className="space-y-2.5 text-sm">
-            <div className="flex justify-between"><span className="text-slate-500">Status</span><StatusBadge status={client.status || "active"} /></div>
-            <div className="flex justify-between"><span className="text-slate-500">Start Date</span><span className="text-slate-900">{client.subscriptionStartDate ? new Date(client.subscriptionStartDate).toLocaleDateString("en-IN", { day: "2-digit", month: "short", year: "numeric" }) : "—"}</span></div>
-            <div className="flex justify-between"><span className="text-slate-500">End Date</span><span className="text-slate-900">{client.subscriptionEndDate ? new Date(client.subscriptionEndDate).toLocaleDateString("en-IN", { day: "2-digit", month: "short", year: "numeric" }) : "—"}</span></div>
-            <div className="flex justify-between"><span className="text-slate-500">Trial Ends</span><span className="text-slate-900">{client.trialEndDate ? new Date(client.trialEndDate).toLocaleDateString("en-IN", { day: "2-digit", month: "short", year: "numeric" }) : "No trial"}</span></div>
-            <div className="flex justify-between"><span className="text-slate-500">Live Date</span><span className="text-slate-900">{client.liveDate ? new Date(client.liveDate).toLocaleDateString("en-IN", { day: "2-digit", month: "short", year: "numeric" }) : "—"}</span></div>
-            <div className="flex justify-between"><span className="text-slate-500">Auto-Renew</span><span className="text-slate-900">{client.autoRenew ? "Yes" : "No"}</span></div>
+            <div>
+              <div className="flex items-center gap-2 mb-2">
+                <Phone className="w-4 h-4 text-slate-400" />
+                <p className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Phone Number</p>
+              </div>
+              <p className="font-bold text-slate-900 font-mono text-sm">{client.contactPhone || "—"}</p>
+            </div>
+            <div>
+              <div className="flex items-center gap-2 mb-2">
+                <MapPin className="w-4 h-4 text-slate-400" />
+                <p className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Location</p>
+              </div>
+              <p className="font-bold text-slate-900 text-sm">{client.city ? `${client.city}, ${client.state}` : "—"}</p>
+            </div>
           </div>
         </motion.div>
       </div>
 
-      {/* Payment History */}
-      {client.payments?.length > 0 && (
-        <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.35 }}
-          className="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
-          <div className="px-5 py-4 border-b border-slate-100 flex items-center gap-2"><History className="w-4 h-4 text-slate-400" /><h2 className="text-base font-semibold text-slate-900">Payment History</h2></div>
-          <table className="w-full text-sm">
-            <thead><tr className="bg-slate-50 border-b border-slate-200">
-              <th className="text-left px-5 py-2.5 font-medium text-slate-600">Date</th>
-              <th className="text-left px-5 py-2.5 font-medium text-slate-600">Method</th>
-              <th className="text-left px-5 py-2.5 font-medium text-slate-600">Note</th>
-              <th className="text-right px-5 py-2.5 font-medium text-slate-600">Amount</th>
-              <th className="text-right px-5 py-2.5 font-medium text-slate-600">Credits</th>
-            </tr></thead>
-            <tbody>
-              {client.payments.slice().reverse().map((p: any, i: number) => (
-                <tr key={i} className="border-b border-slate-50 hover:bg-slate-50">
-                  <td className="px-5 py-2.5 text-slate-600">{new Date(p.date).toLocaleDateString("en-IN", { day: "2-digit", month: "short", year: "numeric" })}</td>
-                  <td className="px-5 py-2.5 text-slate-600 capitalize">{p.method || "—"}</td>
-                  <td className="px-5 py-2.5 text-slate-500">{p.note || "—"}</td>
-                  <td className="px-5 py-2.5 text-right font-mono text-slate-900">₹{p.amount?.toLocaleString()}</td>
-                  <td className="px-5 py-2.5 text-right font-mono text-emerald-600">+{p.credits?.toLocaleString()}</td>
+      {/* Payment & Reports Data Grids */}
+      <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
+        
+        {/* Reports Grid */}
+        <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.25 }}
+          className="bg-white rounded-3xl border border-slate-200 shadow-sm overflow-hidden flex flex-col h-[400px]">
+          <div className="px-6 py-5 border-b border-slate-100 bg-slate-50/50 flex items-center justify-between shrink-0">
+            <div className="flex items-center gap-2"><FileText className="w-4 h-4 text-slate-400" /><h2 className="text-[11px] font-bold text-slate-500 uppercase tracking-wider">Recent Reports</h2></div>
+            <Link href={`/admin/reports?tenantId=${tenantId}`} className="text-[11px] font-black uppercase tracking-wider text-blue-600 hover:text-blue-700 transition-colors">View All</Link>
+          </div>
+          <div className="overflow-y-auto flex-1">
+            <table className="w-full text-sm">
+              <thead className="sticky top-0 bg-white shadow-[0_1px_0_#f1f5f9] z-10">
+                <tr>
+                  <th className="text-left px-6 py-3 font-bold text-slate-400 uppercase tracking-wider text-[10px]">Patient</th>
+                  <th className="text-left px-6 py-3 font-bold text-slate-400 uppercase tracking-wider text-[10px]">Status</th>
+                  <th className="text-right px-6 py-3 font-bold text-slate-400 uppercase tracking-wider text-[10px]">Date</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody className="divide-y divide-slate-50">
+                {recentReports.length === 0 ? (
+                  <tr><td colSpan={3} className="px-6 py-10 text-center text-slate-400 font-medium">No reports generated yet</td></tr>
+                ) : (
+                  recentReports.map((r: any) => (
+                    <tr key={r._id} className="hover:bg-slate-50/80 transition-colors">
+                      <td className="px-6 py-3">
+                        <Link href={`/admin/reports/${r._id}`} className="block group">
+                          <p className="font-bold text-slate-800 group-hover:text-blue-600 transition-colors text-[13px]">{r.patientName}</p>
+                          <p className="text-[11px] font-mono font-bold text-slate-400">{r.labNo}</p>
+                        </Link>
+                      </td>
+                      <td className="px-6 py-3"><StatusBadge status={r.status} /></td>
+                      <td className="px-6 py-3 text-right text-[12px] font-bold text-slate-500">{new Date(r.createdAt).toLocaleDateString("en-IN", { day: "2-digit", month: "short" })}</td>
+                    </tr>
+                  ))
+                )}
+              </tbody>
+            </table>
+          </div>
         </motion.div>
-      )}
 
-      {/* Recent Reports */}
-      <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4 }}
-        className="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
-        <div className="px-5 py-4 border-b border-slate-100 flex items-center justify-between">
-          <h2 className="text-base font-semibold text-slate-900">Recent Reports</h2>
-          <Link href={`/admin/reports?tenantId=${tenantId}`} className="text-xs text-blue-600 hover:underline">View all</Link>
-        </div>
-        {recentReports.length === 0 ? (
-          <div className="p-6 text-center text-sm text-slate-400">No reports yet</div>
-        ) : (
-          <table className="w-full text-sm">
-            <thead><tr className="bg-slate-50 border-b border-slate-200">
-              <th className="text-left px-5 py-2.5 font-medium text-slate-600">Lab No</th>
-              <th className="text-left px-5 py-2.5 font-medium text-slate-600">Patient</th>
-              <th className="text-left px-5 py-2.5 font-medium text-slate-600">Status</th>
-              <th className="text-right px-5 py-2.5 font-medium text-slate-600">Abnormals</th>
-              <th className="text-right px-5 py-2.5 font-medium text-slate-600">Date</th>
-            </tr></thead>
-            <tbody>
-              {recentReports.map((r: any) => (
-                <tr key={r._id} className="border-b border-slate-50 hover:bg-slate-50">
-                  <td className="px-5 py-2.5"><Link href={`/admin/reports/${r._id}`} className="font-mono text-xs text-blue-600 hover:underline">{r.labNo}</Link></td>
-                  <td className="px-5 py-2.5 text-slate-900">{r.patientName}</td>
-                  <td className="px-5 py-2.5"><StatusBadge status={r.status} /></td>
-                  <td className="px-5 py-2.5 text-right">{r.abnormalCount > 0 ? <span className="text-red-600 font-medium">{r.abnormalCount}</span> : <span className="text-slate-400">0</span>}</td>
-                  <td className="px-5 py-2.5 text-right text-slate-500">{new Date(r.createdAt).toLocaleDateString("en-IN", { day: "2-digit", month: "short" })}</td>
+        {/* Payments Grid */}
+        <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }}
+          className="bg-white rounded-3xl border border-slate-200 shadow-sm overflow-hidden flex flex-col h-[400px]">
+          <div className="px-6 py-5 border-b border-slate-100 bg-slate-50/50 flex items-center justify-between shrink-0">
+            <div className="flex items-center gap-2"><History className="w-4 h-4 text-slate-400" /><h2 className="text-[11px] font-bold text-slate-500 uppercase tracking-wider">Payment History</h2></div>
+          </div>
+          <div className="overflow-y-auto flex-1">
+            <table className="w-full text-sm">
+              <thead className="sticky top-0 bg-white shadow-[0_1px_0_#f1f5f9] z-10">
+                <tr>
+                  <th className="text-left px-6 py-3 font-bold text-slate-400 uppercase tracking-wider text-[10px]">Date</th>
+                  <th className="text-left px-6 py-3 font-bold text-slate-400 uppercase tracking-wider text-[10px]">Note</th>
+                  <th className="text-right px-6 py-3 font-bold text-slate-400 uppercase tracking-wider text-[10px]">Amount</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
-        )}
-      </motion.div>
+              </thead>
+              <tbody className="divide-y divide-slate-50">
+                {!client.payments || client.payments.length === 0 ? (
+                  <tr><td colSpan={3} className="px-6 py-10 text-center text-slate-400 font-medium">No payment history</td></tr>
+                ) : (
+                  client.payments.slice().reverse().map((p: any, i: number) => (
+                    <tr key={i} className="hover:bg-slate-50/80 transition-colors">
+                      <td className="px-6 py-3 text-slate-600 font-bold text-[12px]">{new Date(p.date).toLocaleDateString("en-IN", { day: "2-digit", month: "short", year: "numeric" })}</td>
+                      <td className="px-6 py-3">
+                        <p className="text-slate-800 text-[12px] font-bold">{p.method || "—"}</p>
+                        <p className="text-[11px] font-bold text-slate-400">{p.note || "—"}</p>
+                      </td>
+                      <td className="px-6 py-3 text-right">
+                        <p className="font-mono font-black text-slate-800 tracking-tighter">₹{p.amount?.toLocaleString()}</p>
+                        <p className="font-mono text-[11px] font-black text-emerald-600 bg-emerald-50 inline-block px-1.5 py-0.5 rounded mt-1">+{p.credits?.toLocaleString()} cr</p>
+                      </td>
+                    </tr>
+                  ))
+                )}
+              </tbody>
+            </table>
+          </div>
+        </motion.div>
+
+      </div>
 
       {/* Modals */}
       <AddCreditsModal open={creditsOpen} onClose={() => setCreditsOpen(false)} tenantId={client.tenantId} labName={client.labName} />
@@ -225,15 +306,15 @@ export default function ClientDetailPage() {
         loading={toggling}
         variant={client.isLive ? "danger" : "default"}
         title={client.isLive ? `Disable ${client.labName}?` : `Enable ${client.labName}?`}
-        confirmLabel={client.isLive ? "Disable Client" : "Enable Client"}
+        confirmLabel={client.isLive ? "Disable Network" : "Enable Network"}
         message={
           client.isLive ? (
             <>
-              This client will be taken offline. They will <strong>no longer be able to generate reports</strong> until
-              re-enabled. Existing data and credits are kept. You can re-enable them anytime.
+              This network will be taken offline. They will <strong>no longer be able to generate reports</strong> until
+              re-enabled. Existing data and credits are kept.
             </>
           ) : (
-            <>This client will be brought back online and can generate reports again.</>
+            <>This network will be brought back online and can generate reports again.</>
           )
         }
       />
