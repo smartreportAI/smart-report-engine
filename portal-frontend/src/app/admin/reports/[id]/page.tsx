@@ -33,6 +33,7 @@ export default function ReportDetailPage() {
   const { data, isLoading } = useQuery({
     queryKey: ["admin", "reports", id],
     queryFn: () => apiClient(`/admin/reports/${id}`),
+    enabled: typeof window !== "undefined" && !!id && id !== "_placeholder",
   });
 
   const report = data?.data;

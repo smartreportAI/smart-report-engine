@@ -1,7 +1,9 @@
 "use client";
 
+import { useState, useMemo } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { apiClient } from "@/lib/api/client";
+import { cn } from "@/lib/utils";
 import { motion, type Variants } from "framer-motion";
 import {
   FileText,
@@ -36,6 +38,8 @@ const itemVariants: Variants = {
 };
 
 export default function AdminDashboard() {
+  const [timeRange, setTimeRange] = useState<"week" | "month" | "year">("month");
+
   const { data, isLoading } = useQuery({
     queryKey: ["admin", "dashboard"],
     queryFn: () => apiClient("/admin/dashboard"),
@@ -44,7 +48,7 @@ export default function AdminDashboard() {
 
   const { data: statsData } = useQuery({
     queryKey: ["admin", "reports", "stats"],
-    queryFn: () => apiClient("/admin/reports/stats?days=30"),
+    queryFn: () => apiClient("/admin/reports/stats?days=3650"),
   });
 
   const { data: clientsData } = useQuery({
@@ -53,7 +57,7 @@ export default function AdminDashboard() {
   });
 
   const dashboard = data?.data;
-  const chartData = statsData?.data?.perDay || [];
+  const allPerDay: Array<{ _id: string; count: number; failures?: number }> = statsData?.data?.perDay || [];
   const allClients = clientsData?.data || [];
 
   // KPI values
@@ -66,6 +70,69 @@ export default function AdminDashboard() {
   const lowCredits = dashboard?.clients?.lowCredits ?? 0;
   const expiringSoon = dashboard?.clients?.expiringSoon ?? 0;
 
+  // Aggregate chart data based on timeRange:
+  // - "week": last 7 days (day by day)
+  // - "month": all 12 months of current year (Jan, Feb, ...)
+  // - "year": all project years (2024, 2025, 2026, ...)
+  const chartData = useMemo(() => {
+    const now = new Date();
+    const currentYear = now.getFullYear();
+
+    if (timeRange === "week") {
+      const daysList = [];
+      for (let i = 6; i >= 0; i--) {
+        const d = new Date(now);
+        d.setDate(d.getDate() - i);
+        const dateKey = d.toISOString().slice(0, 10);
+        const match = allPerDay.find((p) => p._id === dateKey);
+        daysList.push({
+          _id: dateKey,
+          date: d.toLocaleDateString("en-IN", { day: "numeric", month: "short" }),
+          count: match ? match.count : 0,
+          failures: match ? match.failures : 0,
+        });
+      }
+      return daysList;
+    }
+
+    if (timeRange === "month") {
+      const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+      return monthNames.map((monthName, mIdx) => {
+        const total = allPerDay
+          .filter((p) => {
+            const pd = new Date(p._id);
+            return pd.getFullYear() === currentYear && pd.getMonth() === mIdx;
+          })
+          .reduce((sum, p) => sum + (p.count || 0), 0);
+        return {
+          _id: `${monthName} ${currentYear}`,
+          date: monthName,
+          count: total,
+          failures: 0,
+        };
+      });
+    }
+
+    // "year": all years
+    const yearSet = new Set([currentYear - 2, currentYear - 1, currentYear]);
+    allPerDay.forEach((p) => {
+      const y = new Date(p._id).getFullYear();
+      if (!isNaN(y)) yearSet.add(y);
+    });
+    const sortedYears = Array.from(yearSet).sort();
+    return sortedYears.map((year) => {
+      const total = allPerDay
+        .filter((p) => new Date(p._id).getFullYear() === year)
+        .reduce((sum, p) => sum + (p.count || 0), 0);
+      return {
+        _id: String(year),
+        date: String(year),
+        count: total,
+        failures: 0,
+      };
+    });
+  }, [allPerDay, timeRange]);
+
   // Credits totals
   const totalCreditsAll = allClients.reduce((sum: number, c: any) => sum + (c.totalCredits || 0), 0);
   const remainingCreditsAll = allClients.reduce((sum: number, c: any) => sum + (c.remainingCredits || 0), 0);
@@ -76,7 +143,18 @@ export default function AdminDashboard() {
     .sort((a: any, b: any) => (b.totalReports || 0) - (a.totalReports || 0))
     .slice(0, 5);
 
-  const last7 = chartData.slice(-7).map((d: any) => d.count || 0);
+  const last7 = allPerDay.slice(-7).map((d: any) => d.count || 0);
+
+  // Filtered period metrics for Reports Volume
+  const periodVolume = chartData.reduce((sum: number, d: any) => sum + (d.count || 0), 0);
+
+  const currentYear = new Date().getFullYear();
+  const periodLabel =
+    timeRange === "week"
+      ? "last 7 days"
+      : timeRange === "month"
+      ? `in ${currentYear}`
+      : "all years";
 
   if (isLoading) {
     return (
@@ -144,13 +222,32 @@ export default function AdminDashboard() {
       {/* ── Row 2: Charts ── */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 lg:gap-6">
         <DashboardCard className="lg:col-span-2">
-          <div className="flex items-start justify-between mb-6">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
             <div>
               <h2 className="text-sm font-medium text-slate-900">Reports Volume</h2>
               <div className="flex items-baseline gap-2 mt-1">
-                <p className="text-2xl font-semibold tracking-tight text-slate-900">{reportsThisMonth}</p>
-                <span className="text-xs text-slate-500">last 30 days</span>
+                <p className="text-2xl font-semibold tracking-tight text-slate-900">{periodVolume}</p>
+                <span className="text-xs text-slate-500">{periodLabel}</span>
               </div>
+            </div>
+
+            {/* Time range filter pills */}
+            <div className="inline-flex items-center p-1 bg-slate-100 rounded-lg border border-slate-200/80 self-start sm:self-auto">
+              {(["week", "month", "year"] as const).map((t) => (
+                <button
+                  key={t}
+                  type="button"
+                  onClick={() => setTimeRange(t)}
+                  className={cn(
+                    "px-3 py-1 text-xs font-medium rounded-md capitalize transition-all duration-150",
+                    timeRange === t
+                      ? "bg-white text-slate-900 shadow-sm font-semibold"
+                      : "text-slate-500 hover:text-slate-800"
+                  )}
+                >
+                  {t}
+                </button>
+              ))}
             </div>
           </div>
           <div className="flex-1 min-h-[240px]">
@@ -161,7 +258,7 @@ export default function AdminDashboard() {
         <DashboardCard>
           <h2 className="text-sm font-medium text-slate-900 mb-6">Traffic Distribution</h2>
           <div className="flex-1 min-h-[240px]">
-            <DayDistributionChart data={chartData} />
+            <DayDistributionChart data={allPerDay} />
           </div>
         </DashboardCard>
       </div>

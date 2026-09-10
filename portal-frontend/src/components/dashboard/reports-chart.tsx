@@ -10,10 +10,11 @@ import {
   ResponsiveContainer,
 } from "recharts";
 
-interface ChartDataPoint {
-  _id: string;
+export interface ChartDataPoint {
+  _id?: string;
+  date?: string;
   count: number;
-  failures: number;
+  failures?: number;
 }
 
 interface ReportsChartProps {
@@ -41,10 +42,19 @@ const CustomTooltip = ({ active, payload, label }: any) => {
 };
 
 export function ReportsChart({ data }: ReportsChartProps) {
-  const formattedData = data.map((d) => ({
-    ...d,
-    date: new Date(d._id).toLocaleDateString("en-IN", { day: "numeric", month: "short" }),
-  }));
+  const formattedData = data.map((d) => {
+    let dateStr = d.date;
+    if (!dateStr) {
+      const parsed = new Date(d._id || "");
+      dateStr = !isNaN(parsed.getTime())
+        ? parsed.toLocaleDateString("en-IN", { day: "numeric", month: "short" })
+        : d._id || "";
+    }
+    return {
+      ...d,
+      date: dateStr,
+    };
+  });
 
   if (data.length === 0) {
     return (
@@ -55,8 +65,8 @@ export function ReportsChart({ data }: ReportsChartProps) {
   }
 
   return (
-    <div className="h-[240px] w-full -ml-4">
-      <ResponsiveContainer width="100%" height="100%">
+    <div className="h-[240px] w-full -ml-4 min-w-0">
+      <ResponsiveContainer width="100%" height="100%" minWidth={0} minHeight={240}>
         <AreaChart data={formattedData} margin={{ top: 10, right: 0, left: 0, bottom: 0 }}>
           <defs>
             {/* High-end Multi-stop Gradient */}
@@ -86,7 +96,7 @@ export function ReportsChart({ data }: ReportsChartProps) {
             tickLine={false}
             tick={{ fontSize: 10, fill: "#94a3b8", fontWeight: 500 }}
             tickMargin={12}
-            minTickGap={20}
+            minTickGap={15}
           />
           
           <YAxis
@@ -96,6 +106,7 @@ export function ReportsChart({ data }: ReportsChartProps) {
             tickMargin={12}
             width={40}
             allowDecimals={false}
+            domain={[0, (dataMax: number) => (dataMax > 0 ? "auto" : 5)]}
           />
 
           <Tooltip 

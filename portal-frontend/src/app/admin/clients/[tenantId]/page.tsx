@@ -22,6 +22,7 @@ export default function ClientDetailPage() {
   const { data, isLoading } = useQuery({
     queryKey: ["admin", "clients", tenantId],
     queryFn: () => apiClient(`/admin/clients/${tenantId}`),
+    enabled: typeof window !== "undefined" && !!tenantId && tenantId !== "_placeholder",
   });
 
   const client = data?.data?.client;

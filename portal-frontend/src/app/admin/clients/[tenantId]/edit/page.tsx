@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useParams, useRouter } from "next/navigation";
 import { motion } from "framer-motion";
@@ -42,28 +42,24 @@ function SectionCard({
   description,
   children,
 }: {
-  icon: typeof Building2;
+  icon: React.ComponentType<{ className?: string }>;
   title: string;
   description: string;
   children: React.ReactNode;
 }) {
   return (
-    <motion.section
-      initial={{ opacity: 0, y: 10 }}
-      animate={{ opacity: 1, y: 0 }}
-      className="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden"
-    >
-      <div className="flex items-start gap-3 px-6 py-4 border-b border-slate-100 bg-slate-50/60">
-        <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-blue-50 border border-blue-100">
-          <Icon className="h-4.5 w-4.5 text-blue-600" />
+    <div className="bg-white rounded-xl border border-slate-200 shadow-sm p-6 space-y-6">
+      <div className="flex items-start gap-3 pb-4 border-b border-slate-100">
+        <div className="p-2.5 rounded-lg bg-blue-50 text-blue-600">
+          <Icon className="h-5 w-5" />
         </div>
         <div>
-          <h2 className="text-sm font-semibold text-slate-900">{title}</h2>
-          <p className="text-xs text-slate-500 mt-0.5">{description}</p>
+          <h2 className="text-base font-semibold text-slate-900">{title}</h2>
+          <p className="text-sm text-slate-500 mt-0.5">{description}</p>
         </div>
       </div>
-      <div className="p-6">{children}</div>
-    </motion.section>
+      {children}
+    </div>
   );
 }
 
@@ -77,41 +73,44 @@ export default function EditClientPage() {
   const { data, isLoading } = useQuery({
     queryKey: ["admin", "clients", tenantId],
     queryFn: () => apiClient(`/admin/clients/${tenantId}`),
+    enabled: typeof window !== "undefined" && !!tenantId && tenantId !== "_placeholder",
   });
 
   const client = data?.data?.client;
 
   // Initialize the form once the client loads.
-  if (client && form === null) {
-    setForm({
-      labName: client.labName || "",
-      contactEmail: client.contactEmail || "",
-      contactPhone: client.contactPhone || "",
-      contactPerson: client.contactPerson || "",
-      city: client.city || "",
-      state: client.state || "",
-      website: client.website || "",
-      gstNumber: client.gstNumber || "",
-      plan: client.plan || "starter",
-      primaryColor: client.reportConfig?.branding?.primaryColor || "#2563eb",
-      status: client.status || (client.isLive ? "active" : "suspended"),
-      subscriptionStartDate: toDateInput(client.subscriptionStartDate),
-      subscriptionEndDate: toDateInput(client.subscriptionEndDate),
-      trialEndDate: toDateInput(client.trialEndDate),
-      autoRenew: !!client.autoRenew,
-      notes: client.notes || "",
-      // Report config
-      reportType: client.reportConfig?.reportType || "inDepth",
-      pageOrder: (client.reportConfig?.pageOrder || []).join(", "),
-      showCoverPage: client.reportConfig?.showCoverPage !== false,
-      showBackPage: client.reportConfig?.showBackPage !== false,
-      showRecommendations: client.reportConfig?.showRecommendations !== false,
-      showSummary: client.reportConfig?.showSummary !== false,
-      profileContinuation: !!client.reportConfig?.profileContinuation,
-      strictMapping: !!client.reportConfig?.strictMapping,
-      webViewer: !!client.reportConfig?.webViewer,
-    });
-  }
+  useEffect(() => {
+    if (client && form === null) {
+      setForm({
+        labName: client.labName || "",
+        contactEmail: client.contactEmail || "",
+        contactPhone: client.contactPhone || "",
+        contactPerson: client.contactPerson || "",
+        city: client.city || "",
+        state: client.state || "",
+        website: client.website || "",
+        gstNumber: client.gstNumber || "",
+        plan: client.plan || "starter",
+        primaryColor: client.reportConfig?.branding?.primaryColor || "#2563eb",
+        status: client.status || (client.isLive ? "active" : "suspended"),
+        subscriptionStartDate: toDateInput(client.subscriptionStartDate),
+        subscriptionEndDate: toDateInput(client.subscriptionEndDate),
+        trialEndDate: toDateInput(client.trialEndDate),
+        autoRenew: !!client.autoRenew,
+        notes: client.notes || "",
+        // Report config
+        reportType: client.reportConfig?.reportType || "inDepth",
+        pageOrder: (client.reportConfig?.pageOrder || []).join(", "),
+        showCoverPage: client.reportConfig?.showCoverPage !== false,
+        showBackPage: client.reportConfig?.showBackPage !== false,
+        showRecommendations: client.reportConfig?.showRecommendations !== false,
+        showSummary: client.reportConfig?.showSummary !== false,
+        profileContinuation: !!client.reportConfig?.profileContinuation,
+        strictMapping: !!client.reportConfig?.strictMapping,
+        webViewer: !!client.reportConfig?.webViewer,
+      });
+    }
+  }, [client, form]);
 
   function update(field: string, value: string | boolean) {
     setForm((f) => ({ ...(f as Record<string, any>), [field]: value }));
